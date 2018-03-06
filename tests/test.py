@@ -1,4 +1,7 @@
 import time
+import sys
+
+sys.path.append('../file_checker')
 from check_name import CheckName
 
 
