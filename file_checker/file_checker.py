@@ -5,7 +5,7 @@ from settings import (CHECK_DIRS, FILE_FORMATS, DIR_FORMATS,
                       IGNORE_FILES, IGNORE_DIRS)
 
 
-class CheckName:
+class FileChecker:
     def __init__(self):
         self.error_list = []
 
@@ -84,7 +84,7 @@ def check_settings():
 if __name__ == '__main__':
     check_settings()
 
-    checker = CheckName()
+    checker = FileChecker()
     for d in CHECK_DIRS:
         checker.check(d)
 
