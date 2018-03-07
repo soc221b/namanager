@@ -4,17 +4,17 @@ import os
 
 sys.path.append(
     os.path.dirname(os.path.realpath(__file__)) + "/../file_checker")
-from check_name import CheckName # noqa
+import util # noqa
 
 
-class TestCheckName():
+class TestUtil():
     def test(self):
         self.test_gen_unique_str()
         self.test_get_first_word()
         pass
 
     def test_gen_unique_str(self):
-        gen_unique_str = checker.gen_unique_str
+        gen_unique_str = util.gen_unique_str
         u = gen_unique_str('')
 
         s = ''
@@ -33,7 +33,7 @@ class TestCheckName():
         assert time.time() - start < 0.5
 
     def test_get_first_word(self):
-        get_first_word = checker.get_first_word
+        get_first_word = util.get_first_word
 
         # asserts
         if get_first_word('') != ('', -1, 0):
@@ -87,6 +87,5 @@ class TestCheckName():
 
 
 if __name__ == '__main__':
-    checker = CheckName()
-    test = TestCheckName()
-    test.test()
+    test_util = TestUtil()
+    test_util.test()
