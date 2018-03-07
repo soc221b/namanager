@@ -53,7 +53,7 @@ class TestUtil():
         for i in range(0, 1000):
             # 256 chars
             get_first_word('U' + 'l' * 255)
-            get_first_word('Word' + 'U' * 63)
+            get_first_word('Word' * 64)
             get_first_word('l' * 256)
             get_first_word('U' * 256)
         assert time.time() - start < 5
