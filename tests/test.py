@@ -33,51 +33,27 @@ class TestUtil():
         get_first_word = util.get_first_word
 
         # asserts
-        if get_first_word('') != ('', -1, 0):
-            raise Exception("'{0}' != '{1}'".format('',
-                            get_first_word('')[0]))
-        if get_first_word('H') != ('H', 0, 1):
-            raise Exception("'{0}' != '{1}'".format('H',
-                            get_first_word('H')[0]))
-        if get_first_word('HTTP') != ('HTTP', 0, 4):
-            raise Exception("'{0}' != '{1}'".format('HTTP',
-                            get_first_word('HTTP')[0]))
-        if get_first_word('HTTPProtocol') != ('HTTP', 0, 4):
-            raise Exception("'{0}' != '{1}'".format('HTTPProtocol',
-                            get_first_word('HTTPProtocol')[0]))
-        if get_first_word('HttpProtocol') != ('Http', 0, 4):
-            raise Exception("'{0}' != '{1}'".format('HttpProtocol',
-                            get_first_word('HttpProtocol')[0]))
-        if get_first_word('httpProtocol') != ('http', 0, 4):
-            raise Exception("'{0}' != '{1}'".format('httpProtocol',
-                            get_first_word('httpProtocol')[0]))
+        words = {'': ('', -1, 0),
+                 'H': ('H', 0, 1),
+                 'HTTP': ('HTTP', 0, 4),
+                 'HTTPProtocol': ('HTTP', 0, 4),
+                 'HttpProtocol': ('Http', 0, 4),
+                 'httpProtocol': ('http', 0, 4),
+                 }
+
+        for s, expect in words.items():
+            actual = get_first_word(s)
+            if expect != actual:
+                raise Exception("expect is '{0}', actual is '{1}'".format(
+                                expect,
+                                actual))
 
         # benchmark
         start = time.time()
         for i in range(0, 1000):
             # 256 chars
-            get_first_word('Httpttpttpttpttppttpttpttpttpttppttpttpttpttpttp \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttptt')
-            get_first_word('HttpttPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTP \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTT')
-            get_first_word('httpttpttpttpttppttpttpttpttpttppttpttpttpttpttp \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttptt')
-            get_first_word('HTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTP \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTT')
+            get_first_word('U' + 'l' * 255)
+            get_first_word('Word' + 'U' * 63)
+            get_first_word('l' * 256)
+            get_first_word('U' * 256)
         assert time.time() - start < 5
