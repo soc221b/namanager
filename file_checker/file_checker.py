@@ -29,17 +29,16 @@ class FileChecker():
                 name = name.replace('_', '-')
         return name
 
-    def convert_alphabet(self, name, formats_):
+    def convert_alphabet(self, name, format):
         try:
-            for f in formats_:
-                if f == 'upper_case':
-                    name = name.upper()
-                if f == 'lower_case':
-                    name = name.lower()
-                if f == 'camel_case':
-                    pass
-                if f == 'pascal_case':
-                    pass
+            if format == 'upper_case':
+                name = name.upper()
+            if format == 'lower_case':
+                name = name.lower()
+            if format == 'camel_case':
+                pass
+            if format == 'pascal_case':
+                pass
         except Exception:
             pass
 
