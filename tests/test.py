@@ -1,5 +1,10 @@
 import time
-from check_name import CheckName
+import sys
+import os
+
+sys.path.append(
+    os.path.dirname(os.path.realpath(__file__)) + "/../file_checker")
+from check_name import CheckName # noqa
 
 
 class TestCheckName():
