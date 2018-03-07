@@ -8,11 +8,6 @@ import util # noqa
 
 
 class TestUtil():
-    def test(self):
-        self.test_gen_unique_str()
-        self.test_get_first_word()
-        pass
-
     def test_gen_unique_str(self):
         gen_unique_str = util.gen_unique_str
         u = gen_unique_str('')
@@ -84,8 +79,3 @@ class TestUtil():
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTT')
         assert time.time() - start < 5
-
-
-if __name__ == '__main__':
-    test_util = TestUtil()
-    test_util.test()

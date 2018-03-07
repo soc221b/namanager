@@ -21,4 +21,4 @@ install:
 
 script:
     - flake8 .
-    - python tests/test.py
+    - nosetests . -v
