@@ -9,13 +9,13 @@ class CheckName:
     def __init__(self):
         self.error_list = []
 
-    def _get_unique_str(self, name):
+    def gen_unique_str(self, string):
         u = '_'
-        while u in name:
+        while u in string:
             u += '_'
         return u
 
-    def _get_first_word(self, s):
+    def get_first_word(self, s):
         if s == '':
             return ('', -1, 0)
         start = 0 if len(s) else -1

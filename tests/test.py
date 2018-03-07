@@ -9,80 +9,80 @@ from check_name import CheckName # noqa
 
 class TestCheckName():
     def test(self):
-        self.test_get_unique_str()
+        self.test_gen_unique_str()
         self.test_get_first_word()
         pass
 
-    def test_get_unique_str(self):
-        _get_unique_str = checker._get_unique_str
-        u = _get_unique_str('')
+    def test_gen_unique_str(self):
+        gen_unique_str = checker.gen_unique_str
+        u = gen_unique_str('')
 
         s = ''
-        if _get_unique_str(s) in s:
-            raise Exception("'{0}' is in '{1}'".format(_get_unique_str(s), s))
+        if gen_unique_str(s) in s:
+            raise Exception("'{0}' is in '{1}'".format(gen_unique_str(s), s))
         s = u
-        if _get_unique_str(s) in s:
-            raise Exception("'{0}' is in '{1}'".format(_get_unique_str(s), s))
+        if gen_unique_str(s) in s:
+            raise Exception("'{0}' is in '{1}'".format(gen_unique_str(s), s))
 
         # benchmark
         start = time.time()
         for i in range(0, 1000):
             # 256 chars
-            _get_unique_str(u * 256)
+            gen_unique_str(u * 256)
 
         assert time.time() - start < 0.5
 
     def test_get_first_word(self):
-        _get_first_word = checker._get_first_word
+        get_first_word = checker.get_first_word
 
         # asserts
-        if _get_first_word('') != ('', -1, 0):
+        if get_first_word('') != ('', -1, 0):
             raise Exception("'{0}' != '{1}'".format('',
-                            _get_first_word('')[0]))
-        if _get_first_word('H') != ('H', 0, 1):
+                            get_first_word('')[0]))
+        if get_first_word('H') != ('H', 0, 1):
             raise Exception("'{0}' != '{1}'".format('H',
-                            _get_first_word('H')[0]))
-        if _get_first_word('HTTP') != ('HTTP', 0, 4):
+                            get_first_word('H')[0]))
+        if get_first_word('HTTP') != ('HTTP', 0, 4):
             raise Exception("'{0}' != '{1}'".format('HTTP',
-                            _get_first_word('HTTP')[0]))
-        if _get_first_word('HTTPProtocol') != ('HTTP', 0, 4):
+                            get_first_word('HTTP')[0]))
+        if get_first_word('HTTPProtocol') != ('HTTP', 0, 4):
             raise Exception("'{0}' != '{1}'".format('HTTPProtocol',
-                            _get_first_word('HTTPProtocol')[0]))
-        if _get_first_word('HttpProtocol') != ('Http', 0, 4):
+                            get_first_word('HTTPProtocol')[0]))
+        if get_first_word('HttpProtocol') != ('Http', 0, 4):
             raise Exception("'{0}' != '{1}'".format('HttpProtocol',
-                            _get_first_word('HttpProtocol')[0]))
-        if _get_first_word('httpProtocol') != ('http', 0, 4):
+                            get_first_word('HttpProtocol')[0]))
+        if get_first_word('httpProtocol') != ('http', 0, 4):
             raise Exception("'{0}' != '{1}'".format('httpProtocol',
-                            _get_first_word('httpProtocol')[0]))
+                            get_first_word('httpProtocol')[0]))
 
         # benchmark
         start = time.time()
         for i in range(0, 1000):
             # 256 chars
-            _get_first_word('Httpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
+            get_first_word('Httpttpttpttpttppttpttpttpttpttppttpttpttpttpttp \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttp')
-            _get_first_word('HttpttPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
+                            ppttpttpttpttptt')
+            get_first_word('HttpttPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTP \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTP')
-            _get_first_word('httpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
+                            PPTTPTTPTTPTTPTT')
+            get_first_word('httpttpttpttpttppttpttpttpttpttppttpttpttpttpttp \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
                             ppttpttpttpttpttppttpttpttpttpttppttpttpttpttptt \
-                            ppttpttpttpttpttp')
-            _get_first_word('HTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
+                            ppttpttpttpttptt')
+            get_first_word('HTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTP \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
                             PPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTTPPTTPTTPTTPTTPTT \
-                            PPTTPTTPTTPTTPTTP')
+                            PPTTPTTPTTPTTPTT')
         assert time.time() - start < 5
 
 
