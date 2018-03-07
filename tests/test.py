@@ -2,8 +2,10 @@ import time
 import sys
 import os
 
-sys.path.append(
-    os.path.dirname(os.path.realpath(__file__)) + "/../file_checker")
+sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
+                             '..',
+                             'file_checker'
+                             ]))
 import util # noqa
 
 
