@@ -5,7 +5,7 @@ from settings import (CHECK_DIRS, FILE_FORMATS, DIR_FORMATS,
                       IGNORE_FILES, IGNORE_DIRS)
 
 
-class FileChecker:
+class FileChecker():
     def __init__(self):
         self.error_list = []
 
