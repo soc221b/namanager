@@ -89,6 +89,188 @@ class TestUtil():
         if errors:
             raise Exception(get_error_string(errors))
 
+    def convert_words_to_case(self, words, case):
+        exp = []
+        if case == 'lower_case':
+            for w in words:
+                exp += [w.lower()]
+        if case == 'upper_case':
+            for w in words:
+                exp += [w.upper()]
+        if case == 'camel_case' or case == 'pascal_case':
+            for w in words:
+                exp += [w.lower()]
+            for i, w in enumerate(exp):
+                if w:
+                    if len(w) > 1:
+                        w = w[0].upper() + w[1:]
+                    else:
+                        w = w[0].upper()
+                exp[i] = w
+            if case == 'camel_case':
+                first_alphabet = 0
+                for i, w in enumerate(exp):
+                    first_alphabet = 0
+                    while (first_alphabet < len(w) and
+                           not w[first_alphabet].isalpha()):
+                        first_alphabet += 1
+                    if first_alphabet < len(w):
+                        exp[i] = w[:first_alphabet] + \
+                                 w[first_alphabet].lower() + \
+                                 w[first_alphabet + 1:]
+                        break
+        return exp
+
+    def test_get_words(self):
+        get_words = util.get_words
+        errors = []
+
+        test_data = {'lower_case': [
+                        '',
+                        '.',
+                        '....',
+                        'http_error&response.for.request-of?soap',
+                        '.http_error&response.for.request-of?soap',
+                        'http_error&response.for.request-of?soap.',
+                        '.http_error&response.for.request-of?soap.',
+                        '....http_error&response.for.request-of?soap',
+                        'http_error&response.for.request-of?soap....',
+                        '....http_error&response.for.request-of?soap....',
+                        ],
+                     'upper_case': [
+                        '',
+                        '.',
+                        '....',
+                        'HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP',
+                        '.HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP',
+                        'HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP.',
+                        '.HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP.',
+                        '....HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP',
+                        'HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP....',
+                        '....HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP....',
+                        ],
+                     'camel_case': [
+                        '',
+                        '.',
+                        '....',
+                        'http_Error&Response.For.Request-Of?Soap',
+                        '.http_Error&Response.For.Request-Of?Soap',
+                        'http_Error&Response.For.Request-Of?Soap.',
+                        '.http_Error&Response.For.Request-Of?Soap.',
+                        '....http_Error&Response.For.Request-Of?Soap',
+                        'http_Error&Response.For.Request-Of?Soap....',
+                        '....http_Error&Response.For.Request-Of?Soap....',
+                        'httpErrorResponseForRequestOfSoap',
+                        '.httpErrorResponseForRequestOfSoap',
+                        'httpErrorResponseForRequestOfSoap.',
+                        '.httpErrorResponseForRequestOfSoap.',
+                        '....httpErrorResponseForRequestOfSoap',
+                        'httpErrorResponseForRequestOfSoap....',
+                        '....httpErrorResponseForRequestOfSoap....',
+                        ],
+                     'pascal_case': [
+                        '',
+                        '.',
+                        '....',
+                        'Http_Error&Response.For.Request-Of?Soap',
+                        '.Http_Error&Response.For.Request-Of?Soap',
+                        'Http_Error&Response.For.Request-Of?Soap.',
+                        '.Http_Error&Response.For.Request-Of?Soap.',
+                        '....Http_Error&Response.For.Request-Of?Soap',
+                        'Http_Error&Response.For.Request-Of?Soap....',
+                        '....Http_Error&Response.For.Request-Of?Soap....',
+                        'HttpErrorResponseForRequestOfSoap',
+                        '.HttpErrorResponseForRequestOfSoap',
+                        'HttpErrorResponseForRequestOfSoap.',
+                        '.HttpErrorResponseForRequestOfSoap.',
+                        '....HttpErrorResponseForRequestOfSoap',
+                        'HttpErrorResponseForRequestOfSoap....',
+                        '....HttpErrorResponseForRequestOfSoap....',
+                        ]
+                     }
+
+        words_only_alphabet = [
+            [],
+            [],
+            [],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
+        ]
+
+        words_non_alphabet = [
+            [],
+            ['.'],
+            ['....'],
+            ['http', '_', 'error', '&', 'response', '.', 'for', '.', 'request',
+             '-', 'of', '?', 'soap'],
+            ['.', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
+             'request', '-', 'of', '?', 'soap'],
+            ['http', '_', 'error', '&', 'response', '.', 'for', '.', 'request',
+             '-', 'of', '?', 'soap', '.'],
+            ['.', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
+             'request', '-', 'of', '?', 'soap', '.'],
+            ['....', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
+             'request', '-', 'of', '?', 'soap'],
+            ['http', '_', 'error', '&', 'response', '.', 'for', '.', 'request',
+             '-', 'of', '?', 'soap', '....'],
+            ['....', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
+             'request', '-', 'of', '?', 'soap', '....'],
+            ['Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap'],
+            ['.', 'Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap'],
+            ['Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap', '.'],
+            ['.', 'Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap',
+             '.'],
+            ['....', 'Http', 'Error', 'Response', 'For', 'Request', 'Of',
+             'Soap'],
+            ['Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap',
+             '....'],
+            ['....', 'Http', 'Error', 'Response', 'For', 'Request', 'Of',
+             'Soap', '....'],
+        ]
+
+        for include_non_alphabet in [True, False]:
+            if include_non_alphabet:
+                with_or_not = "with"
+            else:
+                with_or_not = "without"
+
+            for case, sentences in test_data.items():
+                for i, sent in enumerate(sentences):
+                    if include_non_alphabet:
+                        words = words_non_alphabet[i]
+                    else:
+                        words = words_only_alphabet[i]
+
+                    for sep in ['.', '*', '?', '1', '/', "\\", '^', '$']:
+                        # substitute escape signs
+                        exp = []
+                        for e in words:
+                            exp += [e.replace(r'.', sep)]
+                        exp = self.convert_words_to_case(exp, case)
+                        act = get_words(sent.replace('.', sep),
+                                        include_non_alphabet)
+
+                        if act != exp:
+                            errors += [("The '{0}' {1} non-alphabet in {2}\n"
+                                        "expect: {3}\nactual: {4}").format(
+                                        sent.replace(r'.', sep), with_or_not,
+                                        case, exp, act)]
+
+        if errors:
+            raise Exception(get_error_string(errors))
+
 
 class TestFileChecker():
     def _gen_random_alphabet_string(self, length=30):
