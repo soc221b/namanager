@@ -11,7 +11,7 @@ def gen_unique_str(string):
 def get_first_word(s):
     if s == '':
         return ('', -1, 0)
-    start = 0 if len(s) else -1
+    beg = 0 if len(s) else -1
     end = 1 if len(s) else -1
     while end < len(s):
         # abbr
@@ -26,4 +26,4 @@ def get_first_word(s):
 
         end += 1
 
-    return (s[start:end], start, end)
+    return (s[beg:end], beg, end)

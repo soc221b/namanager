@@ -15,7 +15,7 @@ from file_checker.enums import FORMATS # noqa
 
 
 def get_error_string(errors):
-    err_str = ''
+    err_str = '\n'
     for error in errors:
         err_str += error + '\n\n'
     return err_str
