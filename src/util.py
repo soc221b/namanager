@@ -30,3 +30,26 @@ def get_first_word(s):
         end += 1
 
     return (s[beg:end], beg, end)
+
+
+def get_words(string, include_non_alphabet=True):
+    words = []
+    while string != '':
+        if include_non_alphabet and not string[0].isalpha():
+            first_alphabet = re.search('[a-zA-Z]', string)
+            if first_alphabet:
+                i = string.find(first_alphabet[0])
+                words += [string[:i]]
+                string = string[i:]
+            else:
+                words += [string]
+                string = ''
+        else:
+            tpl = get_first_word(string)
+            if tpl[0]:
+                string = string[tpl[2]:]
+                words += [tpl[0]]
+            else:
+                string = ''
+
+    return [w for w in words if w != '']
