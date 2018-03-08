@@ -10,7 +10,7 @@ def gen_unique_str(string):
 
 def get_first_word(s):
     try:
-        beg = s.find(re.search('[A-Za-z]', s)[0]) if len(s) else -1
+        beg = s.find(re.search('[A-Za-z]', s).group(0)) if len(s) else -1
     except Exception:
         beg = -1
     end = beg + 1 if len(s) else 0
@@ -38,7 +38,7 @@ def get_words(string, include_non_alphabet=True):
         if include_non_alphabet and not string[0].isalpha():
             first_alphabet = re.search('[a-zA-Z]', string)
             if first_alphabet:
-                i = string.find(first_alphabet[0])
+                i = string.find(first_alphabet.group(0))
                 words += [string[:i]]
                 string = string[i:]
             else:
