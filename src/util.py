@@ -9,19 +9,22 @@ def gen_unique_str(string):
 
 
 def get_first_word(s):
-    if s == '':
-        return ('', -1, 0)
-    beg = 0 if len(s) else -1
-    end = 1 if len(s) else -1
+    try:
+        beg = s.find(re.search('[A-Za-z]', s)[0]) if len(s) else -1
+    except Exception:
+        beg = -1
+    end = beg + 1 if len(s) else 0
     while end < len(s):
-        # abbr
+        # e.g., HTTPResponse
         if (s[end - 1].isupper() and
             s[end].isupper() and
            (end + 1 != len(s) and s[end + 1].islower())):
             break
-
-        if (re.search('[^a-z]', s[end]) and
-           not s[end - 1].isupper()):
+        # e.g., HttpResponse or Http_response
+        if s[end - 1].islower() and not s[end].islower():
+            break
+        # e.g., HTTP* or HTTP_
+        if not s[end].isalpha():
             break
 
         end += 1
