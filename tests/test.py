@@ -7,11 +7,11 @@ import itertools
 
 sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
                              '..',
-                             'file_checker'
+                             'src'
                              ]))
 import util # noqa
-from file_checker.file_checker import FileChecker # noqa
-from file_checker.enums import FORMATS # noqa
+from file_checker import FileChecker # noqa
+from enums import FORMATS # noqa
 
 
 def get_error_string(errors):
