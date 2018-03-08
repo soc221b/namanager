@@ -14,17 +14,25 @@ from file_checker.file_checker import FileChecker # noqa
 from file_checker.enums import FORMATS # noqa
 
 
+def get_error_string(errors):
+    err_str = ''
+    for error in errors:
+        err_str += error + '\n\n'
+    return err_str
+
+
 class TestUtil():
     def test_gen_unique_str(self):
         gen_unique_str = util.gen_unique_str
+        errors = []
         u = gen_unique_str('')
 
         s = ''
         if gen_unique_str(s) in s:
-            raise Exception("'{0}' is in '{1}'".format(gen_unique_str(s), s))
+            errors += ["'{0}' is in '{1}'".format(gen_unique_str(s), s)]
         s = u
         if gen_unique_str(s) in s:
-            raise Exception("'{0}' is in '{1}'".format(gen_unique_str(s), s))
+            errors += ["'{0}' is in '{1}'".format(gen_unique_str(s), s)]
 
         # benchmark
         start = time.time()
@@ -32,10 +40,15 @@ class TestUtil():
             # 256 chars
             gen_unique_str(u * 256)
 
-        assert time.time() - start < 0.5
+        if time.time() - start > 0.5:
+            errors += ['The algorithm is not efficient.']
+
+        if errors:
+            raise Exception(get_error_string(errors))
 
     def test_get_first_word(self):
         get_first_word = util.get_first_word
+        errors = []
 
         # asserts
         words = {'': ('', -1, 0),
@@ -49,9 +62,8 @@ class TestUtil():
         for s, expect in words.items():
             actual = get_first_word(s)
             if expect != actual:
-                raise Exception("expect is '{0}', actual is '{1}'".format(
-                                expect,
-                                actual))
+                errors += ["expect is '{0}', actual is '{1}'".format(expect,
+                           actual)]
 
         # benchmark
         start = time.time()
@@ -61,7 +73,11 @@ class TestUtil():
             get_first_word('Word' * 64)
             get_first_word('l' * 256)
             get_first_word('U' * 256)
-        assert time.time() - start < 5
+        if time.time() - start > 5:
+            errors += ['The algorithm is not efficient.']
+
+        if errors:
+            raise Exception(get_error_string(errors))
 
 
 class TestFileChecker():
@@ -88,21 +104,45 @@ class TestFileChecker():
 
     def test_convert_sep(self):
         fc = FileChecker()
+        errors = []
 
         # boundary
         for sep in self._gen_all_possible_pair(FORMATS['sep']):
-            assert '' == fc.convert_sep('', list(sep))
+            act = fc.convert_sep('', list(sep))
+            if '' != act:
+                errors += ["'' != {0}".format(act)]
         for s in ['_', '_a', 'a_', 'a_a', '-', '-a', 'a-', 'a-a']:
-            assert s == fc.convert_sep(s, [])
+            act = fc.convert_sep(s, [])
+            if s != act:
+                errors += ["{0} != {1}".format(s, act)]
 
         # dash_to_underscore
-        assert '_' == fc.convert_sep('-', ['dash_to_underscore'])
-        assert '_a' == fc.convert_sep('-a', ['dash_to_underscore'])
-        assert 'a_' == fc.convert_sep('a-', ['dash_to_underscore'])
-        assert 'a_a' == fc.convert_sep('a-a', ['dash_to_underscore'])
+        act = fc.convert_sep('-', ['dash_to_underscore'])
+        if '_' != act:
+            errors += ["expect '_' != actual '{0}'".format(act)]
+        act = fc.convert_sep('-a', ['dash_to_underscore'])
+        if '_a' != act:
+            errors += ["expect '_a' != actual '{0}'".format(act)]
+        act = fc.convert_sep('a-', ['dash_to_underscore'])
+        if 'a_' != act:
+            errors += ["expect 'a_' != actual '{0}'".format(act)]
+        act = fc.convert_sep('a-a', ['dash_to_underscore'])
+        if 'a_a' != act:
+            errors += ["expect 'a_a' != actual '{0}'".format(act)]
 
         # underscore_to_dash
-        assert '-' == fc.convert_sep('_', ['underscore_to_dash'])
-        assert '-a' == fc.convert_sep('_a', ['underscore_to_dash'])
-        assert 'a-' == fc.convert_sep('a_', ['underscore_to_dash'])
-        assert 'a-a' == fc.convert_sep('a_a', ['underscore_to_dash'])
+        act = fc.convert_sep('_', ['underscore_to_dash'])
+        if '-' != act:
+            errors += ["expect '-' != actual '{0}'".format(act)]
+        act = fc.convert_sep('_a', ['underscore_to_dash'])
+        if '-a' != act:
+            errors += ["expect '-a' != actual '{0}'".format(act)]
+        act = fc.convert_sep('a_', ['underscore_to_dash'])
+        if 'a-' != act:
+            errors += ["expect 'a-' != actual '{0}'".format(act)]
+        act = fc.convert_sep('a_a', ['underscore_to_dash'])
+        if 'a-a' != act:
+            errors += ["expect 'a-a' != actual '{0}'".format(act)]
+
+        if errors:
+            raise Exception(get_error_string(errors))
