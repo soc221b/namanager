@@ -57,6 +57,16 @@ class TestUtil():
                  'HTTPProtocol': ('HTTP', 0, 4),
                  'HttpProtocol': ('Http', 0, 4),
                  'httpProtocol': ('http', 0, 4),
+                 '*H': ('H', 1, 2),
+                 '*HTTP': ('HTTP', 1, 5),
+                 '*HTTPProtocol': ('HTTP', 1, 5),
+                 '*HttpProtocol': ('Http', 1, 5),
+                 '*httpProtocol': ('http', 1, 5),
+                 'H*': ('H', 0, 1),
+                 'HTTP*': ('HTTP', 0, 4),
+                 'HTTP*Protocol': ('HTTP', 0, 4),
+                 'Http*Protocol': ('Http', 0, 4),
+                 'http*Protocol': ('http', 0, 4),
                  }
 
         for s, expect in words.items():
