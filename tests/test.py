@@ -52,10 +52,10 @@ class TestUtil():
 
         s = ''
         if gen_unique_str(s) in s:
-            errors += ["'{0}' is in '{1}'".format(gen_unique_str(s), s)]
+            errors.append("'{0}' is in '{1}'".format(gen_unique_str(s), s))
         s = u
         if gen_unique_str(s) in s:
-            errors += ["'{0}' is in '{1}'".format(gen_unique_str(s), s)]
+            errors.append("'{0}' is in '{1}'".format(gen_unique_str(s), s))
 
         # benchmark
         start = time.time()
@@ -64,7 +64,7 @@ class TestUtil():
             gen_unique_str(u * 256)
 
         if time.time() - start > 0.5:
-            errors += ['The algorithm is not efficient.']
+            errors.append('The algorithm is not efficient.')
 
         assert errors == [], Exception(get_error_string(errors))
 
@@ -94,8 +94,8 @@ class TestUtil():
         for s, expect in words.items():
             actual = get_first_word(s)
             if expect != actual:
-                errors += ["expect is '{0}', actual is '{1}'".format(expect,
-                           actual)]
+                errors.append("expect is '{0}', actual is '{1}'".format(expect,
+                              actual))
 
         # benchmark
         start = time.time()
@@ -106,7 +106,7 @@ class TestUtil():
             get_first_word('l' * 256)
             get_first_word('U' * 256)
         if time.time() - start > 5:
-            errors += ['The algorithm is not efficient.']
+            errors.append('The algorithm is not efficient.')
 
         assert errors == [], Exception(get_error_string(errors))
 
@@ -284,10 +284,12 @@ class TestUtil():
                                         include_non_letter)
 
                         if act != exp:
-                            errors += [("The '{0}' {1} non-alphabet in {2}\n"
-                                        "expect: {3}\nactual: {4}").format(
-                                        sent.replace(r'.', sep), with_or_not,
-                                        case, exp, act)]
+                            errors.append(("The '{0}' {1} non-alphabet in {2}"
+                                           "\nexpect: {3}"
+                                           "\nactual: {4}").format(
+                                               sent.replace(r'.', sep),
+                                               with_or_not, case, exp,
+                                               act))
 
         assert errors == [], Exception(get_error_string(errors))
 
@@ -301,38 +303,38 @@ class TestFileChecker():
         for sep in gen_all_possible_pair(FORMATS['sep']):
             act = fc.convert_sep('', list(sep))
             if '' != act:
-                errors += ["'' != {0}".format(act)]
+                errors.append("'' != {0}".format(act))
         for s in ['_', '_a', 'a_', 'a_a', '-', '-a', 'a-', 'a-a']:
             act = fc.convert_sep(s, [])
             if s != act:
-                errors += ["{0} != {1}".format(s, act)]
+                errors.append("{0} != {1}".format(s, act))
 
         # dash_to_underscore
         act = fc.convert_sep('-', ['dash_to_underscore'])
         if '_' != act:
-            errors += ["expect '_' != actual '{0}'".format(act)]
+            errors.append("expect '_' != actual '{0}'".format(act))
         act = fc.convert_sep('-a', ['dash_to_underscore'])
         if '_a' != act:
-            errors += ["expect '_a' != actual '{0}'".format(act)]
+            errors.append("expect '_a' != actual '{0}'".format(act))
         act = fc.convert_sep('a-', ['dash_to_underscore'])
         if 'a_' != act:
-            errors += ["expect 'a_' != actual '{0}'".format(act)]
+            errors.append("expect 'a_' != actual '{0}'".format(act))
         act = fc.convert_sep('a-a', ['dash_to_underscore'])
         if 'a_a' != act:
-            errors += ["expect 'a_a' != actual '{0}'".format(act)]
+            errors.append("expect 'a_a' != actual '{0}'".format(act))
 
         # underscore_to_dash
         act = fc.convert_sep('_', ['underscore_to_dash'])
         if '-' != act:
-            errors += ["expect '-' != actual '{0}'".format(act)]
+            errors.append("expect '-' != actual '{0}'".format(act))
         act = fc.convert_sep('_a', ['underscore_to_dash'])
         if '-a' != act:
-            errors += ["expect '-a' != actual '{0}'".format(act)]
+            errors.append("expect '-a' != actual '{0}'".format(act))
         act = fc.convert_sep('a_', ['underscore_to_dash'])
         if 'a-' != act:
-            errors += ["expect 'a-' != actual '{0}'".format(act)]
+            errors.append("expect 'a-' != actual '{0}'".format(act))
         act = fc.convert_sep('a_a', ['underscore_to_dash'])
         if 'a-a' != act:
-            errors += ["expect 'a-a' != actual '{0}'".format(act)]
+            errors.append("expect 'a-a' != actual '{0}'".format(act))
 
         assert errors == [], Exception(get_error_string(errors))
