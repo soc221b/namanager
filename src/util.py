@@ -39,16 +39,16 @@ def get_words(string, include_non_letter=True):
             first_letter = re.search('[a-zA-Z]', string)
             if first_letter:
                 i = string.find(first_letter.group(0))
-                words += [string[:i]]
+                words.append(string[:i])
                 string = string[i:]
             else:
-                words += [string]
+                words.append(string)
                 string = ''
         else:
             tpl = get_first_word(string)
             if tpl[0]:
                 string = string[tpl[2]:]
-                words += [tpl[0]]
+                words.append(tpl[0])
             else:
                 string = ''
 
