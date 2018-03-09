@@ -90,7 +90,7 @@ def convert_words_to_case(words, case):
             ['_*&h', 'ttp', 'protocol', '#$%']
     """
 
-    exp = []
+    converted_words = []
 
     if case == 'camel_case':
         first_word_occured = False
@@ -99,10 +99,10 @@ def convert_words_to_case(words, case):
             if not first_word_occured and word[0].isalpha():
                 word = word[0].lower() + word[1:]
                 first_word_occured = True
-            exp.append(word)
+            converted_words.append(word)
 
     elif case in ['upper_case', 'lower_case', 'pascal_case']:
         for w in words:
-            exp.append(convert_word_to_case(w, case))
+            converted_words.append(convert_word_to_case(w, case))
 
-    return exp
+    return converted_words
