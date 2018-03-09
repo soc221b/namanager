@@ -131,16 +131,16 @@ class TestUtil():
                 exp[i] = w
             # convert first letter to lowercase
             if case == 'camel_case':
-                first_alphabet = 0
+                first_letter = 0
                 for i, w in enumerate(exp):
-                    first_alphabet = 0
-                    while (first_alphabet < len(w) and
-                           not w[first_alphabet].isalpha()):
-                        first_alphabet += 1
-                    if first_alphabet < len(w):
-                        exp[i] = w[:first_alphabet] + \
-                                 w[first_alphabet].lower() + \
-                                 w[first_alphabet + 1:]
+                    first_letter = 0
+                    while (first_letter < len(w) and
+                           not w[first_letter].isalpha()):
+                        first_letter += 1
+                    if first_letter < len(w):
+                        exp[i] = w[:first_letter] + \
+                                 w[first_letter].lower() + \
+                                 w[first_letter + 1:]
                         break
         return exp
 
@@ -212,7 +212,7 @@ class TestUtil():
                         ]
                      }
 
-        words_only_alphabet = [
+        words_only = [
             [],
             [],
             [],
@@ -232,7 +232,7 @@ class TestUtil():
             ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
         ]
 
-        words_non_alphabet = [
+        words_with_other_char = [
             [],
             ['.'],
             ['....'],
@@ -263,18 +263,18 @@ class TestUtil():
              'Soap', '....'],
         ]
 
-        for include_non_alphabet in [True, False]:
-            if include_non_alphabet:
+        for include_non_letter in [True, False]:
+            if include_non_letter:
                 with_or_not = "with"
             else:
                 with_or_not = "without"
 
             for case, sentences in test_data.items():
                 for i, sent in enumerate(sentences):
-                    if include_non_alphabet:
-                        words = words_non_alphabet[i]
+                    if include_non_letter:
+                        words = words_with_other_char[i]
                     else:
-                        words = words_only_alphabet[i]
+                        words = words_only[i]
 
                     for sep in ['.', '*', '?', '1', '/', "\\", '^', '$']:
                         # substitute escape signs
@@ -283,10 +283,10 @@ class TestUtil():
                             exp += [e.replace(r'.', sep)]
                         exp = self.convert_words_to_case(exp, case)
                         act = get_words(sent.replace('.', sep),
-                                        include_non_alphabet)
+                                        include_non_letter)
 
                         if act != exp:
-                            errors.push([("The '{0}' {1} non-alphabet in {2}\n"
+                            errors.push([("The '{0}' {1} non-letter in {2}\n"
                                           "expect: {3}\nactual: {4}").format(
                                           sent.replace(r'.', sep), with_or_not,
                                           case, exp, act)])

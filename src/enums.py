@@ -37,10 +37,10 @@
 #   dash_to_underscore        Get_HTTPResponse_Code
 #   underscore_to_dash        Get-HTTPResponse-Code
 
-FORMATS = {'alphabet': ['upper_case',
-                        'lower_case',
-                        'camel_case',
-                        'pascal_case'],
+FORMATS = {'letter_case': ['upper_case',
+                           'lower_case',
+                           'camel_case',
+                           'pascal_case'],
 
            'sep': ['dash_to_underscore',
                    'underscore_to_dash'],

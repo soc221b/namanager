@@ -32,13 +32,13 @@ def get_first_word(s):
     return (s[beg:end], beg, end)
 
 
-def get_words(string, include_non_alphabet=True):
+def get_words(string, include_non_letter=True):
     words = []
     while string != '':
-        if include_non_alphabet and not string[0].isalpha():
-            first_alphabet = re.search('[a-zA-Z]', string)
-            if first_alphabet:
-                i = string.find(first_alphabet.group(0))
+        if include_non_letter and not string[0].isalpha():
+            first_letter = re.search('[a-zA-Z]', string)
+            if first_letter:
+                i = string.find(first_letter.group(0))
                 words += [string[:i]]
                 string = string[i:]
             else:
@@ -55,7 +55,7 @@ def get_words(string, include_non_alphabet=True):
     return [w for w in words if w != '']
 
 
-def convert_alphabet(string, case):
+def convert_letters_to_case(string, case):
     try:
         if case == 'upper_case':
             string = string.upper()
