@@ -121,12 +121,15 @@ class TestUtil():
             for w in words:
                 exp += [w.upper()]
         if case == 'camel_case' or case == 'pascal_case':
+            # convert all words to lowercase
             for w in words:
                 exp += [w.lower()]
+            # convert all first char of words to uppercase
             for i, w in enumerate(exp):
                 if w:
                     w = w[0].upper() + w[1:]
                 exp[i] = w
+            # convert first letter to lowercase
             if case == 'camel_case':
                 first_alphabet = 0
                 for i, w in enumerate(exp):
