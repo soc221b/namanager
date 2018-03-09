@@ -9,41 +9,19 @@ class FileChecker():
     def __init__(self):
         self.error_list = []
 
-    def is_file_ignored(self, filename):
-        for pattern in IGNORE_FILES:
-            if re.match(pattern, filename):
+    def is_string_matching(self, string, re_match_list=[]):
+        for pattern in re_match_list:
+            if re.match(pattern, string):
                 return True
         return False
 
-    def is_dir_ignored(self, dirname):
-        for pattern in IGNORE_DIRS:
-            if re.match(pattern, dirname):
-                return True
-        return False
-
-    def convert_sep(self, name, formats_):
-        for f in formats_:
-            if f == 'dash_to_underscore':
-                name = name.replace('-', '_')
-            if f == 'underscore_to_dash':
-                name = name.replace('_', '-')
-        return name
-
-    def convert_alphabet(self, name, formats_):
-        try:
-            for f in formats_:
-                if f == 'upper_case':
-                    name = name.upper()
-                if f == 'lower_case':
-                    name = name.lower()
-                if f == 'camel_case':
-                    pass
-                if f == 'pascal_case':
-                    pass
-        except Exception:
-            pass
-
-        return name
+    def convert_sep(self, string, cases):
+        for case in cases:
+            if case == 'dash_to_underscore':
+                string = string.replace('-', '_')
+            if case == 'underscore_to_dash':
+                string = string.replace('_', '-')
+        return string
 
     def _convert_filename(self, filename):
         pass
