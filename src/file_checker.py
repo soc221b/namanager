@@ -21,28 +21,28 @@ class FileChecker():
                 return True
         return False
 
-    def convert_sep(self, name, formats_):
-        for f in formats_:
-            if f == 'dash_to_underscore':
-                name = name.replace('-', '_')
-            if f == 'underscore_to_dash':
-                name = name.replace('_', '-')
-        return name
+    def convert_sep(self, string, cases):
+        for case in cases:
+            if case == 'dash_to_underscore':
+                string = string.replace('-', '_')
+            if case == 'underscore_to_dash':
+                string = string.replace('_', '-')
+        return string
 
-    def convert_alphabet(self, name, format):
+    def convert_alphabet(self, string, case):
         try:
-            if format == 'upper_case':
-                name = name.upper()
-            if format == 'lower_case':
-                name = name.lower()
-            if format == 'camel_case':
+            if case == 'upper_case':
+                string = string.upper()
+            if case == 'lower_case':
+                string = string.lower()
+            if case == 'camel_case':
                 pass
-            if format == 'pascal_case':
+            if case == 'pascal_case':
                 pass
         except Exception:
             pass
 
-        return name
+        return string
 
     def _convert_filename(self, filename):
         pass
