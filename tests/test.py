@@ -21,6 +21,29 @@ def get_error_string(errors):
     return err_str
 
 
+def gen_random_alphabet_string(length=30):
+    s = ''
+    for i in range(0, length):
+        s += random.choice(string.ascii_letters)
+
+    return s
+
+
+def gen_all_possible_pair(iterable, beg=0, end=-1):
+    """
+    :param iterable:
+    :type iterable: list, str or iterable types
+    :return: tuple -
+    """
+    if end == -1:
+        end = len(iterable)
+    res = []
+    for i in range(beg, end):
+        for comb in itertools.combinations(iterable, i + 1):
+            res += itertools.permutations(comb)
+    return res
+
+
 class TestUtil():
     def test_gen_unique_str(self):
         gen_unique_str = util.gen_unique_str
@@ -273,33 +296,12 @@ class TestUtil():
 
 
 class TestFileChecker():
-    def _gen_random_alphabet_string(self, length=30):
-        s = ''
-        for i in range(0, length):
-            s += random.choice(string.ascii_letters)
-
-        return s
-
-    def _gen_all_possible_pair(self, iterable, beg=0, end=-1):
-        """
-        :param iterable:
-        :type iterable: list, str or iterable types
-        :return: tuple -
-        """
-        if end == -1:
-            end = len(iterable)
-        res = []
-        for i in range(beg, end):
-            for comb in itertools.combinations(iterable, i + 1):
-                res += itertools.permutations(comb)
-        return res
-
     def test_convert_sep(self):
         fc = FileChecker()
         errors = []
 
         # boundary
-        for sep in self._gen_all_possible_pair(FORMATS['sep']):
+        for sep in gen_all_possible_pair(FORMATS['sep']):
             act = fc.convert_sep('', list(sep))
             if '' != act:
                 errors += ["'' != {0}".format(act)]

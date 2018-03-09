@@ -53,3 +53,19 @@ def get_words(string, include_non_alphabet=True):
                 string = ''
 
     return [w for w in words if w != '']
+
+
+def convert_alphabet(string, case):
+    try:
+        if case == 'upper_case':
+            string = string.upper()
+        if case == 'lower_case':
+            string = string.lower()
+        if case == 'camel_case':
+            pass
+        if case == 'pascal_case':
+            pass
+    except Exception:
+        pass
+
+    return string

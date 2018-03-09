@@ -23,21 +23,6 @@ class FileChecker():
                 string = string.replace('_', '-')
         return string
 
-    def convert_alphabet(self, string, case):
-        try:
-            if case == 'upper_case':
-                string = string.upper()
-            if case == 'lower_case':
-                string = string.lower()
-            if case == 'camel_case':
-                pass
-            if case == 'pascal_case':
-                pass
-        except Exception:
-            pass
-
-        return string
-
     def _convert_filename(self, filename):
         pass
 
