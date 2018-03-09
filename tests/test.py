@@ -262,6 +262,76 @@ class TestUtil():
 
         assert errors == [], Exception(get_error_string(errors))
 
+    def test_convert_sentence_to_case(self):
+        """
+        This test is assumed that
+        convert_words will be called indirectly by convert_sentence
+        """
+
+        convert_sentence_to_case = util.convert_sentence_to_case
+        errors = []
+
+        # boundary
+        act = convert_sentence_to_case('', [])
+        if '' != act:
+            errors.append("'' != '{0}'".format(act))
+        for case in gen_all_possible_pair(FORMATS['letter_case']):
+            if '' != convert_sentence_to_case('', list(case)):
+                errors.append("'' != {0}".format(
+                              convert_sentence_to_case('', list(case))))
+
+        # with any separator
+        expect = {'lower_case': 'http_error&response*for.request-of?soap',
+                  'upper_case': 'HTTP_ERROR&RESPONSE*FOR.REQUEST-OF?SOAP',
+                  'camel_case': 'http_Error&Response*For.Request-Of?Soap',
+                  'pascal_case': 'Http_Error&Response*For.Request-Of?Soap',
+                  }
+
+        strings = ['http_error&response*for.request-of?soap',
+                   'HTTP_ERROR&RESPONSE*FOR.REQUEST-OF?SOAP',
+                   'http_Error&Response*For.Request-Of?Soap',
+                   'Http_Error&Response*For.Request-Of?Soap',
+                   ]
+
+        for case in gen_all_possible_pair(FORMATS['letter_case']):
+            for s in strings:
+                exp = expect[case[-1]]
+                act = convert_sentence_to_case(s, case[-1])
+                if exp != act:
+                    errors.append("In format: {0} within any separator \
+                                  \nexpect: {1} !=\nactual: {2}".format(
+                                  case, exp, act))
+
+        # without any separator
+        # httperrorresponseforrequestofsoap
+        expect = {'lower_case': 'httperrorresponseforrequestofsoap',
+                  'upper_case': 'HTTPERRORRESPONSEFORREQUESTOFSOAP',
+                  'camel_case': 'httpErrorResponseForRequestOfSoap',
+                  'pascal_case': 'HttpErrorResponseForRequestOfSoap',
+                  }
+
+        strings = ['httpErrorResponseForRequestOfSoap',
+                   'HttpErrorResponseForRequestOfSoap',
+                   ]
+
+        for case in gen_all_possible_pair(FORMATS['letter_case']):
+            for s in strings:
+                exp = expect[case[-1]]
+                act = convert_sentence_to_case(s, case[-1])
+                if exp != act:
+                    errors.append("In format: {0} without any separator \
+                                  \nexpect: {1} !=\nactual: {2}".format(
+                                  case, exp, act))
+        assert errors == [], Exception(get_error_string(errors))
+        # upper_case
+        # lower_case
+        # camel_case
+        # pascal_case
+
+        # 'HTTP_Error_Response_For_Request_Of_Soap',
+        # 'Http_ERROR_Response_For_Request_Of_Soap',
+        # 'Http_Error_Response_For_Request_of_SOAP'
+
 
 class TestFileChecker():
     def test_convert_sep(self):

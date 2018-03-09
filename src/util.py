@@ -75,6 +75,11 @@ def convert_word_to_case(word, case):
     return word
 
 
+def convert_sentence_to_case(sentence, case):
+    words = get_words(sentence)
+    return ''.join(convert_words_to_case(words, case))
+
+
 def convert_words_to_case(words, case):
     """
     This function assuming that
