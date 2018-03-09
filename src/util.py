@@ -55,12 +55,12 @@ def get_words(string, include_non_letter=True):
     return [w for w in words if w != '']
 
 
-def convert_letters_to_case(string, case):
+def convert_word_to_case(word, case):
     try:
         if case == 'upper_case':
-            string = string.upper()
+            word = word.upper()
         if case == 'lower_case':
-            string = string.lower()
+            word = word.lower()
         if case == 'camel_case':
             pass
         if case == 'pascal_case':
@@ -68,4 +68,4 @@ def convert_letters_to_case(string, case):
     except Exception:
         pass
 
-    return string
+    return word
