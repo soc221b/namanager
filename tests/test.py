@@ -111,6 +111,16 @@ class TestUtil():
         assert errors == [], Exception(get_error_string(errors))
 
     def convert_words_to_case(self, words, case):
+        """
+        This function assuming that
+        all words are well separated and
+        not included empty string:
+            Ok:
+                ['_*&', 'Http', 'protocol', '#$%']
+            Wrong:
+                ['_*&h', 'ttp', 'protocol', '#$%']
+        """
+
         exp = []
         if case == 'lower_case':
             for w in words:
@@ -131,14 +141,8 @@ class TestUtil():
             if case == 'camel_case':
                 first_letter = 0
                 for i, w in enumerate(exp):
-                    first_letter = 0
-                    while (first_letter < len(w) and
-                           not w[first_letter].isalpha()):
-                        first_letter += 1
-                    if first_letter < len(w):
-                        exp[i] = w[:first_letter] + \
-                                 w[first_letter].lower() + \
-                                 w[first_letter + 1:]
+                    if w[0].isalpha():
+                        exp[i] = w[0].lower() + w[1:]
                         break
         return exp
 
