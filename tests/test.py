@@ -66,8 +66,7 @@ class TestUtil():
         if time.time() - start > 0.5:
             errors.push(['The algorithm is not efficient.'])
 
-        if errors:
-            raise Exception(get_error_string(errors))
+        assert errors == [], Exception(get_error_string(errors))
 
     def test_get_first_word(self):
         get_first_word = util.get_first_word
@@ -109,8 +108,7 @@ class TestUtil():
         if time.time() - start > 5:
             errors.push(['The algorithm is not efficient.'])
 
-        if errors:
-            raise Exception(get_error_string(errors))
+        assert errors == [], Exception(get_error_string(errors))
 
     def convert_words_to_case(self, words, case):
         exp = []
@@ -291,8 +289,7 @@ class TestUtil():
                                           sent.replace(r'.', sep), with_or_not,
                                           case, exp, act)])
 
-        if errors:
-            raise Exception(get_error_string(errors))
+        assert errors == [], Exception(get_error_string(errors))
 
 
 class TestFileChecker():
@@ -338,5 +335,4 @@ class TestFileChecker():
         if 'a-a' != act:
             errors.push(["expect 'a-a' != actual '{0}'".format(act)])
 
-        if errors:
-            raise Exception(get_error_string(errors))
+        assert errors == [], Exception(get_error_string(errors))
