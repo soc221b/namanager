@@ -125,10 +125,7 @@ class TestUtil():
                 exp += [w.lower()]
             for i, w in enumerate(exp):
                 if w:
-                    if len(w) > 1:
-                        w = w[0].upper() + w[1:]
-                    else:
-                        w = w[0].upper()
+                    w = w[0].upper() + w[1:]
                 exp[i] = w
             if case == 'camel_case':
                 first_alphabet = 0
