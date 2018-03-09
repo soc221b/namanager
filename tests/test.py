@@ -139,7 +139,6 @@ class TestUtil():
                 exp[i] = w
             # convert first letter to lowercase
             if case == 'camel_case':
-                first_letter = 0
                 for i, w in enumerate(exp):
                     if w[0].isalpha():
                         exp[i] = w[0].lower() + w[1:]
