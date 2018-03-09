@@ -7,10 +7,11 @@ import itertools
 
 sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
                              '..',
-                             'file_checker'
+                             'src'
                              ]))
-
-import file_checker # noqa
+import util # noqa
+from file_checker import FileChecker # noqa
+from enums import FORMATS # noqa
 
 
 def get_error_string(errors):
@@ -45,7 +46,7 @@ def gen_all_possible_pair(iterable, beg=0, end=-1):
 
 class TestUtil():
     def test_gen_unique_str(self):
-        gen_unique_str = file_checker.util.gen_unique_str
+        gen_unique_str = util.gen_unique_str
         errors = []
         u = gen_unique_str('')
 
@@ -68,7 +69,7 @@ class TestUtil():
         assert errors == [], Exception(get_error_string(errors))
 
     def test_get_first_word(self):
-        get_first_word = file_checker.util.get_first_word
+        get_first_word = util.get_first_word
         errors = []
 
         # asserts
@@ -110,8 +111,8 @@ class TestUtil():
         assert errors == [], Exception(get_error_string(errors))
 
     def test_get_words(self):
-        get_words = file_checker.util.get_words
-        convert_words_to_case = file_checker.util.convert_words_to_case
+        get_words = util.get_words
+        convert_words_to_case = util.convert_words_to_case
         errors = []
 
         test_data = {'lower_case': [
@@ -267,14 +268,14 @@ class TestUtil():
         convert_words will be called indirectly by convert_sentence
         """
 
-        convert_sentence_to_case = file_checker.util.convert_sentence_to_case
+        convert_sentence_to_case = util.convert_sentence_to_case
         errors = []
 
         # boundary
         act = convert_sentence_to_case('', [])
         if '' != act:
             errors.append("'' != '{0}'".format(act))
-        for case in gen_all_possible_pair(file_checker.enums.FORMATS['letter_case']):
+        for case in gen_all_possible_pair(FORMATS['letter_case']):
             if '' != convert_sentence_to_case('', list(case)):
                 errors.append("'' != {0}".format(
                               convert_sentence_to_case('', list(case))))
@@ -292,7 +293,7 @@ class TestUtil():
                    'Http_Error&Response*For.Request-Of?Soap',
                    ]
 
-        for case in gen_all_possible_pair(file_checker.enums.FORMATS['letter_case']):
+        for case in gen_all_possible_pair(FORMATS['letter_case']):
             for s in strings:
                 exp = expect[case[-1]]
                 act = convert_sentence_to_case(s, case[-1])
@@ -313,7 +314,7 @@ class TestUtil():
                    'HttpErrorResponseForRequestOfSoap',
                    ]
 
-        for case in gen_all_possible_pair(file_checker.enums.FORMATS['letter_case']):
+        for case in gen_all_possible_pair(FORMATS['letter_case']):
             for s in strings:
                 exp = expect[case[-1]]
                 act = convert_sentence_to_case(s, case[-1])
@@ -334,11 +335,11 @@ class TestUtil():
 
 class TestFileChecker():
     def test_convert_sep(self):
-        fc = file_checker.FileChecker()
+        fc = FileChecker()
         errors = []
 
         # boundary
-        for sep in gen_all_possible_pair(file_checker.enums.FORMATS['sep']):
+        for sep in gen_all_possible_pair(FORMATS['sep']):
             act = fc.convert_sep('', list(sep))
             if '' != act:
                 errors.append("'' != {0}".format(act))
