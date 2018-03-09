@@ -56,15 +56,19 @@ def get_words(string, include_non_letter=True):
 
 
 def convert_word_to_case(word, case):
+    """
+    Only support pascal case,
+    because camel case is sensible for multiple words,
+    user can just change first letter to lowercase.
+    """
+
     try:
         if case == 'upper_case':
             word = word.upper()
         if case == 'lower_case':
             word = word.lower()
-        if case == 'camel_case':
-            pass
         if case == 'pascal_case':
-            pass
+            word = word[0].upper() + word[1:].lower()
     except Exception:
         pass
 
@@ -83,25 +87,18 @@ def convert_words_to_case(words, case):
     """
 
     exp = []
-    if case == 'lower_case':
+
+    if case == 'camel_case':
+        first_word_occured = False
         for w in words:
-            exp += [w.lower()]
-    if case == 'upper_case':
+            word = convert_word_to_case(w, 'pascal_case')
+            if not first_word_occured and word[0].isalpha():
+                word = word[0].lower() + word[1:]
+                first_word_occured = True
+            exp.append(word)
+
+    elif case in ['upper_case', 'lower_case', 'pascal_case']:
         for w in words:
-            exp += [w.upper()]
-    if case == 'camel_case' or case == 'pascal_case':
-        # convert all words to lowercase
-        for w in words:
-            exp += [w.lower()]
-        # convert all first char of words to uppercase
-        for i, w in enumerate(exp):
-            if w:
-                w = w[0].upper() + w[1:]
-            exp[i] = w
-        # convert first letter to lowercase
-        if case == 'camel_case':
-            for i, w in enumerate(exp):
-                if w[0].isalpha():
-                    exp[i] = w[0].lower() + w[1:]
-                    break
+            exp.append(convert_word_to_case(w, case))
+
     return exp
