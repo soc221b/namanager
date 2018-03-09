@@ -9,15 +9,9 @@ class FileChecker():
     def __init__(self):
         self.error_list = []
 
-    def is_file_ignored(self, filename):
-        for pattern in IGNORE_FILES:
-            if re.match(pattern, filename):
-                return True
-        return False
-
-    def is_dir_ignored(self, dirname):
-        for pattern in IGNORE_DIRS:
-            if re.match(pattern, dirname):
+    def is_string_matching(self, string, re_match_list=[]):
+        for pattern in re_match_list:
+            if re.match(pattern, string):
                 return True
         return False
 
