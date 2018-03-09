@@ -69,3 +69,39 @@ def convert_word_to_case(word, case):
         pass
 
     return word
+
+
+def convert_words_to_case(words, case):
+    """
+    This function assuming that
+    all words are well separated and
+    not included empty string:
+        Ok:
+            ['_*&', 'Http', 'protocol', '#$%']
+        Wrong:
+            ['_*&h', 'ttp', 'protocol', '#$%']
+    """
+
+    exp = []
+    if case == 'lower_case':
+        for w in words:
+            exp += [w.lower()]
+    if case == 'upper_case':
+        for w in words:
+            exp += [w.upper()]
+    if case == 'camel_case' or case == 'pascal_case':
+        # convert all words to lowercase
+        for w in words:
+            exp += [w.lower()]
+        # convert all first char of words to uppercase
+        for i, w in enumerate(exp):
+            if w:
+                w = w[0].upper() + w[1:]
+            exp[i] = w
+        # convert first letter to lowercase
+        if case == 'camel_case':
+            for i, w in enumerate(exp):
+                if w[0].isalpha():
+                    exp[i] = w[0].lower() + w[1:]
+                    break
+    return exp

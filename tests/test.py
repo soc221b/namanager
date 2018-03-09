@@ -110,43 +110,9 @@ class TestUtil():
 
         assert errors == [], Exception(get_error_string(errors))
 
-    def convert_words_to_case(self, words, case):
-        """
-        This function assuming that
-        all words are well separated and
-        not included empty string:
-            Ok:
-                ['_*&', 'Http', 'protocol', '#$%']
-            Wrong:
-                ['_*&h', 'ttp', 'protocol', '#$%']
-        """
-
-        exp = []
-        if case == 'lower_case':
-            for w in words:
-                exp += [w.lower()]
-        if case == 'upper_case':
-            for w in words:
-                exp += [w.upper()]
-        if case == 'camel_case' or case == 'pascal_case':
-            # convert all words to lowercase
-            for w in words:
-                exp += [w.lower()]
-            # convert all first char of words to uppercase
-            for i, w in enumerate(exp):
-                if w:
-                    w = w[0].upper() + w[1:]
-                exp[i] = w
-            # convert first letter to lowercase
-            if case == 'camel_case':
-                for i, w in enumerate(exp):
-                    if w[0].isalpha():
-                        exp[i] = w[0].lower() + w[1:]
-                        break
-        return exp
-
     def test_get_words(self):
         get_words = util.get_words
+        convert_words_to_case = util.convert_words_to_case
         errors = []
 
         test_data = {'lower_case': [
@@ -282,7 +248,7 @@ class TestUtil():
                         exp = []
                         for e in words:
                             exp += [e.replace(r'.', sep)]
-                        exp = self.convert_words_to_case(exp, case)
+                        exp = convert_words_to_case(exp, case)
                         act = get_words(sent.replace('.', sep),
                                         include_non_letter)
 
