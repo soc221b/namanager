@@ -1,47 +1,14 @@
 import time
 import sys
 import os
-import string
-import random
-import itertools
 
 sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
                              '..',
                              'src'
                              ]))
+import helper # noqa
 import util # noqa
-from file_checker import FileChecker # noqa
 from enums import FORMATS # noqa
-
-
-def get_error_string(errors):
-    err_str = '\n'
-    for error in errors:
-        err_str += error + '\n\n'
-    return err_str
-
-
-def gen_random_alphabet_string(length=30):
-    s = ''
-    for i in range(0, length):
-        s += random.choice(string.ascii_letters)
-
-    return s
-
-
-def gen_all_possible_pair(iterable, beg=0, end=-1):
-    """
-    :param iterable:
-    :type iterable: list, str or iterable types
-    :return: tuple -
-    """
-    if end == -1:
-        end = len(iterable)
-    res = []
-    for i in range(beg, end):
-        for comb in itertools.combinations(iterable, i + 1):
-            res += itertools.permutations(comb)
-    return res
 
 
 class TestUtil():
@@ -66,7 +33,7 @@ class TestUtil():
         if time.time() - start > 0.5:
             errors.append('The algorithm is not efficient.')
 
-        assert errors == [], Exception(get_error_string(errors))
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_get_first_word(self):
         get_first_word = util.get_first_word
@@ -108,7 +75,7 @@ class TestUtil():
         if time.time() - start > 5:
             errors.append('The algorithm is not efficient.')
 
-        assert errors == [], Exception(get_error_string(errors))
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_get_words(self):
         get_words = util.get_words
@@ -260,7 +227,7 @@ class TestUtil():
                                                with_or_not, case, exp,
                                                act))
 
-        assert errors == [], Exception(get_error_string(errors))
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_convert_sentence_to_case(self):
         """
@@ -275,7 +242,7 @@ class TestUtil():
         act = convert_sentence_to_case('', [])
         if '' != act:
             errors.append("'' != '{0}'".format(act))
-        for case in gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
             if '' != convert_sentence_to_case('', list(case)):
                 errors.append("'' != {0}".format(
                               convert_sentence_to_case('', list(case))))
@@ -293,7 +260,7 @@ class TestUtil():
                    'Http_Error&Response*For.Request-Of?Soap',
                    ]
 
-        for case in gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
             for s in strings:
                 exp = expect[case[-1]]
                 act = convert_sentence_to_case(s, case[-1])
@@ -314,7 +281,7 @@ class TestUtil():
                    'HttpErrorResponseForRequestOfSoap',
                    ]
 
-        for case in gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
             for s in strings:
                 exp = expect[case[-1]]
                 act = convert_sentence_to_case(s, case[-1])
@@ -322,58 +289,4 @@ class TestUtil():
                     errors.append("In format: {0} without any separator \
                                   \nexpect: {1} !=\nactual: {2}".format(
                                   case, exp, act))
-        assert errors == [], Exception(get_error_string(errors))
-        # upper_case
-        # lower_case
-        # camel_case
-        # pascal_case
-
-        # 'HTTP_Error_Response_For_Request_Of_Soap',
-        # 'Http_ERROR_Response_For_Request_Of_Soap',
-        # 'Http_Error_Response_For_Request_of_SOAP'
-
-
-class TestFileChecker():
-    def test_convert_sep(self):
-        fc = FileChecker()
-        errors = []
-
-        # boundary
-        for sep in gen_all_possible_pair(FORMATS['sep']):
-            act = fc.convert_sep('', list(sep))
-            if '' != act:
-                errors.append("'' != {0}".format(act))
-        for s in ['_', '_a', 'a_', 'a_a', '-', '-a', 'a-', 'a-a']:
-            act = fc.convert_sep(s, [])
-            if s != act:
-                errors.append("{0} != {1}".format(s, act))
-
-        # dash_to_underscore
-        act = fc.convert_sep('-', ['dash_to_underscore'])
-        if '_' != act:
-            errors.append("expect '_' != actual '{0}'".format(act))
-        act = fc.convert_sep('-a', ['dash_to_underscore'])
-        if '_a' != act:
-            errors.append("expect '_a' != actual '{0}'".format(act))
-        act = fc.convert_sep('a-', ['dash_to_underscore'])
-        if 'a_' != act:
-            errors.append("expect 'a_' != actual '{0}'".format(act))
-        act = fc.convert_sep('a-a', ['dash_to_underscore'])
-        if 'a_a' != act:
-            errors.append("expect 'a_a' != actual '{0}'".format(act))
-
-        # underscore_to_dash
-        act = fc.convert_sep('_', ['underscore_to_dash'])
-        if '-' != act:
-            errors.append("expect '-' != actual '{0}'".format(act))
-        act = fc.convert_sep('_a', ['underscore_to_dash'])
-        if '-a' != act:
-            errors.append("expect '-a' != actual '{0}'".format(act))
-        act = fc.convert_sep('a_', ['underscore_to_dash'])
-        if 'a-' != act:
-            errors.append("expect 'a-' != actual '{0}'".format(act))
-        act = fc.convert_sep('a_a', ['underscore_to_dash'])
-        if 'a-a' != act:
-            errors.append("expect 'a-a' != actual '{0}'".format(act))
-
-        assert errors == [], Exception(get_error_string(errors))
+        assert errors == [], Exception(helper.get_error_string(errors))
