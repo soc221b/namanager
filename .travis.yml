@@ -22,7 +22,7 @@ install:
                           # a useful metric
 
 script:
-    - sh scripts/test.sh
+    - ./scripts/test.sh
 
 after_success:
     - codecov
