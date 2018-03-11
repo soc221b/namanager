@@ -11,6 +11,14 @@ from enums import FORMATS # noqa
 
 
 class TestFileChecker():
+    def test_is_string_matching(self):
+        fc = FileChecker()
+        errors = []
+        
+        # testing utilities
+        
+        assert errors == [], Exception(util.get_error_string(errors))
+    
     def test_convert_sep(self):
         fc = FileChecker()
         errors = []
