@@ -18,13 +18,13 @@ def gen_random_alphabet_string(length=30):
     return s
 
 
-def gen_all_possible_pair(iterable, beg=0, end=-1):
+def gen_all_possible_pair(iterable, beg=0, end=None):
     """
     :param iterable:
     :type iterable: list, str or iterable types
     :return: tuple -
     """
-    if end == -1:
+    if end is None:
         end = len(iterable)
     res = []
     for i in range(beg, end):
