@@ -17,40 +17,40 @@ class TestFileChecker():
 
         # boundary
         for sep in helper.gen_all_possible_pair(FORMATS['sep']):
-            act = fc.convert_sep('', list(sep))
-            if '' != act:
-                errors.append("'' != {0}".format(act))
+            actl = fc.convert_sep('', list(sep))
+            if '' != actl:
+                errors.append("'' != {0}".format(actl))
         for s in ['_', '_a', 'a_', 'a_a', '-', '-a', 'a-', 'a-a']:
-            act = fc.convert_sep(s, [])
-            if s != act:
-                errors.append("{0} != {1}".format(s, act))
+            actl = fc.convert_sep(s, [])
+            if s != actl:
+                errors.append("{0} != {1}".format(s, actl))
 
         # dash_to_underscore
-        act = fc.convert_sep('-', ['dash_to_underscore'])
-        if '_' != act:
-            errors.append("expect '_' != actual '{0}'".format(act))
-        act = fc.convert_sep('-a', ['dash_to_underscore'])
-        if '_a' != act:
-            errors.append("expect '_a' != actual '{0}'".format(act))
-        act = fc.convert_sep('a-', ['dash_to_underscore'])
-        if 'a_' != act:
-            errors.append("expect 'a_' != actual '{0}'".format(act))
-        act = fc.convert_sep('a-a', ['dash_to_underscore'])
-        if 'a_a' != act:
-            errors.append("expect 'a_a' != actual '{0}'".format(act))
+        actl = fc.convert_sep('-', ['dash_to_underscore'])
+        if '_' != actl:
+            errors.append("expect '_' != actlual '{0}'".format(actl))
+        actl = fc.convert_sep('-a', ['dash_to_underscore'])
+        if '_a' != actl:
+            errors.append("expect '_a' != actlual '{0}'".format(actl))
+        actl = fc.convert_sep('a-', ['dash_to_underscore'])
+        if 'a_' != actl:
+            errors.append("expect 'a_' != actlual '{0}'".format(actl))
+        actl = fc.convert_sep('a-a', ['dash_to_underscore'])
+        if 'a_a' != actl:
+            errors.append("expect 'a_a' != actlual '{0}'".format(actl))
 
         # underscore_to_dash
-        act = fc.convert_sep('_', ['underscore_to_dash'])
-        if '-' != act:
-            errors.append("expect '-' != actual '{0}'".format(act))
-        act = fc.convert_sep('_a', ['underscore_to_dash'])
-        if '-a' != act:
-            errors.append("expect '-a' != actual '{0}'".format(act))
-        act = fc.convert_sep('a_', ['underscore_to_dash'])
-        if 'a-' != act:
-            errors.append("expect 'a-' != actual '{0}'".format(act))
-        act = fc.convert_sep('a_a', ['underscore_to_dash'])
-        if 'a-a' != act:
-            errors.append("expect 'a-a' != actual '{0}'".format(act))
+        actl = fc.convert_sep('_', ['underscore_to_dash'])
+        if '-' != actl:
+            errors.append("expect '-' != actlual '{0}'".format(actl))
+        actl = fc.convert_sep('_a', ['underscore_to_dash'])
+        if '-a' != actl:
+            errors.append("expect '-a' != actlual '{0}'".format(actl))
+        actl = fc.convert_sep('a_', ['underscore_to_dash'])
+        if 'a-' != actl:
+            errors.append("expect 'a-' != actlual '{0}'".format(actl))
+        actl = fc.convert_sep('a_a', ['underscore_to_dash'])
+        if 'a-a' != actl:
+            errors.append("expect 'a-a' != actlual '{0}'".format(actl))
 
         assert errors == [], Exception(util.get_error_string(errors))

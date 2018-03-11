@@ -212,20 +212,20 @@ class TestUtil():
 
                     for sep in ['.', '*', '?', '1', '/', "\\", '^', '$']:
                         # substitute escape signs
-                        exp = []
+                        expt = []
                         for e in words:
-                            exp += [e.replace(r'.', sep)]
-                        exp = convert_words_to_case(exp, case)
-                        act = get_words(sent.replace('.', sep),
-                                        include_non_letter)
+                            expt += [e.replace(r'.', sep)]
+                        expt = convert_words_to_case(expt, case)
+                        actl = get_words(sent.replace('.', sep),
+                                         include_non_letter)
 
-                        if act != exp:
+                        if actl != expt:
                             errors.append(("The '{0}' {1} non-alphabet in {2}"
                                            "\nexpect: {3}"
                                            "\nactual: {4}").format(
                                                sent.replace(r'.', sep),
-                                               with_or_not, case, exp,
-                                               act))
+                                               with_or_not, case, expt,
+                                               actl))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -239,9 +239,9 @@ class TestUtil():
         errors = []
 
         # boundary
-        act = convert_sentence_to_case('', [])
-        if '' != act:
-            errors.append("'' != '{0}'".format(act))
+        actl = convert_sentence_to_case('', [])
+        if '' != actl:
+            errors.append("'' != '{0}'".format(actl))
         for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
             if '' != convert_sentence_to_case('', list(case)):
                 errors.append("'' != {0}".format(
@@ -262,12 +262,12 @@ class TestUtil():
 
         for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
             for s in strings:
-                exp = expect[case[-1]]
-                act = convert_sentence_to_case(s, case[-1])
-                if exp != act:
+                expt = expect[case[-1]]
+                actl = convert_sentence_to_case(s, case[-1])
+                if expt != actl:
                     errors.append("In format: {0} within any separator \
                                   \nexpect: {1} !=\nactual: {2}".format(
-                                  case, exp, act))
+                                  case, expt, actl))
 
         # without any separator
         # httperrorresponseforrequestofsoap
@@ -283,10 +283,10 @@ class TestUtil():
 
         for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
             for s in strings:
-                exp = expect[case[-1]]
-                act = convert_sentence_to_case(s, case[-1])
-                if exp != act:
+                expt = expect[case[-1]]
+                actl = convert_sentence_to_case(s, case[-1])
+                if expt != actl:
                     errors.append("In format: {0} without any separator \
                                   \nexpect: {1} !=\nactual: {2}".format(
-                                  case, exp, act))
+                                  case, expt, actl))
         assert errors == [], Exception(helper.get_error_string(errors))
