@@ -18,7 +18,12 @@ before_install:
 
 install:
     - pip install -r requirements.txt
+    - pip install codecov # codecov isn't really part of our project, just
+                          # a useful metric
 
 script:
     - flake8 .
-    - nosetests . -v
+    - nosetests . -v --with-coverage
+
+after_success:
+    - codecov
