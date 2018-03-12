@@ -1,5 +1,7 @@
 cwd=$(pwd)
-file_checker_root_path="$(cd '$(dirname '${BASH_SOURCE[0]}')' ; pwd -P )/.."
+file_checker_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
+cd $file_checker_root_path
+
 error_code=0
 
 echo '''
@@ -18,6 +20,9 @@ echo '''
 ================================================================================
 '''
 flake8 . --exclude env
+if [ $? -ne 0 ]; then
+    error_code=1
+fi
 
 echo '''
 ================================================================================
@@ -26,6 +31,9 @@ echo '''
 '''
 python3 tests/test_util.py
 python3 tests/test_file_checker.py
+if [ $? -ne 0 ]; then
+    error_code=1
+fi
 
 echo '''
 ================================================================================
@@ -33,6 +41,9 @@ echo '''
 ================================================================================
 '''
 python3 src/file_checker.py
+if [ $? -ne 0 ]; then
+    error_code=1
+fi
 
 echo '''
 ================================================================================
