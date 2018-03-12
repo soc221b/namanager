@@ -26,5 +26,10 @@ A checker/detector could check name of file/directory is expectable or not.
 
 # How to use
 
+### Installation
 + If you have git installed, then run the following command: `pip install git+https://github.com/iattempt/FileChecker.git`
 + If you do _not_ have git installed, then run the following command: `pip install --upgrade https://github.com/iattempt/FileChecker/tarball/master`
+
+### Running
++ `pip install -r requirements.txt`
++ And now you can use the package!
