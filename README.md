@@ -23,3 +23,8 @@ A checker/detector could check name of file/directory is expectable or not.
     4. Exclude the files *not* in ONLY_FILES
     5. Exclude the files in IGNORE_FILES
     6. Check the directories with FILE_FORMATS
+
+# How to use
+
++ If you have git installed, then run the following command: `pip install git+https://github.com/iattempt/FileChecker.git`
++ If you do _not_ have git installed, then run the following command: `pip install --upgrade https://github.com/iattempt/FileChecker/tarball/master`
