@@ -14,11 +14,21 @@ class TestFileChecker():
     def test_is_string_matching(self):
         fc = FileChecker()
         errors = []
-        
-        # testing utilities
-        
+
+        # todo: add more pairs
+        expect_pairs = [
+            (False, "", []),
+        ]
+
+        for (expt, string, pattern) in expect_pairs:
+            actl = fc.is_string_matching(string, pattern)
+            if expt != actl:
+                errors.append(("string:\t{0}\npattern:\t{1}"
+                               "\nexpect: '{0}' != \nactl").format(
+                               string, pattern, expt, actl))
+
         assert errors == [], Exception(util.get_error_string(errors))
-    
+
     def test_convert_sep(self):
         fc = FileChecker()
         errors = []
