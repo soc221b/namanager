@@ -4,17 +4,24 @@ cd $file_checker_root_path
 
 error_code=0
 
+
+assert()
+{
+    error=$?
+    if [ $error -ne 0 ]; then
+        echo "exit ($error)"
+        error_code=1
+    fi
+}
+
+
 echo '''
 ================================================================================
                                       Nose
 ================================================================================
 '''
 nosetests . -v --with-coverage --cover-erase
-error=$?
-if [ $error -ne 0 ]; then
-    echo "exit ($error)"
-    error_code=1
-fi
+assert
 
 echo '''
 ================================================================================
@@ -22,11 +29,7 @@ echo '''
 ================================================================================
 '''
 flake8 . --exclude env
-error=$?
-if [ $error -ne 0 ]; then
-    echo "exit ($error)"
-    error_code=1
-fi
+assert
 
 echo '''
 ================================================================================
@@ -34,18 +37,10 @@ echo '''
 ================================================================================
 '''
 python3 tests/test_util.py
-error=$?
-if [ $error -ne 0 ]; then
-    echo "exit ($error)"
-    error_code=1
-fi
+assert
 
 python3 tests/test_file_checker.py
-error=$?
-if [ $error -ne 0 ]; then
-    echo "exit ($error)"
-    error_code=1
-fi
+assert
 
 echo '''
 ================================================================================
@@ -53,11 +48,7 @@ echo '''
 ================================================================================
 '''
 python3 src/file_checker.py
-error=$?
-if [ $error -ne 0 ]; then
-    echo "exit ($error)"
-    error_code=1
-fi
+assert
 
 echo '''
 ================================================================================
