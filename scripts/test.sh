@@ -20,7 +20,7 @@ echo '''
                                       Nose
 ================================================================================
 '''
-nosetests . -v --with-coverage --cover-erase
+nosetests . -v --with-coverage --cover-erase --cover-html
 assert
 
 echo '''
