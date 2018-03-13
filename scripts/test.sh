@@ -10,7 +10,9 @@ echo '''
 ================================================================================
 '''
 nosetests . -v --with-coverage --cover-erase
-if [ $? -ne 0 ]; then
+error=$?
+if [ $error -ne 0 ]; then
+    echo "exit ($error)"
     error_code=1
 fi
 
@@ -20,7 +22,9 @@ echo '''
 ================================================================================
 '''
 flake8 . --exclude env
-if [ $? -ne 0 ]; then
+error=$?
+if [ $error -ne 0 ]; then
+    echo "exit ($error)"
     error_code=1
 fi
 
@@ -30,8 +34,16 @@ echo '''
 ================================================================================
 '''
 python3 tests/test_util.py
+error=$?
+if [ $error -ne 0 ]; then
+    echo "exit ($error)"
+    error_code=1
+fi
+
 python3 tests/test_file_checker.py
-if [ $? -ne 0 ]; then
+error=$?
+if [ $error -ne 0 ]; then
+    echo "exit ($error)"
     error_code=1
 fi
 
@@ -41,14 +53,16 @@ echo '''
 ================================================================================
 '''
 python3 src/file_checker.py
-if [ $? -ne 0 ]; then
+error=$?
+if [ $error -ne 0 ]; then
+    echo "exit ($error)"
     error_code=1
 fi
 
 echo '''
 ================================================================================
 '''
-if [[ $error_code -eq 0 ]]; then
+if [ $error_code -eq 0 ]; then
     echo 'Passed'
 else
     echo 'Error'
