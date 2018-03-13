@@ -1,6 +1,6 @@
 {
     "CHECK_DIRS": [
-        "/project/fork/cosmos/code"
+        "./"
     ],
     "ONLY_FILES": [
         ".*"
@@ -17,11 +17,11 @@
        "^/utility"
     ],
     "FILE_FORMATS": {
-        "LETTER_CASE": "lower_case",
+        "LETTER_CASE": "camel_case",
         "SEP": "dash_to_underscore"
     },
     "DIR_FORMATS": {
-        "LETTER_CASE": "lower_case",
+        "LETTER_CASE": "upper_case",
         "SEP": "dash_to_underscore"
     },
 
