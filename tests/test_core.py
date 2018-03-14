@@ -403,7 +403,42 @@ class TestFileChecker():
         pass
 
     def test_check_file(self):
-        pass
+        fc = FileChecker()
+        errors = []
+        etc = {
+            "CHECK_DIRS": [
+                os.path.realpath(os.path.dirname(__file__))
+            ],
+            "ONLY_FILES": [],
+            "ONLY_DIRS": [],
+            "IGNORE_FILES": [
+                "/README.md$",
+                ".*\\.md"
+            ],
+            "IGNORE_DIRS": [
+                ".*"
+            ],
+            "FILE_FORMATS": {
+                "LETTER_CASE": "camel_case",
+                "SEP": "dash_to_underscore"
+            },
+            "DIR_FORMATS": {
+                "LETTER_CASE": "upper_case",
+                "SEP": "dash_to_underscore"
+            }
+        }
+
+        fc.load_settings(etc)
+        fc.get_file_list(fc.convert_walk_to_list(etc['CHECK_DIRS'][0]))
+
+        for f in fc.get_dict():
+            expect = f['filename']['expect']
+            actual = f['filename']['actual']
+            if len(expect) != len(actual):
+                errors.append(("expect: {0}\nactual: {1}\nin: {2}".format(
+                    expect, actual, f['dirpath']
+                )))
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_check_dir(self):
         pass
