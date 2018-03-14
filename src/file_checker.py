@@ -1,6 +1,6 @@
 import os
 import re
-import util
+import file_checker.util as util
 
 
 class FileChecker():

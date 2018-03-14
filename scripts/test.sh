@@ -28,18 +28,7 @@ echo '''
                                      Flake8
 ================================================================================
 '''
-flake8 . --exclude env
-assert
-
-echo '''
-================================================================================
-                                   Run tests
-================================================================================
-'''
-python3 tests/test_util.py
-assert
-
-python3 tests/test_file_checker.py
+flake8 . --exclude env,build
 assert
 
 echo '''
@@ -47,7 +36,7 @@ echo '''
                                    Run main
 ================================================================================
 '''
-python3 src/file_checker.py
+python3 file_checker/main.py
 assert
 
 echo '''

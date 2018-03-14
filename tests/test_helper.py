@@ -1,4 +1,4 @@
-import helper # noqa
+import file_checker.tests.helper as helper # noqa
 import json
 
 

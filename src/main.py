@@ -1,10 +1,8 @@
 import os
 import json
-import argparse
-from enums import FORMATS
-from file_checker import FileChecker # noqa
+from file_checker.enums import FORMATS
+from file_checker.core import FileChecker # noqa
 
-SETTINGS_FILE = 'src/settings.json'
 SETTINGS_JSON = {}
 
 
@@ -13,10 +11,10 @@ def raiser(condition, msg):
         raise Exception('settings must be dict.')  # pragma: no cover
 
 
-def import_settings():
+def import_settings(settings_file):
     global SETTINGS_JSON
 
-    with open(SETTINGS_FILE, 'r') as s:
+    with open(settings_file, 'r') as s:
         SETTINGS_JSON = json.loads(s.read())
 
     raiser(isinstance(SETTINGS_JSON, dict),
@@ -63,16 +61,6 @@ def import_settings():
                Exception('DIR_FORMATS[\'{0}\'] has wrong key.'.format(k)))
 
 
-def parse():  # pragma: no cover
-    global SETTINGS_FILE
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--setting_file', help='The settings file name')
-    args = parser.parse_args()
-    if args.setting_file:
-        SETTINGS_FILE = args.setting_file
-
-
 def main():  # pragma: no cover
     for d in SETTINGS_JSON['CHECK_DIRS']:
         checker = FileChecker(SETTINGS_JSON)
@@ -82,7 +70,6 @@ def main():  # pragma: no cover
             print(e)
 
         print('In folder {0} :'.format(os.path.realpath(d)))
-        # print("In folder '../Cosmos/code': ".format(d))
         if checker.error_set:
             print('FAILED (error{0}={1})\n'.format(
                   's' if len(checker.error_set) > 1 else '',
@@ -92,6 +79,5 @@ def main():  # pragma: no cover
 
 
 if __name__ == '__main__':
-    parse()  # pragma: no cover
-    import_settings()  # pragma: no cover
-    main()  # pragma: no cover
+    import_settings('file_checker/settings.json')
+    main()

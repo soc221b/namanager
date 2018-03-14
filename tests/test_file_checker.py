@@ -1,11 +1,7 @@
 import os
 import sys
-sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
-                             '..',
-                             'src'
-                             ]))
-import helper # noqa
-from file_checker import FileChecker # noqa
+import file_checker.tests.helper as helper # noqa
+from file_checker.core import FileChecker # noqa
 
 
 class TestFileChecker():

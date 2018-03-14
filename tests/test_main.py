@@ -1,10 +1,10 @@
-import os
-import sys
-sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
-                             '..',
-                             'src'
-                             ]))
-import main # noqa
+import file_checker.main as main # noqa
 
-main.import_settings()
-main.main()
+
+class TestMain():
+    def test_import_settings(self):
+        main.import_settings(settings_file='file_checker/settings.json')
+
+    def test_main(self):
+        main.import_settings(settings_file='file_checker/settings.json')
+        main.main()

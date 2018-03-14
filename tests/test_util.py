@@ -1,14 +1,8 @@
 import time
-import sys
-import os
 
-sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
-                             '..',
-                             'src'
-                             ]))
-import helper # noqa
-import util # noqa
-from enums import FORMATS # noqa
+import file_checker.tests.helper as helper # noqa
+import file_checker.util as util # noqa
+from file_checker.enums import FORMATS # noqa
 
 
 class TestUtil():
