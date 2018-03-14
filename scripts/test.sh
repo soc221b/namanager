@@ -36,6 +36,7 @@ echo '''
                                    Run main
 ================================================================================
 '''
+python3 setup.py install
 python3 file_checker/main.py
 assert
 
