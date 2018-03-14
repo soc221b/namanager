@@ -122,6 +122,7 @@ class TestFileChecker():
         fc = FileChecker()
         errors = []
         walk = [
+            # needs to test file which not involved with extension
             ('/root/to/path/a', ['a'], ['not.mdfile', 'notmd', 'is.md']),
             ('/root/to/path/a/a', [], ['not.mdfile', 'notmd', 'is.md']),
             ('/root/to/path/b', ['a'], ['not.mdfile', 'notmd', 'is.md']),

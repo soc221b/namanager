@@ -230,7 +230,9 @@ class FileChecker():
         walk = self.get_file_list(walk)
         for dirpath, dirs, files in walk:
             for f in files:
-                extension = '.' + f.split(r'.')[-1]
+                extension = (
+                    '' if f.find(r'\.') == -1 else '.' + f.split(r'\.')[-1]
+                )
                 actual = f
                 expect = actual.replace(extension, '')
 
