@@ -109,20 +109,6 @@ class FileChecker():
                 return True
         return False
 
-    def convert_sep(self, string, cases):
-        for case in cases:
-            if case == 'dash_to_underscore':
-                string = string.replace('-', '_')
-            if case == 'underscore_to_dash':
-                string = string.replace('_', '-')
-        return string
-
-    def _convert_filename(self, filename):
-        pass
-
-    def _convert_dirname(self, dirname):
-        pass
-
     def check(self, root):
         for (dirpath, dirname, filename) in os.walk(root):
             pass
