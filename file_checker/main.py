@@ -66,14 +66,15 @@ def main():  # pragma: no cover
         checker = FileChecker(SETTINGS_JSON)
         checker.check(d)
 
-        for e in checker.error_set:
+        RESULT = checker.get_dict()
+        for e in RESULT:
             print(e)
 
         print('In folder {0} :'.format(os.path.realpath(d)))
-        if checker.error_set:
+        if RESULT:
             print('FAILED (error{0}={1})\n'.format(
-                  's' if len(checker.error_set) > 1 else '',
-                  len(checker.error_set)))
+                  's' if len(RESULT) > 1 else '',
+                  len(RESULT)))
         else:
             print('OK.\n')
 

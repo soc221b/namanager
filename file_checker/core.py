@@ -1,5 +1,8 @@
 import os
 import re
+import json
+import dicttoxml
+from xml.dom.minidom import parseString
 import file_checker.util as util
 
 
@@ -8,7 +11,7 @@ class FileChecker():
         self.init_settings()
         self.load_settings(settings)
 
-        self._error_set = set()
+        self._error_info = []
 
     def init_settings(self):
         self._FILE_FORMATS = {}
@@ -61,8 +64,8 @@ class FileChecker():
             self._IGNORE_DIRS)
 
     @property
-    def error_set(self):
-        return self._error_set
+    def error_info(self):
+        return self._error_info
 
     @property
     def file_formats(self):
@@ -110,11 +113,6 @@ class FileChecker():
                 if re.search(pattern, string) is not None:
                     return True
         return False
-
-    def append_error(self, expect, actual, dirpath):  # progma: no cover
-        self._error_set.add(
-            "expect: '{0}' in '{2}'\nactual: '{1}' in '{2}'\n".format(
-                expect, actual, dirpath))
 
     def convert_walk_to_list(self, root):
         return [tp for tp in os.walk(os.path.realpath(root))]
@@ -242,7 +240,13 @@ class FileChecker():
                 expect += extension
 
                 if expect != actual:
-                    self.append_error(expect, actual, dirpath)
+                    self._error_info.append({
+                        'filename': {
+                            'expect': expect,
+                            'actual': actual
+                        },
+                        'dirpath': dirpath
+                    })
 
     def check_dir(self, walk):
         """
@@ -262,11 +266,25 @@ class FileChecker():
                 expect, self.dir_letter_case)
 
             if expect != actual:
-                self.append_error(
-                    expect, actual, dirpath[:dirpath.rfind(os.sep)])
+                self._error_info.append({
+                    'dirname': {
+                        'expect': expect,
+                        'actual': actual
+                    },
+                    'dirpath': dirpath[:dirpath.rfind(os.sep)]
+                })
 
     def check(self, root):
         root = os.path.realpath(root)
         walk = self.convert_walk_to_list(root)
         self.check_dir(walk)
         self.check_file(walk)
+
+    def get_dict(self, error_info=None):
+        return self.error_info
+
+    def get_json(self, error_info=None):
+        return json.dumps(self.error_info)
+
+    def get_xml(self, error_info=None):
+        return parseString(dicttoxml.dicttoxml(self.error_info)).toprettyxml()
