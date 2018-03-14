@@ -1,7 +1,7 @@
 cwd=$(pwd)
 file_checker_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
 cd $file_checker_root_path
-
+mv tests file_checker
 error_code=0
 
 
@@ -49,4 +49,5 @@ else
     exit 1
 fi
 
+mv file_checker/tests .
 cd $cwd

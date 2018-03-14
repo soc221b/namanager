@@ -79,5 +79,5 @@ def main():  # pragma: no cover
 
 
 if __name__ == '__main__':
-    import_settings('file_checker/settings.json')
-    main()
+    import_settings('file_checker/settings.json')  # pragma: no cover
+    main()  # pragma: no cover
