@@ -18,7 +18,20 @@ class TestFileChecker():
         self.test_properties(fc)
 
     def test_convert_os_sep_of_str_in_list(self):
-        pass
+        fc = FileChecker()
+        errors = []
+        here = os.path.realpath(os.path.dirname(__file__))
+
+        expect = [os.path.normpath(here)]
+        actual = fc.convert_os_sep_of_str_in_list([here])
+
+        if not helper.is_same(expect, actual):
+            errors.append(
+                'Converting OS separator occurs error:'
+                'expect: {0}\nactual: {1}'.format(expect, actual)
+            )
+
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_load_settings(self, fc=FileChecker()):
         settings = {
@@ -70,6 +83,7 @@ class TestFileChecker():
             (True, '/root/to/path', ['.*/to/pa']),
             (True, '/root/to/path', ['^.*/path$', '^.*/to/path$']),
             (False, '', []),
+            (False, 'abc', []),
             (False, '/c/a', ['^/a$']),
             (False, '/root/to/path', ['pa$', '.*/ath$',
                                       '^/path$', '^/to/path$', '^[^/]*path',
