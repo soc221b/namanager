@@ -18,8 +18,6 @@ A checker/detector could check name of file/directory is expectable or not.
 
 + Parse files
     1. Walk over the directories under CHECK_DIR
-    2. Exclude the directories *not* in ONLY_DIRS
-    3. Exclude the directories in IGNORE_DIRS
     4. Exclude the files *not* in ONLY_FILES
     5. Exclude the files in IGNORE_FILES
     6. Check the directories with FILE_FORMATS
