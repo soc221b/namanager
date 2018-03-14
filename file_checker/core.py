@@ -122,7 +122,7 @@ class FileChecker():
         if walk:
             root = walk[0][0]
             for (dirpath, dirs, files) in walk:
-                if len(dirpath.split('/')) < len(root.split('/')):
+                if len(dirpath.split(os.sep)) < len(root.split(os.sep)):
                     root = dirpath
         return root
 
