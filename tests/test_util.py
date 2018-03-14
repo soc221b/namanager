@@ -230,7 +230,7 @@ class TestUtil():
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_convert_sentence_to_case(self):
-        """
+        """test_convert_sentence_to_case
         This test is assumed that
         convert_words will be called indirectly by convert_sentence
         """
