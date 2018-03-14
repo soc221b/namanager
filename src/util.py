@@ -62,15 +62,12 @@ def convert_word_to_case(word, case):
     user can just change first letter to lowercase.
     """
 
-    try:
-        if case == 'upper_case':
-            word = word.upper()
-        if case == 'lower_case':
-            word = word.lower()
-        if case == 'pascal_case':
-            word = word[0].upper() + word[1:].lower()
-    except Exception:
-        pass
+    if case == 'upper_case':
+        word = word.upper()
+    if case == 'lower_case':
+        word = word.lower()
+    if case == 'pascal_case':
+        word = word[0].upper() + word[1:].lower()
 
     return word
 

@@ -242,7 +242,7 @@ class TestUtil():
         actl = convert_sentence_to_case('', [])
         if '' != actl:
             errors.append("'' != '{0}'".format(actl))
-        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
             if '' != convert_sentence_to_case('', list(case)):
                 errors.append("'' != {0}".format(
                               convert_sentence_to_case('', list(case))))
@@ -260,7 +260,7 @@ class TestUtil():
                    'Http_Error&Response*For.Request-Of?Soap',
                    ]
 
-        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
             for s in strings:
                 expt = expect[case[-1]]
                 actl = convert_sentence_to_case(s, case[-1])
@@ -281,7 +281,7 @@ class TestUtil():
                    'HttpErrorResponseForRequestOfSoap',
                    ]
 
-        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
             for s in strings:
                 expt = expect[case[-1]]
                 actl = convert_sentence_to_case(s, case[-1])

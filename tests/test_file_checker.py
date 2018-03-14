@@ -34,7 +34,7 @@ class TestFileChecker():
         errors = []
 
         # boundary
-        for sep in helper.gen_all_possible_pair(FORMATS['sep']):
+        for sep in helper.gen_all_possible_pair(FORMATS['SEP']):
             actl = fc.convert_sep('', list(sep))
             if '' != actl:
                 errors.append("'' != {0}".format(actl))
