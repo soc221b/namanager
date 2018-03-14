@@ -104,9 +104,10 @@ class FileChecker():
         return self._DIR_LETTER_CASE
 
     def is_string_matching(self, string, re_match_list=[]):
-        for pattern in re_match_list:
-            if re.match(pattern, string):
-                return True
+        if string:
+            for pattern in re_match_list:
+                if re.search(pattern, string) is not None:
+                    return True
         return False
 
     def check(self, root):
