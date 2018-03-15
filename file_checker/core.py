@@ -25,7 +25,7 @@ class FileChecker():
         self._DIR_SEP = ''
         self._DIR_LETTER_CASE = ''
 
-    def convert_os_sep_of_str_in_list(self, strlist):
+    def _convert_os_sep_of_str_in_list(self, strlist):
         # needs to test
         converted_strlist = []
         for s in strlist:
@@ -54,13 +54,13 @@ class FileChecker():
         if 'IGNORE_DIRS' in settings:
             self._IGNORE_DIRS = settings['IGNORE_DIRS']
 
-        self._ONLY_FILES = self.convert_os_sep_of_str_in_list(
+        self._ONLY_FILES = self._convert_os_sep_of_str_in_list(
             self._ONLY_FILES)
-        self._ONLY_DIRS = self.convert_os_sep_of_str_in_list(
+        self._ONLY_DIRS = self._convert_os_sep_of_str_in_list(
             self._ONLY_DIRS)
-        self._IGNORE_FILES = self.convert_os_sep_of_str_in_list(
+        self._IGNORE_FILES = self._convert_os_sep_of_str_in_list(
             self._IGNORE_FILES)
-        self._IGNORE_DIRS = self.convert_os_sep_of_str_in_list(
+        self._IGNORE_DIRS = self._convert_os_sep_of_str_in_list(
             self._IGNORE_DIRS)
 
     @property
@@ -107,17 +107,17 @@ class FileChecker():
     def dir_letter_case(self):
         return self._DIR_LETTER_CASE
 
-    def is_string_matching(self, string, re_match_list=[]):
+    def _is_string_matching(self, string, re_match_list=[]):
         if string:
             for pattern in re_match_list:
                 if re.search(pattern, string) is not None:
                     return True
         return False
 
-    def convert_walk_to_list(self, root):
+    def _convert_walk_to_list(self, root):
         return [tp for tp in os.walk(os.path.realpath(root))]
 
-    def get_root_in_walk(self, walk):
+    def _get_root_in_walk(self, walk):
         root = ''
         if walk:
             root = walk[0][0]
@@ -126,9 +126,10 @@ class FileChecker():
                     root = dirpath
         return root
 
-    def include_file_by_match_list_in_walk(self, re_patterns, walk, root=None):
+    def _include_file_by_match_list_in_walk(self, re_patterns, walk,
+                                            root=None):
         if root is None:
-            root = self.get_root_in_walk(walk)
+            root = self._get_root_in_walk(walk)
 
         filtered_walk = []
         for (dirpath, dirs, files) in walk:
@@ -142,20 +143,21 @@ class FileChecker():
                     dirname_pattern = pattern[:latest_sep_index] + '$'
                     filename_pattern = '^' + pattern[latest_sep_index + 1:]
                     rel_dirpath = dirpath[len(root):]
-                    if not self.is_string_matching(
+                    if not self._is_string_matching(
                        rel_dirpath, [dirname_pattern]):
                         continue
 
                 for filename in files:
-                    if self.is_string_matching(filename, [filename_pattern]):
+                    if self._is_string_matching(filename, [filename_pattern]):
                         filtered_files.append(filename)
                 if filtered_files:
                     filtered_walk.append((dirpath, dirs, filtered_files))
 
         return filtered_walk
 
-    def exclude_file_by_match_list_in_walk(self, re_patterns, walk, root=None):
-        include_walk = self.include_file_by_match_list_in_walk(
+    def _exclude_file_by_match_list_in_walk(self, re_patterns, walk,
+                                            root=None):
+        include_walk = self._include_file_by_match_list_in_walk(
             re_patterns, walk, root)
         filtered_walk = []
 
@@ -178,20 +180,20 @@ class FileChecker():
 
         return filtered_walk
 
-    def include_dir_by_match_list_in_walk(self, re_patterns, walk, root=None):
+    def _include_dir_by_match_list_in_walk(self, re_patterns, walk, root=None):
         if root is None:
-            root = self.get_root_in_walk(walk)
+            root = self._get_root_in_walk(walk)
 
         filtered_walk = []
         for (dirpath, dirs, files) in walk:
             rel_dirpath = dirpath[len(root):]
-            if self.is_string_matching(rel_dirpath, re_patterns):
+            if self._is_string_matching(rel_dirpath, re_patterns):
                 filtered_walk.append((dirpath, dirs, files))
 
         return filtered_walk
 
-    def exclude_dir_by_match_list_in_walk(self, re_patterns, walk, root=None):
-        include_walk = self.include_dir_by_match_list_in_walk(
+    def _exclude_dir_by_match_list_in_walk(self, re_patterns, walk, root=None):
+        include_walk = self._include_dir_by_match_list_in_walk(
             re_patterns, walk, root)
         filtered_walk = []
 
@@ -207,27 +209,30 @@ class FileChecker():
 
         return filtered_walk
 
-    def get_file_list(self, walk):
+    def _get_file_list(self, walk):
         if self.only_files:
-            walk = self.include_file_by_match_list_in_walk(
+            walk = self._include_file_by_match_list_in_walk(
                 self.only_files, walk)
         if self.ignore_files:
-            walk = self.exclude_file_by_match_list_in_walk(
+            walk = self._exclude_file_by_match_list_in_walk(
                 self.ignore_files, walk)
 
         return walk
 
-    def get_dir_list(self, walk):
+    def _get_dir_list(self, walk):
         if self.only_dirs:
-            walk = self.include_dir_by_match_list_in_walk(self.only_dirs, walk)
+            walk = self._include_dir_by_match_list_in_walk(
+                self.only_dirs, walk)
         if self.ignore_dirs:
-            walk = self.exclude_dir_by_match_list_in_walk(
+            walk = self._exclude_dir_by_match_list_in_walk(
                 self.ignore_dirs, walk)
 
         return walk
 
-    def check_file(self, walk):
-        walk = self.get_file_list(walk)
+    def check_file(self, root):
+        root = os.path.realpath(root)
+        walk = self._convert_walk_to_list(root)
+        walk = self._get_file_list(walk)
         for dirpath, dirs, files in walk:
             for f in files:
                 extension = (
@@ -250,7 +255,7 @@ class FileChecker():
                         'dirpath': dirpath
                     })
 
-    def check_dir(self, walk):
+    def check_dir(self, root):
         """
         Only check dirs/files path under root (excluded)
             root:     /root/path/to/dir
@@ -259,7 +264,9 @@ class FileChecker():
 
             OK: any part path of /root/path/to/dir will be never checked
         """
-        walk = self.get_dir_list(walk)
+        root = os.path.realpath(root)
+        walk = self._convert_walk_to_list(root)
+        walk = self._get_dir_list(walk)
         for dirpath, dirs, files in walk:
             actual = dirpath[dirpath.rfind(os.sep):]
             expect = actual
@@ -277,10 +284,8 @@ class FileChecker():
                 })
 
     def check(self, root):
-        root = os.path.realpath(root)
-        walk = self.convert_walk_to_list(root)
-        self.check_dir(walk)
-        self.check_file(walk)
+        self.check_dir(root)
+        self.check_file(root)
 
     def get_dict(self, error_info=None):
         return self.error_info

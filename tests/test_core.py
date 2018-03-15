@@ -21,7 +21,7 @@ class TestFileChecker():
         here = os.path.realpath(os.path.dirname(__file__))
 
         expect = [os.path.normpath(here)]
-        actual = fc.convert_os_sep_of_str_in_list([here])
+        actual = fc._convert_os_sep_of_str_in_list([here])
 
         if not helper.is_same(expect, actual):
             errors.append(
@@ -89,7 +89,7 @@ class TestFileChecker():
         ]
 
         for (expt, string, pattern) in expect_pairs:
-            actl = fc.is_string_matching(string, pattern)
+            actl = fc._is_string_matching(string, pattern)
             if expt != actl:
                 errors.append(("string:\t{0}\npattern:\t{1}"
                                "\nexpect: '{0}'\nactl").format(
@@ -100,7 +100,7 @@ class TestFileChecker():
     def test_convert_walk_to_list(self):
         fc = FileChecker()
 
-        actl = fc.convert_walk_to_list(os.path.dirname(sys.executable))
+        actl = fc._convert_walk_to_list(os.path.dirname(sys.executable))
 
         assert isinstance(actl, list)
         assert isinstance(actl[0], tuple)
@@ -114,7 +114,7 @@ class TestFileChecker():
         expt = os.path.realpath(os.path.dirname(sys.executable))
         walk = [tp for tp in os.walk(expt)]
 
-        actl = fc.get_root_in_walk(walk)
+        actl = fc._get_root_in_walk(walk)
 
         assert actl == expt
 
@@ -177,7 +177,7 @@ class TestFileChecker():
         }
 
         for description, pattern in patterns.items():
-            actl = fc.include_file_by_match_list_in_walk(pattern, walk)
+            actl = fc._include_file_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
             if not helper.is_same(expt, actl):
                 errors.append(("description:\t{0}\npattern:\t{1}"
@@ -256,7 +256,7 @@ class TestFileChecker():
         }
 
         for description, pattern in patterns.items():
-            actl = fc.exclude_file_by_match_list_in_walk(pattern, walk)
+            actl = fc._exclude_file_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
             if not helper.is_same(expt, actl):
                 errors.append(("description:\t{0}\npattern:\t{1}"
@@ -318,7 +318,7 @@ class TestFileChecker():
         }
 
         for description, pattern in patterns.items():
-            actl = fc.include_dir_by_match_list_in_walk(pattern, walk)
+            actl = fc._include_dir_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
             if not helper.is_same(expt, actl):
                 errors.append(("description:\t{0}\npattern:\t{1}"
@@ -386,7 +386,7 @@ class TestFileChecker():
         }
 
         for description, pattern in patterns.items():
-            actl = fc.exclude_dir_by_match_list_in_walk(pattern, walk)
+            actl = fc._exclude_dir_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
             if not helper.is_same(expt, actl):
                 errors.append(("description:\t{0}\npattern:\t{1}"
@@ -429,7 +429,7 @@ class TestFileChecker():
         }
 
         fc.load_settings(etc)
-        fc.get_file_list(fc.convert_walk_to_list(etc['CHECK_DIRS'][0]))
+        fc._get_file_list(fc._convert_walk_to_list(etc['CHECK_DIRS'][0]))
 
         for f in fc.get_dict():
             expect = f['filename']['expect']
