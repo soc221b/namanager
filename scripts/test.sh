@@ -61,7 +61,10 @@ echo '''
                                      Run main
 ================================================================================
 '''
-python3 file_checker/main.py
+cp file_checker/main.py ../
+cd ../
+python3 file_checker/file_checker/main.py
+cd file_checker
 assert
 
 echo '''
