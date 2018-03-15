@@ -63,8 +63,8 @@ echo '''
 '''
 cp file_checker/main.py ../
 cd ../
-python3 file_checker/file_checker/main.py
-cd file_checker
+python3 FileChecker/file_checker/main.py
+cd FileChecker
 assert
 
 echo '''
