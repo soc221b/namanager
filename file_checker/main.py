@@ -95,5 +95,5 @@ def entry(settings_file, required=False, fmt='json'):
     check(required, fmt)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     entry('FileChecker/file_checker/settings.json')

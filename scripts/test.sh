@@ -27,7 +27,11 @@ echo '''
                                       Nose
 ================================================================================
 '''
-nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
+if [ $CI ]; then
+    nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests --cover-min-percentage=100
+else
+    nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
+fi
 assert
 
 echo '''

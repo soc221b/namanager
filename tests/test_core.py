@@ -422,7 +422,7 @@ class TestFileChecker():
                 "SEP": "dash_to_underscore"
             },
             "DIR_FORMATS": {
-                "LETTER_CASE": "lower_case",
+                "LETTER_CASE": "upper_case",
                 "SEP": "dash_to_underscore"
             }
         }
