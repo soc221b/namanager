@@ -17,8 +17,11 @@ before_install:
     - pip install autopep8
 
 install:
-    - pip install -r requirements.txt
+    - pip install codecov # codecov isn't really part of our project, just
+                          # a useful metric
 
 script:
-    - flake8 .
-    - python tests/test.py
+    - ./scripts/test.sh
+
+after_success:
+    - codecov
