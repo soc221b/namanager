@@ -2,8 +2,8 @@ import os
 import sys
 import json
 import xmltodict
-import file_checker.tests.helper as helper # noqa
-from file_checker.core import FileChecker # noqa
+import file_checker.tests.helper as helper
+from file_checker.core import FileChecker
 
 
 class TestFileChecker():
@@ -23,11 +23,11 @@ class TestFileChecker():
         expect = [os.path.normpath(here)]
         actual = fc._convert_os_sep_of_str_in_list([here])
 
-        if not helper.is_same(expect, actual):
-            errors.append(
+        helper.append_to_error_if_not_expect_with_msg(
+            errors, helper.is_same(expect, actual), (
                 'Converting OS separator occurs error:'
                 'expect: {0}\nactual: {1}'.format(expect, actual)
-            )
+            ))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -90,10 +90,10 @@ class TestFileChecker():
 
         for (expt, string, pattern) in expect_pairs:
             actl = fc._is_string_matching(string, pattern)
-            if expt != actl:
-                errors.append(("string:\t{0}\npattern:\t{1}"
-                               "\nexpect: '{0}'\nactl").format(
-                               string, pattern, expt, actl))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, expt == actl, (
+                    "string:\t{0}\npattern:\t{1}\nexpect: '{0}'\nactl").format(
+                        string, pattern, expt, actl))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -179,11 +179,12 @@ class TestFileChecker():
         for description, pattern in patterns.items():
             actl = fc._include_file_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
-            if not helper.is_same(expt, actl):
-                errors.append(("description:\t{0}\npattern:\t{1}"
-                               "\nexpect: '{2}'\nactl: '{3}'").format(
-                               description, pattern, helper.format_dump(expt),
-                               helper.format_dump(actl)))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, helper.is_same(expt, actl), (
+                    "description:\t{0}\npattern:\t{1}"
+                    "\nexpect: '{2}'\nactl: '{3}'").format(
+                        description, pattern, helper.format_dump(expt),
+                        helper.format_dump(actl)))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -258,11 +259,12 @@ class TestFileChecker():
         for description, pattern in patterns.items():
             actl = fc._exclude_file_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
-            if not helper.is_same(expt, actl):
-                errors.append(("description:\t{0}\npattern:\t{1}"
-                               "\nexpect: '{2}'\nactl: '{3}'").format(
-                               description, pattern, helper.format_dump(expt),
-                               helper.format_dump(actl)))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, helper.is_same(expt, actl), (
+                    "description:\t{0}\npattern:\t{1}"
+                    "\nexpect: '{2}'\nactl: '{3}'").format(
+                        description, pattern, helper.format_dump(expt),
+                        helper.format_dump(actl)))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -320,11 +322,12 @@ class TestFileChecker():
         for description, pattern in patterns.items():
             actl = fc._include_dir_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
-            if not helper.is_same(expt, actl):
-                errors.append(("description:\t{0}\npattern:\t{1}"
-                               "\nexpect: '{2}'\nactl: '{3}'").format(
-                               description, pattern, helper.format_dump(expt),
-                               helper.format_dump(actl)))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, helper.is_same(expt, actl), (
+                    "description:\t{0}\npattern:\t{1}"
+                    "\nexpect: '{2}'\nactl: '{3}'").format(
+                        description, pattern, helper.format_dump(expt),
+                        helper.format_dump(actl)))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -388,11 +391,12 @@ class TestFileChecker():
         for description, pattern in patterns.items():
             actl = fc._exclude_dir_by_match_list_in_walk(pattern, walk)
             expt = expect_pairs[description]
-            if not helper.is_same(expt, actl):
-                errors.append(("description:\t{0}\npattern:\t{1}"
-                               "\nexpect: '{2}'\nactl: '{3}'").format(
-                               description, pattern, helper.format_dump(expt),
-                               helper.format_dump(actl)))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, helper.is_same(expt, actl), (
+                    "description:\t{0}\npattern:\t{1}"
+                    "\nexpect: '{2}'\nactl: '{3}'").format(
+                        description, pattern, helper.format_dump(expt),
+                        helper.format_dump(actl)))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -407,37 +411,32 @@ class TestFileChecker():
         errors = []
         etc = {
             "CHECK_DIRS": [
-                os.path.realpath(os.path.dirname(__file__))
+                os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
             ],
             "ONLY_FILES": [],
             "ONLY_DIRS": [],
-            "IGNORE_FILES": [
-                "/README.md$",
-                ".*\\.md"
-            ],
-            "IGNORE_DIRS": [
-                ".*"
-            ],
+            "IGNORE_FILES": [],
+            "IGNORE_DIRS": [],
             "FILE_FORMATS": {
-                "LETTER_CASE": "camel_case",
+                "LETTER_CASE": "lower_case",
                 "SEP": "dash_to_underscore"
             },
             "DIR_FORMATS": {
-                "LETTER_CASE": "upper_case",
+                "LETTER_CASE": "lower_case",
                 "SEP": "dash_to_underscore"
             }
         }
 
         fc.load_settings(etc)
-        fc._get_file_list(fc._convert_walk_to_list(etc['CHECK_DIRS'][0]))
+        fc.check_file(etc['CHECK_DIRS'][0])
 
         for f in fc.get_dict():
             expect = f['filename']['expect']
             actual = f['filename']['actual']
-            if len(expect) != len(actual):
-                errors.append(("expect: {0}\nactual: {1}\nin: {2}".format(
-                    expect, actual, f['dirpath']
-                )))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, len(expect) == len(actual), (
+                    "expect: {0}\nactual: {1}\nin: {2}".format(
+                        expect, actual, f['dirpath'])))
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_check_dir(self):

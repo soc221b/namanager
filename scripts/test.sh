@@ -27,7 +27,7 @@ echo '''
                                       Nose
 ================================================================================
 '''
-nosetests . -v --with-coverage --cover-erase --cover-html
+nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
 assert
 
 echo '''
@@ -67,15 +67,35 @@ python3 FileChecker/file_checker/main.py
 cd FileChecker
 assert
 
+if [ $CI ]; then
+    if [ $error_code -eq 0 ]; then
+        echo '''
+================================================================================
+                               Update codecov badge
+================================================================================
+'''
+        pip install coverage codecov
+        codecov --required
+        assert
+    fi
+else
+    echo '''
+================================================================================
+                      Rebuild local development environment
+================================================================================
+'''
+    pip install -r requirements_dev.txt
+fi
+
 echo '''
 ================================================================================
 '''
+mv file_checker/tests .
+cd $cwd
+
 if [ $error_code -eq 0 ]; then
     echo 'Passed'
 else
     echo 'Error'
     exit 1
 fi
-
-mv file_checker/tests .
-cd $cwd

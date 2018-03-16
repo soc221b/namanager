@@ -1,7 +1,7 @@
 import os
 import json
 from file_checker.enums import FORMATS
-from file_checker.core import FileChecker # noqa
+from file_checker.core import FileChecker
 
 SETTINGS_JSON = {}
 
@@ -81,5 +81,5 @@ def main():  # pragma: no cover
 
 if __name__ == '__main__':
     import_settings(
-        'file_checker/file_checker/settings.json')  # pragma: no cover
+        'FileChecker/file_checker/settings.json')  # pragma: no cover
     main()  # pragma: no cover

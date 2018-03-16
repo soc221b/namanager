@@ -1,22 +1,21 @@
 import time
 
-import file_checker.tests.helper as helper # noqa
-import file_checker.util as util # noqa
-from file_checker.enums import FORMATS # noqa
+import file_checker.tests.helper as helper
+import file_checker.util as util
+from file_checker.enums import FORMATS
 
 
 class TestUtil():
     def test_gen_unique_str(self):
         gen_unique_str = util.gen_unique_str
-        errors = []
         u = gen_unique_str('')
 
         s = ''
-        if gen_unique_str(s) in s:
-            errors.append("'{0}' is in '{1}'".format(gen_unique_str(s), s))
+        assert gen_unique_str(s) not in s, Exception(
+            "'{0}' is in '{1}'".format(gen_unique_str(s), s))
         s = u
-        if gen_unique_str(s) in s:
-            errors.append("'{0}' is in '{1}'".format(gen_unique_str(s), s))
+        assert gen_unique_str(s) not in s, Exception(
+            "'{0}' is in '{1}'".format(gen_unique_str(s), s))
 
         # benchmark
         start = time.time()
@@ -24,10 +23,8 @@ class TestUtil():
             # 256 chars
             gen_unique_str(u * 256)
 
-        if time.time() - start > 0.5:
-            errors.append('The algorithm is not efficient.')
-
-        assert errors == [], Exception(helper.get_error_string(errors))
+        assert time.time() - start < 1, Exception(
+            'The algorithm is not efficient.')
 
     def test_get_first_word(self):
         get_first_word = util.get_first_word
@@ -54,9 +51,10 @@ class TestUtil():
 
         for s, expect in words.items():
             actual = get_first_word(s)
-            if expect != actual:
-                errors.append("expect is '{0}', actual is '{1}'".format(expect,
-                              actual))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, expect == actual, (
+                    "expect is '{0}', actual is '{1}'".format(
+                        expect, actual)))
 
         # benchmark
         start = time.time()
@@ -66,8 +64,9 @@ class TestUtil():
             get_first_word('Word' * 64)
             get_first_word('l' * 256)
             get_first_word('U' * 256)
-        if time.time() - start > 5:
-            errors.append('The algorithm is not efficient.')
+        helper.append_to_error_if_not_expect_with_msg(
+            errors, time.time() - start < 5, (
+                'The algorithm is not efficient.'))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -213,13 +212,13 @@ class TestUtil():
                         actl = get_words(sent.replace('.', sep),
                                          include_non_letter)
 
-                        if actl != expt:
-                            errors.append(("The '{0}' {1} non-alphabet in {2}"
-                                           "\nexpect: {3}"
-                                           "\nactual: {4}").format(
-                                               sent.replace(r'.', sep),
-                                               with_or_not, case, expt,
-                                               actl))
+                        helper.append_to_error_if_not_expect_with_msg(
+                            errors, actl == expt, (
+                                "The '{0}' {1} non-alphabet in {2}"
+                                "\nexpect: {3}\nactual: {4}").format(
+                                    sent.replace(r'.', sep),
+                                    with_or_not, case, expt,
+                                    actl))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -234,12 +233,14 @@ class TestUtil():
 
         # boundary
         actl = convert_sentence_to_case('', [])
-        if '' != actl:
-            errors.append("'' != '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(
+            errors, '' == actl, (
+                "'' != '{0}'".format(actl)))
         for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
-            if '' != convert_sentence_to_case('', list(case)):
-                errors.append("'' != {0}".format(
-                              convert_sentence_to_case('', list(case))))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, '' == convert_sentence_to_case('', list(case)), (
+                    "'' != {0}".format(
+                        convert_sentence_to_case('', list(case)))))
 
         # with any separator
         expect = {'lower_case': 'http_error&response*for.request-of?soap',
@@ -258,10 +259,11 @@ class TestUtil():
             for s in strings:
                 expt = expect[case[-1]]
                 actl = convert_sentence_to_case(s, case[-1])
-                if expt != actl:
-                    errors.append("In format: {0} within any separator \
-                                  \nexpect: {1} !=\nactual: {2}".format(
-                                  case, expt, actl))
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors, expt == actl, (
+                        "In format: {0} within any separator"
+                        "\nexpect: {1} !=\nactual: {2}".format(
+                            case, expt, actl)))
 
         # without any separator
         # httperrorresponseforrequestofsoap
@@ -279,10 +281,11 @@ class TestUtil():
             for s in strings:
                 expt = expect[case[-1]]
                 actl = convert_sentence_to_case(s, case[-1])
-                if expt != actl:
-                    errors.append("In format: {0} without any separator \
-                                  \nexpect: {1} !=\nactual: {2}".format(
-                                  case, expt, actl))
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors, expt == actl, (
+                        "In format: {0} without any separator"
+                        "\nexpect: {1} !=\nactual: {2}".format(
+                            case, expt, actl)))
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_convert_sep(self):
@@ -292,39 +295,41 @@ class TestUtil():
         # boundary
         for sep in helper.gen_all_possible_pair(FORMATS['SEP']):
             actl = convert_sep('', list(sep))
-            if '' != actl:
-                errors.append("'' != {0}".format(actl))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, '' == actl, (
+                    "'' != {0}".format(actl)))
         for s in ['_', '_a', 'a_', 'a_a', '-', '-a', 'a-', 'a-a']:
             actl = convert_sep(s, [])
-            if s != actl:
-                errors.append("{0} != {1}".format(s, actl))
+            helper.append_to_error_if_not_expect_with_msg(
+                errors, s == actl, (
+                    "{0} != {1}".format(s, actl)))
 
         # dash_to_underscore
         actl = convert_sep('-', ['dash_to_underscore'])
-        if '_' != actl:
-            errors.append("expect '_' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, '_' == actl, (
+            "expect '_' != actlual '{0}'".format(actl)))
         actl = convert_sep('-a', ['dash_to_underscore'])
-        if '_a' != actl:
-            errors.append("expect '_a' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, '_a' == actl, (
+            "expect '_a' != actlual '{0}'".format(actl)))
         actl = convert_sep('a-', ['dash_to_underscore'])
-        if 'a_' != actl:
-            errors.append("expect 'a_' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, 'a_' == actl, (
+            "expect 'a_' != actlual '{0}'".format(actl)))
         actl = convert_sep('a-a', ['dash_to_underscore'])
-        if 'a_a' != actl:
-            errors.append("expect 'a_a' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, 'a_a' == actl, (
+            "expect 'a_a' != actlual '{0}'".format(actl)))
 
         # underscore_to_dash
         actl = convert_sep('_', ['underscore_to_dash'])
-        if '-' != actl:
-            errors.append("expect '-' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, '-' == actl, (
+            "expect '-' != actlual '{0}'".format(actl)))
         actl = convert_sep('_a', ['underscore_to_dash'])
-        if '-a' != actl:
-            errors.append("expect '-a' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, '-a' == actl, (
+            "expect '-a' != actlual '{0}'".format(actl)))
         actl = convert_sep('a_', ['underscore_to_dash'])
-        if 'a-' != actl:
-            errors.append("expect 'a-' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, 'a-' == actl, (
+            "expect 'a-' != actlual '{0}'".format(actl)))
         actl = convert_sep('a_a', ['underscore_to_dash'])
-        if 'a-a' != actl:
-            errors.append("expect 'a-a' != actlual '{0}'".format(actl))
+        helper.append_to_error_if_not_expect_with_msg(errors, 'a-a' == actl, (
+            "expect 'a-a' != actlual '{0}'".format(actl)))
 
         assert errors == [], Exception(helper.get_error_string(errors))

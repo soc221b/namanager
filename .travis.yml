@@ -16,12 +16,5 @@ before_install:
     - pip install pep8
     - pip install autopep8
 
-install:
-    - pip install codecov # codecov isn't really part of our project, just
-                          # a useful metric
-
 script:
     - ./scripts/test.sh
-
-after_success:
-    - codecov

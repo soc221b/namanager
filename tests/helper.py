@@ -11,6 +11,11 @@ def get_error_string(errors):
     return err_str
 
 
+def append_to_error_if_not_expect_with_msg(error, expect, msg):
+    if not expect:  # pragma: no cover
+        error.append(msg)
+
+
 def gen_random_alphabet_string(length=30):
     s = ''
     for i in range(0, length):

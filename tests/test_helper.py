@@ -1,4 +1,4 @@
-import file_checker.tests.helper as helper # noqa
+import file_checker.tests.helper as helper
 import json
 
 
@@ -7,6 +7,18 @@ class TestHelper():
         get_error_string = helper.get_error_string
         assert isinstance(get_error_string([]), str)
         assert isinstance(get_error_string(['a', 'b']), str)
+
+    def test_append_to_error_if_not_expect_with_msg(self):
+        append_to_error_if_not_expect_with_msg = (
+            helper.append_to_error_if_not_expect_with_msg)
+
+        actual = []
+        append_to_error_if_not_expect_with_msg(actual, 1 == 0, "123")
+        assert actual == ["123"]
+
+        actual = []
+        append_to_error_if_not_expect_with_msg(actual, 1 == 1, "123")
+        assert actual == []
 
     def test_gen_random_alphabet_string(self):
         gen_random_alphabet_string = helper.gen_random_alphabet_string

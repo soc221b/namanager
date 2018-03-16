@@ -1,4 +1,4 @@
-from file_checker.main import import_settings, main # noqa
+from file_checker.main import import_settings, main
 
 
 class TestMain():

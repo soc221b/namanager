@@ -2,7 +2,7 @@ import setuptools
 import os
 
 NAME = 'File Checker'
-VERSION = '0.0.0'
+VERSION = '0.0.1'
 DESCRIPTION = (
     'A checker could check name of file/directory is expectable or not.'
 )
