@@ -8,7 +8,7 @@ SETTINGS_JSON = {}
 
 def raiser(condition, msg):
     if not condition:
-        raise Exception('settings must be dict.')  # pragma: no cover
+        raise Exception(msg)  # pragma: no cover
 
 
 def import_settings(settings_file):
@@ -18,7 +18,7 @@ def import_settings(settings_file):
         SETTINGS_JSON = json.loads(s.read())
 
     raiser(isinstance(SETTINGS_JSON, dict),
-           Exception('settings must be dict.'))
+           'settings must be dict.')
 
     SETTING_TYPE_PAIR = {
         'CHECK_DIRS': list,
@@ -33,19 +33,19 @@ def import_settings(settings_file):
     for key, value in SETTING_TYPE_PAIR.items():
         SETTINGS_JSON[key] = SETTINGS_JSON.get(key, value())
         raiser(isinstance(SETTINGS_JSON[key], value),
-               Exception('{0} must be {1}.'.format(key, value)))
+               '{0} must be {1}.'.format(key, value))
 
     for k, v in SETTINGS_JSON['FILE_FORMATS'].items():
         raiser(k in FORMATS,
-               Exception('FILE_FORMATS has wrong key.'))
+               'FILE_FORMATS has wrong key:{0}.'.format(k))
         raiser(v in FORMATS[k],
-               Exception('FILE_FORMATS[\'{0}\'] has wrong key.'.format(k)))
+               'FILE_FORMATS[\'{0}\'] has wrong key:{1}.'.format(k, v))
 
     for k, v in SETTINGS_JSON['DIR_FORMATS'].items():
         raiser(k in FORMATS,
-               Exception('DIR_FORMATS has wrong key.'))
+               'DIR_FORMATS has wrong key:{0}.'.format(k))
         raiser(v in FORMATS[k],
-               Exception('DIR_FORMATS[\'{0}\'] has wrong key.'.format(k)))
+               'DIR_FORMATS[\'{0}\'] has wrong key:{1}.'.format(k, v))
 
 
 def main():  # pragma: no cover
