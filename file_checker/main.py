@@ -20,33 +20,20 @@ def import_settings(settings_file):
     raiser(isinstance(SETTINGS_JSON, dict),
            Exception('settings must be dict.'))
 
-    SETTINGS_JSON['CHECK_DIRS'] = SETTINGS_JSON.get('CHECK_DIRS', [])
-    raiser(isinstance(SETTINGS_JSON['CHECK_DIRS'], list),
-           Exception('CHECK_DIRS must be list.'))
+    SETTING_TYPE_PAIR = {
+        'CHECK_DIRS': list,
+        'ONLY_FILES': list,
+        'ONLY_DIRS': list,
+        'IGNORE_FILES': list,
+        'IGNORE_DIRS': list,
+        'FILE_FORMATS': dict,
+        'DIR_FORMATS': dict
+    }
 
-    SETTINGS_JSON['ONLY_FILES'] = SETTINGS_JSON.get('ONLY_FILES', [])
-    raiser(isinstance(SETTINGS_JSON['ONLY_FILES'], list),
-           Exception('ONLY_FILES must be list.'))
-
-    SETTINGS_JSON['ONLY_DIRS'] = SETTINGS_JSON.get('ONLY_DIRS', [])
-    raiser(isinstance(SETTINGS_JSON['ONLY_DIRS'], list),
-           Exception('ONLY_DIRS must be list.'))
-
-    SETTINGS_JSON['IGNORE_FILES'] = SETTINGS_JSON.get('IGNORE_FILES', [])
-    raiser(isinstance(SETTINGS_JSON['IGNORE_FILES'], list),
-           Exception('IGNORE_FILES must be list.'))
-
-    SETTINGS_JSON['IGNORE_DIRS'] = SETTINGS_JSON.get('IGNORE_DIRS', [])
-    raiser(isinstance(SETTINGS_JSON['IGNORE_DIRS'], list),
-           Exception('IGNORE_DIRS must be list.'))
-
-    SETTINGS_JSON['FILE_FORMATS'] = SETTINGS_JSON.get('FILE_FORMATS', {})
-    raiser(isinstance(SETTINGS_JSON['FILE_FORMATS'], dict),
-           Exception('FILE_FORMATS must be dict.'))
-
-    SETTINGS_JSON['DIR_FORMATS'] = SETTINGS_JSON.get('DIR_FORMATS', {})
-    raiser(isinstance(SETTINGS_JSON['DIR_FORMATS'], dict),
-           Exception('DIR_FORMATS must be dict.'))
+    for key, value in SETTING_TYPE_PAIR.items():
+        SETTINGS_JSON[key] = SETTINGS_JSON.get(key, value())
+        raiser(isinstance(SETTINGS_JSON[key], value),
+               Exception('{0} must be {1}.'.format(key, value)))
 
     for k, v in SETTINGS_JSON['FILE_FORMATS'].items():
         raiser(k in FORMATS,
