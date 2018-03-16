@@ -35,7 +35,7 @@ echo '''
                                      Flake8
 ================================================================================
 '''
-flake8 . --exclude env,build
+flake8 . bin/file_checker --exclude env,build
 assert
 
 echo '''
@@ -64,7 +64,17 @@ echo '''
 cp file_checker/main.py ../
 cd ../
 python3 FileChecker/file_checker/main.py
+assert
 cd FileChecker
+assert
+
+
+echo '''
+================================================================================
+                                     Run CLI
+================================================================================
+'''
+file_checker --settings file_checker/settings.json
 assert
 
 if [ $CI ]; then

@@ -1,10 +1,12 @@
-from file_checker.main import import_settings, main
+from file_checker.main import entry
 
 
 class TestMain():
     def test_import_settings(self):
-        import_settings(settings_file='file_checker/settings.json')
+        pass
 
-    def test_main(self):
-        import_settings(settings_file='file_checker/settings.json')
-        main()
+    def test_check(self):
+        pass
+
+    def test_entry(self):
+        entry('file_checker/settings.json', False)
