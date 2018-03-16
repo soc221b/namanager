@@ -55,6 +55,15 @@ def get_words(string, include_non_letter=True):
     return [w for w in words if w != '']
 
 
+def convert_sep(string, cases):
+    for case in cases:
+        if case == 'dash_to_underscore':
+            string = string.replace('-', '_')
+        if case == 'underscore_to_dash':
+            string = string.replace('_', '-')
+    return string
+
+
 def convert_word_to_case(word, case):
     """
     Only support pascal case,
@@ -62,15 +71,12 @@ def convert_word_to_case(word, case):
     user can just change first letter to lowercase.
     """
 
-    try:
-        if case == 'upper_case':
-            word = word.upper()
-        if case == 'lower_case':
-            word = word.lower()
-        if case == 'pascal_case':
-            word = word[0].upper() + word[1:].lower()
-    except Exception:
-        pass
+    if case == 'upper_case':
+        word = word.upper()
+    if case == 'lower_case':
+        word = word.lower()
+    if case == 'pascal_case':
+        word = word[0].upper() + word[1:].lower()
 
     return word
 

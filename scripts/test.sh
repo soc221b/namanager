@@ -1,7 +1,7 @@
 cwd=$(pwd)
 file_checker_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
 cd $file_checker_root_path
-
+mv tests file_checker
 error_code=0
 
 
@@ -14,13 +14,20 @@ assert()
     fi
 }
 
+echo '''
+================================================================================
+                        Setting up a development environment
+================================================================================
+'''
+pip install -r requirements_dev.txt
+assert
 
 echo '''
 ================================================================================
                                       Nose
 ================================================================================
 '''
-nosetests . -v --with-coverage --cover-erase
+nosetests . -v --with-coverage --cover-erase --cover-html
 assert
 
 echo '''
@@ -28,26 +35,36 @@ echo '''
                                      Flake8
 ================================================================================
 '''
-flake8 . --exclude env
+flake8 . --exclude env,build
 assert
 
 echo '''
 ================================================================================
-                                   Run tests
+                         Setting up a client environment
 ================================================================================
 '''
-python3 tests/test_util.py
+pip uninstall -r requirements_dev.txt -y
 assert
-
-python3 tests/test_file_checker.py
+pip install -r requirements.txt
 assert
 
 echo '''
 ================================================================================
-                                   Run main
+                                   Setup module
 ================================================================================
 '''
-python3 src/file_checker.py
+python3 setup.py install
+assert
+
+echo '''
+================================================================================
+                                     Run main
+================================================================================
+'''
+cp file_checker/main.py ../
+cd ../
+python3 FileChecker/file_checker/main.py
+cd FileChecker
 assert
 
 echo '''
@@ -60,4 +77,5 @@ else
     exit 1
 fi
 
+mv file_checker/tests .
 cd $cwd

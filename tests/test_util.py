@@ -1,14 +1,8 @@
 import time
-import sys
-import os
 
-sys.path.append(os.sep.join([os.path.dirname(os.path.realpath(__file__)),
-                             '..',
-                             'src'
-                             ]))
-import helper # noqa
-import util # noqa
-from enums import FORMATS # noqa
+import file_checker.tests.helper as helper # noqa
+import file_checker.util as util # noqa
+from file_checker.enums import FORMATS # noqa
 
 
 class TestUtil():
@@ -230,7 +224,7 @@ class TestUtil():
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_convert_sentence_to_case(self):
-        """
+        """test_convert_sentence_to_case
         This test is assumed that
         convert_words will be called indirectly by convert_sentence
         """
@@ -242,7 +236,7 @@ class TestUtil():
         actl = convert_sentence_to_case('', [])
         if '' != actl:
             errors.append("'' != '{0}'".format(actl))
-        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
             if '' != convert_sentence_to_case('', list(case)):
                 errors.append("'' != {0}".format(
                               convert_sentence_to_case('', list(case))))
@@ -260,7 +254,7 @@ class TestUtil():
                    'Http_Error&Response*For.Request-Of?Soap',
                    ]
 
-        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
             for s in strings:
                 expt = expect[case[-1]]
                 actl = convert_sentence_to_case(s, case[-1])
@@ -281,7 +275,7 @@ class TestUtil():
                    'HttpErrorResponseForRequestOfSoap',
                    ]
 
-        for case in helper.gen_all_possible_pair(FORMATS['letter_case']):
+        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
             for s in strings:
                 expt = expect[case[-1]]
                 actl = convert_sentence_to_case(s, case[-1])
@@ -289,4 +283,48 @@ class TestUtil():
                     errors.append("In format: {0} without any separator \
                                   \nexpect: {1} !=\nactual: {2}".format(
                                   case, expt, actl))
+        assert errors == [], Exception(helper.get_error_string(errors))
+
+    def test_convert_sep(self):
+        convert_sep = util.convert_sep
+        errors = []
+
+        # boundary
+        for sep in helper.gen_all_possible_pair(FORMATS['SEP']):
+            actl = convert_sep('', list(sep))
+            if '' != actl:
+                errors.append("'' != {0}".format(actl))
+        for s in ['_', '_a', 'a_', 'a_a', '-', '-a', 'a-', 'a-a']:
+            actl = convert_sep(s, [])
+            if s != actl:
+                errors.append("{0} != {1}".format(s, actl))
+
+        # dash_to_underscore
+        actl = convert_sep('-', ['dash_to_underscore'])
+        if '_' != actl:
+            errors.append("expect '_' != actlual '{0}'".format(actl))
+        actl = convert_sep('-a', ['dash_to_underscore'])
+        if '_a' != actl:
+            errors.append("expect '_a' != actlual '{0}'".format(actl))
+        actl = convert_sep('a-', ['dash_to_underscore'])
+        if 'a_' != actl:
+            errors.append("expect 'a_' != actlual '{0}'".format(actl))
+        actl = convert_sep('a-a', ['dash_to_underscore'])
+        if 'a_a' != actl:
+            errors.append("expect 'a_a' != actlual '{0}'".format(actl))
+
+        # underscore_to_dash
+        actl = convert_sep('_', ['underscore_to_dash'])
+        if '-' != actl:
+            errors.append("expect '-' != actlual '{0}'".format(actl))
+        actl = convert_sep('_a', ['underscore_to_dash'])
+        if '-a' != actl:
+            errors.append("expect '-a' != actlual '{0}'".format(actl))
+        actl = convert_sep('a_', ['underscore_to_dash'])
+        if 'a-' != actl:
+            errors.append("expect 'a-' != actlual '{0}'".format(actl))
+        actl = convert_sep('a_a', ['underscore_to_dash'])
+        if 'a-a' != actl:
+            errors.append("expect 'a-a' != actlual '{0}'".format(actl))
+
         assert errors == [], Exception(helper.get_error_string(errors))
