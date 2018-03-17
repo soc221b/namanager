@@ -40,7 +40,6 @@ before_build:
   # What would the Windows equivalent of the commands you used be?
 
 build_script:
-  - 
   - %PYTHON%/Scripts/nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
   - %PYTHON%/Scripts/flake8 . --exclude env,build
   - %PYTHON%/Scripts/pip uninstall -r requirements_dev.txt -y
