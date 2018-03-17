@@ -1,7 +1,6 @@
 cwd=$(pwd)
 file_checker_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
 cd $file_checker_root_path
-mv tests file_checker
 error_code=0
 
 
@@ -27,7 +26,11 @@ echo '''
                                       Nose
 ================================================================================
 '''
+mv tests file_checker
+assert
 nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
+assert
+mv file_checker/tests .
 assert
 
 echo '''
@@ -100,7 +103,6 @@ fi
 echo '''
 ================================================================================
 '''
-mv file_checker/tests .
 cd $cwd
 
 if [ $error_code -eq 0 ]; then
