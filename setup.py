@@ -15,9 +15,9 @@ AUTHOR = (
     'Arnav Borborah (arnavb@github)'
 )
 AUTHOR_EMAIL = 'iattempt.net@gmail.com'
-URL = 'https://github.com/iattempt/FileChecker'
+URL = 'https://github.com/iattempt/namanager'
 PACKAGES = {'namanager'}
-KEYWORDS = ['checker', 'formatter', 'filename']
+KEYWORDS = ['name', 'manager', 'checker', 'formatter', 'filename']
 PYTHON_REQUIRES = '==3.4.*,==3.5.*,==3.6.*'
 
 setuptools.setup(
