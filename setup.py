@@ -1,7 +1,7 @@
 import setuptools
 import os
 
-NAME = 'File Checker'
+NAME = 'namanager'
 VERSION = '0.0.1'
 DESCRIPTION = (
     'A checker could check name of file/directory is expectable or not.'
@@ -16,7 +16,7 @@ AUTHOR = (
 )
 AUTHOR_EMAIL = 'iattempt.net@gmail.com'
 URL = 'https://github.com/iattempt/FileChecker'
-PACKAGES = {'file_checker'}
+PACKAGES = {'namanager'}
 KEYWORDS = ['checker', 'formatter', 'filename']
 PYTHON_REQUIRES = '==3.4.*,==3.5.*,==3.6.*'
 

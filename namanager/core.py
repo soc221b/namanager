@@ -3,10 +3,10 @@ import re
 import json
 import dicttoxml
 from xml.dom.minidom import parseString
-import file_checker.util as util
+import namanager.util as util
 
 
-class FileChecker():
+class Namanager():
     def __init__(self, settings={}):
         self.init_settings()
         self.load_settings(settings)

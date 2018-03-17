@@ -1,4 +1,4 @@
-import file_checker.tests.helper as helper
+import namanager.tests.helper as helper
 import json
 
 

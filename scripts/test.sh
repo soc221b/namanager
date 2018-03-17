@@ -1,7 +1,7 @@
 cwd=$(pwd)
-file_checker_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
-cd $file_checker_root_path
-mv tests file_checker
+namanager_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
+cd $namanager_root_path
+mv tests namanager
 error_code=0
 
 
@@ -61,10 +61,10 @@ echo '''
                                      Run main
 ================================================================================
 '''
-cp file_checker/main.py ../
+cp namanager/main.py ../
 cd ../
-python3 FileChecker/file_checker/main.py
-cd FileChecker
+python3 namanager/namanager/main.py
+cd namanager
 assert
 
 if [ $CI ]; then
@@ -90,7 +90,7 @@ fi
 echo '''
 ================================================================================
 '''
-mv file_checker/tests .
+mv namanager/tests .
 cd $cwd
 
 if [ $error_code -eq 0 ]; then
