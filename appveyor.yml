@@ -1,1 +1,52 @@
+version: "{build}"
 
+environment:
+  - matrix:
+    # Python 3.4
+    - PYTHON: "C:\\Python34"
+      PYTHON_VERSION: "3.4.4"
+      PYTHON_ARCH: "32"
+      
+    - PYTHON: "C:\\Python34-x64"
+      PYTHON_VERSION: "3.4.4"
+      PYTHON_ARCH: "64"
+      
+    # Python 3.5
+    - PYTHON: "C:\\Python35"
+      PYTHON_VERSION: "3.5.3"
+      PYTHON_ARCH: "32"
+      
+    - PYTHON: "C:\\Python35-x64"
+      PYTHON_VERSION: "3.5.3"
+      PYTHON_ARCH: "64"
+    
+    # Python 3.6
+    - PYTHON: "C:\\Python36"
+      PYTHON_VERSION: "3.6.4"
+      PYTHON_ARCH: "32"
+      
+    - PYTHON: "C:\\Python36-x64"
+      PYTHON_VERSION: "3.6.4"
+      PYTHON_ARCH: "64"
+
+init:
+  - "echo %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%" # A status message
+
+install:
+  - "%PYTHON%/Scripts/pip.exe install -r requirements_dev.txt"
+
+before_build:
+  - cwd = %cd%
+  # What would the Windows equivalent of the commands you used be?
+
+build_script:
+  - 
+  - %PYTHON%/Scripts/nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
+  - %PYTHON%/Scripts/flake8 . --exclude env,build
+  - %PYTHON%/Scripts/pip uninstall -r requirements_dev.txt -y
+  - %PYTHON%/Scripts/pip install -r requirements.txt
+  - %PYTHON% setup.py install
+  - copy file_checker/main.py ../ && cd ../
+  - %PYTHON% FileChecker/file_checker/main.py
+  - cd FileChecker
+  # TODO
