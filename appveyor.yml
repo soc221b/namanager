@@ -37,7 +37,7 @@ install:
 
 before_build:
   - cwd = %cd%
-  # What would the Windows equivalent of the commands you used be?
+  # TODO: What would the Windows equivalent of the commands you used be?
 
 build_script:
   - %PYTHON%/Scripts/nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
@@ -48,4 +48,4 @@ build_script:
   - copy file_checker/main.py ../ && cd ../
   - %PYTHON% FileChecker/file_checker/main.py
   - cd FileChecker
-  # TODO
+  # TODO: Add rest of build script
