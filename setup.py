@@ -19,6 +19,7 @@ URL = 'https://github.com/iattempt/FileChecker'
 PACKAGES = {'file_checker'}
 SCRIPT = ['bin/file_checker']
 KEYWORDS = ['checker', 'formatter', 'filename']
+INSTALL_REQUIRES = ['dicttoxml', 'xmltodict']
 PYTHON_REQUIRES = '==3.4.*,==3.5.*,==3.6.*'
 
 setuptools.setup(
@@ -33,5 +34,6 @@ setuptools.setup(
     packages=PACKAGES,
     scripts=SCRIPT,
     keywords=KEYWORDS,
+    install_requires=INSTALL_REQUIRES,
     python_requires=PYTHON_REQUIRES
 )
