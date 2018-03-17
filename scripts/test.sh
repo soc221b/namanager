@@ -1,6 +1,6 @@
-cwd=$(pwd)
-file_checker_root_path="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
-cd $file_checker_root_path
+CWD=$(pwd)
+FILE_CHECKER_ROOT_PATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
+cd $FILE_CHECKER_ROOT_PATH
 error_code=0
 
 
@@ -13,17 +13,25 @@ assert()
     fi
 }
 
+deactivate
+
 echo '''
 ================================================================================
-                        Setting up a development environment
+Setting up a development environment
 ================================================================================
 '''
+python3 -m venv dev
+assert
+source ./dev/bin/activate
+assert
+echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
+echo ""
 pip install -r requirements_dev.txt
 assert
 
 echo '''
 ================================================================================
-                                      Nose
+Unit tests
 ================================================================================
 '''
 mv tests file_checker
@@ -35,56 +43,55 @@ assert
 
 echo '''
 ================================================================================
-                                     Flake8
+Flake8
 ================================================================================
 '''
-flake8 . bin/file_checker --exclude env,build
+flake8 . bin/file_checker --exclude dev,dist,build
 assert
 
 echo '''
 ================================================================================
-                         Setting up a client environment
+Deactivate the development environment
 ================================================================================
 '''
-pip uninstall -r requirements_dev.txt -y
-assert
-pip install -r requirements.txt
+deactivate
 assert
 
 echo '''
 ================================================================================
-                                   Setup module
+Setting up a distribute environment
 ================================================================================
 '''
+python3 -m venv dist
+assert
+source ./dist/bin/activate
+assert
+echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
+echo ""
 python3 setup.py install
 assert
 
 echo '''
 ================================================================================
-                                     Run main
-================================================================================
-'''
-cp file_checker/main.py ../
-cd ../
-python3 FileChecker/file_checker/main.py
-assert
-cd FileChecker
-assert
-
-
-echo '''
-================================================================================
-                                     Run CLI
+Run CLI
 ================================================================================
 '''
 file_checker --settings file_checker/settings.json
+assert
+
+echo '''
+================================================================================
+Deactivate the distribute environment
+================================================================================
+'''
+deactivate
 assert
 
 if [ $CI ]; then
     if [ $error_code -eq 0 ]; then
         echo '''
 ================================================================================
-                               Update codecov badge
+Update codecov badge
 ================================================================================
 '''
         pip install coverage codecov
@@ -94,16 +101,19 @@ if [ $CI ]; then
 else
     echo '''
 ================================================================================
-                      Rebuild local development environment
+Rebuild local development environment
 ================================================================================
 '''
+    source ./dev/bin/activate
+    echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
+    echo ""
     pip install -r requirements_dev.txt
 fi
 
 echo '''
 ================================================================================
 '''
-cd $cwd
+cd $CWD
 
 if [ $error_code -eq 0 ]; then
     echo 'Passed'
