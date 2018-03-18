@@ -34,11 +34,11 @@ echo '''
 Unit tests
 ================================================================================
 '''
-mv tests file_checker
+mv tests namanager
 assert
 nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
 assert
-mv file_checker/tests .
+mv namanager/tests .
 assert
 
 echo '''
@@ -46,7 +46,7 @@ echo '''
 Flake8
 ================================================================================
 '''
-flake8 . bin/file_checker --exclude dev,dist,build
+flake8 . bin/namanager --exclude dev,dist,build
 assert
 
 echo '''
@@ -76,7 +76,7 @@ echo '''
 Run CLI
 ================================================================================
 '''
-namanager --settings file_checker/settings.json
+namanager --settings namanager/settings.json
 assert
 
 echo '''

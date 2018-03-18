@@ -1,5 +1,6 @@
 from namanager.main import entry
 
+
 class TestMain():
     def test_import_settings(self):
         pass

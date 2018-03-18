@@ -1,5 +1,5 @@
-from namanager.main import import_settings, main
+from namanager.main import entry
 
 __all__ = [
-    'import_settings', 'main'
+    'entry'
 ]

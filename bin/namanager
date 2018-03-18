@@ -2,14 +2,14 @@
 
 import argparse
 import os
-from file_checker.main import entry
+from namanager.main import entry
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--settings", default=os.path.join(os.getcwd(),
                     'settings.json'),
                     help="Import settings.json.")
 parser.add_argument("--required", action='store_true',
-                    help="If file_checker fails it will exit 1.")
+                    help="If namanager fails it will exit 1.")
 parser.add_argument("--with-xml", action='store_true',
                     help="Generate as xml format.")
 parser.add_argument("--with-json", action='store_true',
