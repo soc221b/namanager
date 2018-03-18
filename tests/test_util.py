@@ -1,8 +1,8 @@
 import time
 
-import file_checker.tests.helper as helper
-import file_checker.util as util
-from file_checker.enums import FORMATS
+import namanager.tests.helper as helper
+import namanager.util as util
+from namanager.enums import FORMATS
 
 
 class TestUtil():
