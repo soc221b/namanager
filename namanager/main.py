@@ -81,5 +81,5 @@ def main():  # pragma: no cover
 
 if __name__ == '__main__':
     import_settings(
-        'Namanager/namanager/settings.json')  # pragma: no cover
+        'namanager/namanager/settings.json')  # pragma: no cover
     main()  # pragma: no cover

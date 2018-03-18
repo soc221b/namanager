@@ -64,6 +64,7 @@ echo '''
 cp namanager/main.py ../
 cd ../
 python3 namanager/namanager/main.py
+assert
 cd namanager
 assert
 
