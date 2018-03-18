@@ -1,7 +1,7 @@
 import os
 import json
-from file_checker.enums import FORMATS
-from file_checker.core import FileChecker
+from namanager.enums import FORMATS
+from namanager.core import Namanager
 
 SETTINGS_JSON = {}
 
@@ -63,7 +63,7 @@ def import_settings(settings_file):
 
 def check(required=False, fmt='json'):  # pragma: no cover
     for d in SETTINGS_JSON['CHECK_DIRS']:
-        checker = FileChecker(SETTINGS_JSON)
+        checker = Namanager(SETTINGS_JSON)
         checker.check(d)
 
         if fmt == 'readable':
@@ -96,4 +96,4 @@ def entry(settings_file, required=False, fmt='json'):
 
 
 if __name__ == '__main__':  # pragma: no cover
-    entry('FileChecker/file_checker/settings.json')
+    entry('namanager/file_checker/settings.json')

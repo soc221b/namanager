@@ -1,6 +1,6 @@
 CWD=$(pwd)
-FILE_CHECKER_ROOT_PATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
-cd $FILE_CHECKER_ROOT_PATH
+NAMANAGER_ROOT_PATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
+cd $NAMANAGER_ROOT_PATH
 error_code=0
 
 
@@ -76,7 +76,7 @@ echo '''
 Run CLI
 ================================================================================
 '''
-file_checker --settings file_checker/settings.json
+namanager --settings file_checker/settings.json
 assert
 
 echo '''

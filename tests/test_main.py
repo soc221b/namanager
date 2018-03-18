@@ -1,5 +1,4 @@
-from file_checker.main import entry
-
+from namanager.main import entry
 
 class TestMain():
     def test_import_settings(self):
@@ -9,4 +8,4 @@ class TestMain():
         pass
 
     def test_entry(self):
-        entry('file_checker/settings.json', False)
+        entry('namanager/settings.json', False)

@@ -2,13 +2,13 @@ import os
 import sys
 import json
 import xmltodict
-import file_checker.tests.helper as helper
-from file_checker.core import FileChecker
+import namanager.tests.helper as helper
+from namanager.core import Namanager
 
 
-class TestFileChecker():
+class TestNamanager():
     def test_init_settings(self):
-        fc = FileChecker()
+        fc = Namanager()
         self.test_load_settings(fc)
 
         fc.init_settings()
@@ -16,7 +16,7 @@ class TestFileChecker():
         self.test_properties(fc)
 
     def test_convert_os_sep_of_str_in_list(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
         here = os.path.realpath(os.path.dirname(__file__))
 
@@ -31,7 +31,7 @@ class TestFileChecker():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_load_settings(self, fc=FileChecker()):
+    def test_load_settings(self, fc=Namanager()):
         settings = {
             # "CHECK_DIRS": ["123"],
             "ONLY_FILES": ["123"],
@@ -55,7 +55,7 @@ class TestFileChecker():
         assert "123" == fc.dir_letter_case
         assert "123" == fc.dir_sep
 
-    def test_properties(self, fc=FileChecker()):
+    def test_properties(self, fc=Namanager()):
         assert not fc.error_info
         assert not fc.file_formats
         assert not fc.dir_formats
@@ -69,7 +69,7 @@ class TestFileChecker():
         assert not fc.dir_letter_case
 
     def test_is_string_matching(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
 
         # todo: add more pairs
@@ -98,7 +98,7 @@ class TestFileChecker():
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_convert_walk_to_list(self):
-        fc = FileChecker()
+        fc = Namanager()
 
         actl = fc._convert_walk_to_list(os.path.dirname(sys.executable))
 
@@ -109,7 +109,7 @@ class TestFileChecker():
         assert isinstance(actl[0][2], list)
 
     def test_get_root_in_walk(self):
-        fc = FileChecker()
+        fc = Namanager()
 
         expt = os.path.realpath(os.path.dirname(sys.executable))
         walk = [tp for tp in os.walk(expt)]
@@ -119,7 +119,7 @@ class TestFileChecker():
         assert actl == expt
 
     def test_include_file_by_match_list_in_walk(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
         walk = [
             # needs to test file which not involved with extension
@@ -189,7 +189,7 @@ class TestFileChecker():
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_exclude_file_by_match_list_in_walk(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
         walk = [
             ('/root/to/path', ['a', 'b', 'c'], [
@@ -269,7 +269,7 @@ class TestFileChecker():
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_include_dir_by_match_list_in_walk(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
         walk = [
             ('/root/to/path', ['aa', 'ba', 'ca'], [
@@ -332,7 +332,7 @@ class TestFileChecker():
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_exclude_dir_by_match_list_in_walk(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
         walk = [
             ('/root/to/path', ['aa', 'ba', 'ca'], [
@@ -407,7 +407,7 @@ class TestFileChecker():
         pass
 
     def test_check_file(self):
-        fc = FileChecker()
+        fc = Namanager()
         errors = []
         etc = {
             "CHECK_DIRS": [
@@ -446,7 +446,7 @@ class TestFileChecker():
         pass
 
     def test_get_xml_json_dict(self):
-        fc = FileChecker()
+        fc = Namanager()
         data = [
             {"_id": "5aa7e7247d6d91ca300e1fb3","index": 0,"guid": "319cb0fe-29b9-4d60-9fde-4e82aee9bc16","booleans": [True, False],"lists": [[True], [False]],"numbers": {'1':{'1':1}, '2':{'2':2}, '3':{'3':3}},"list": [213, 3],"isActive": False,"balance": "$2,803.51","picture": "http://placehold.it/32x32","age": 31,"eyeColor": "brown","name": "Esperanza Weeks","gender": "female","company": "EZENTIA","email": "esperanzaweeks@ezentia.com","phone": "+1 (930) 533-3206","address": "653 Division Avenue, Tilleda, Ohio, 5025","about": "Duis laborum dolor veniam aliqua nostrud velit excepteur qui. Est consectetur incididunt amet nulla pariatur. Do non consequat in occaecat quis esse incididunt. Dolore eu adipisicing esse ad quis et nisi ut ad. Adipisicing amet magna deserunt aliquip nulla laboris cupidatat velit qui ipsum deserunt. Nulla cupidatat eu nisi eu duis nostrud duis sint culpa consectetur fugiat do tempor laboris.","registered": "2014-11-26T08:32:11 -08:00","latitude": 83.870374,"longitude": 165.0311,"tags": ["non","laboris","sit","pariatur","enim","magna","qui"],"friends": [{"id": 0,"name": "Claudine Butler"},{"id": 1,"name": "Tate Potts"},{"id": 2,"name": "Clark Franco"}],"greeting": "Hello, Esperanza Weeks! You have 6 unread messages.","favoriteFruit": "apple"}, # noqa
         ]
