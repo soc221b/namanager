@@ -71,6 +71,26 @@ deactivate_env()
     fi
 }
 
+# -d: make dir
+mktemp_cwd()
+{
+    existed='blah'
+    while [[ $existed != '' ]]; do
+        rand=`openssl rand -base64 16`
+        rand=${rand//\//_}
+        existed=`ls | grep $rand`
+    done
+
+    temp_type=false
+    for p in $@; do
+        if [[ $p = '-d' ]]; then temp_type=true; fi
+    done
+
+    if [[ $temp_type = true ]]; then mkdir $rand; else touch $rand; fi
+
+    result=$rand
+}
+
 ################################################################################
 # Main
 ################################################################################
@@ -139,8 +159,20 @@ echo '''
 Run CLI
 ================================================================================
 '''
-namanager --settings namanager/settings.json
+# generate temp files
+mktemp_cwd -d
+rand_dir=$result
+cd $rand_dir
+for (( i = 0; i < 500; i++ )); do
+    mktemp_cwd -d
+    mktemp_cwd
+done
+
+namanager --settings ../namanager/settings.json
 assert
+
+cd $NAMANAGER_ROOT_PATH
+rm -rf $rand_dir
 
 echo '''
 ================================================================================
