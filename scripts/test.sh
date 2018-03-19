@@ -3,6 +3,15 @@ NAMANAGER_ROOT_PATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
 cd $NAMANAGER_ROOT_PATH
 error_code=0
 
+# changes version which user defined
+# pass version to $1
+if [ $# -eq 1 ]; then
+    PIP=`which pip$1`
+    PYTHON=`which python$1`
+else
+    PIP=`which pip`
+    PYTHON=`which python`
+fi
 
 assert()
 {
@@ -28,13 +37,13 @@ echo '''
 Setting up a development environment
 ================================================================================
 '''
-python3 -m venv dev
+$PYTHON -m venv dev
 assert
 source ./dev/bin/activate
 assert
 echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
 echo ""
-pip install -r requirements_dev.txt
+$PIP install -r requirements_dev.txt
 assert
 
 echo '''
@@ -70,13 +79,13 @@ echo '''
 Setting up a distribute environment
 ================================================================================
 '''
-python3 -m venv dist
+$PYTHON -m venv dist
 assert
 source ./dist/bin/activate
 assert
 echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
 echo ""
-python3 setup.py install
+$PYTHON setup.py install
 assert
 
 echo '''
@@ -102,7 +111,7 @@ if [ $CI ]; then
 Update codecov badge
 ================================================================================
 '''
-        pip install coverage codecov
+        $PIP install coverage codecov
         codecov --required
         assert
     fi
@@ -115,7 +124,7 @@ Rebuild local development environment
     source ./dev/bin/activate
     echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
     echo ""
-    pip install -r requirements_dev.txt
+    $PIP install -r requirements_dev.txt
 fi
 
 echo '''
