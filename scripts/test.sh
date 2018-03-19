@@ -13,6 +13,13 @@ else
     PYTHON=`which python`
 fi
 
+# '2 7 14' or '3 6 4', etc.
+VERSION=`$PYTHON -c 'import sys; print("%i %i %i" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))'`
+VERSION=($VERSION)
+VERSION_MAJOR=${VERSION[0]}
+VERSION_MINOR=${VERSION[1]}
+VERSION_PATCH=${VERSION[2]}
+
 assert()
 {
     error=$?
