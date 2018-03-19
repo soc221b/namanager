@@ -1,3 +1,7 @@
+################################################################################
+# Set up
+################################################################################
+
 CWD=$(pwd)
 NAMANAGER_ROOT_PATH="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )/.."
 cd $NAMANAGER_ROOT_PATH
@@ -19,6 +23,9 @@ VERSION=($VERSION)
 VERSION_MAJOR=${VERSION[0]}
 VERSION_MINOR=${VERSION[1]}
 VERSION_PATCH=${VERSION[2]}
+################################################################################
+# Functions
+################################################################################
 
 assert()
 {
@@ -29,27 +36,65 @@ assert()
     fi
 }
 
+is_supports_venv()
+{
+    if [[ VERSION_MAJOR -ge 3 ]] && [[ VERSION_MINOR -ge 3 ]]; then
+        is_supports=1
+    else
+        is_supports=0
+    fi
+
+    return $is_supports
+}
+
+# pass name to $1
+activate_env()
+{
+    is_supports_venv
+    if [[ $? -eq 1 ]]; then
+        $PYTHON -m venv $1
+        assert
+        source ./$1/bin/activate
+        assert
+        echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
+        echo ""
+    fi
+}
+
+# pass name to $1
+deactivate_env()
+{
+    is_supports_venv
+    if [[ $? -eq 1 ]]; then
+        deactivate
+        assert
+    fi
+}
+
+################################################################################
+# Main
+################################################################################
+echo $SHELL
+echo `which $PIP`
+echo `which $PYTHON`
+echo ""
+
 echo '''
 ================================================================================
 Tearing down environment
 ================================================================================
 '''
-if [ $CI ]; then
-    deactivate
-    rm -rf dev dist
-fi
+deactivate
+rm -rf dev dist
+$PIP uninstall -y -r requirements_dev.txt
+$PIP uninstall -y -r requirements.txt
 
 echo '''
 ================================================================================
 Setting up a development environment
 ================================================================================
 '''
-$PYTHON -m venv dev
-assert
-source ./dev/bin/activate
-assert
-echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
-echo ""
+activate_env dev
 $PIP install -r requirements_dev.txt
 assert
 
@@ -78,20 +123,14 @@ echo '''
 Deactivate the development environment
 ================================================================================
 '''
-deactivate
-assert
+deactivate_env dev
 
 echo '''
 ================================================================================
 Setting up a distribute environment
 ================================================================================
 '''
-$PYTHON -m venv dist
-assert
-source ./dist/bin/activate
-assert
-echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
-echo ""
+activate_env dist
 $PYTHON setup.py install
 assert
 
@@ -108,8 +147,7 @@ echo '''
 Deactivate the distribute environment
 ================================================================================
 '''
-deactivate
-assert
+deactivate_env dist
 
 if [ $CI ]; then
     if [ $error_code -eq 0 ]; then
