@@ -2,6 +2,7 @@ import random
 import itertools
 import string
 import collections
+import json
 
 
 def get_error_string(errors):
@@ -92,97 +93,5 @@ def is_same(a, b):
     return _is_same(a, b) and _is_same(b, a)
 
 
-def _dump_space(string, spaces):
-    s = spaces
-    while s != 0:
-        string += " "
-        s -= 1
-    return string
-
-
-def _determine_last(dump_callback, string, json_, col_start_at_=0):
-    return dump_callback(string, json_, col_start_at_)
-
-
-def _dump_dict(string, dict_, col_start_at_=0):
-    # warning: cannot use int as key of dict
-    string += "{\n"
-
-    for index, (key, value) in enumerate(dict_.items()):
-        string = _dump_space(string, col_start_at_)
-        string += '"' + str(key) + '"' + ": "
-
-        if isinstance(value, list) and len(value) > 0:
-            string = _determine_last(
-                _dump_list, string, value, col_start_at_ + 4)
-
-        elif isinstance(value, dict) and len(value) > 0:
-            string = _determine_last(
-                _dump_dict, string, value, col_start_at_ + 4)
-
-        else:
-            if isinstance(value, str):
-                string += '"' + value + '"'
-            elif isinstance(value, bool):
-                if value:
-                    string += "true"
-                else:
-                    string += "false"
-            else:
-                string += str(value)
-
-        if index != len(dict_) - 1:
-            string += ","
-        string += "\n"
-
-    string = _dump_space(string, col_start_at_ - 4)
-    string += "}"
-    return string
-
-
-def _dump_list(string, list_, col_start_at_=0):
-    string += "[\n"
-
-    for index, value in enumerate(list_):
-        string = _dump_space(string, col_start_at_)
-
-        if isinstance(value, list) and len(value) > 0:
-            string = _determine_last(
-                _dump_list, string, value, col_start_at_ + 4)
-
-        elif isinstance(value, dict) and len(value) > 0:
-            string = _determine_last(
-                _dump_dict, string, value, col_start_at_ + 4)
-
-        else:
-            if isinstance(value, str):
-                string += '"' + value + '"'
-            elif isinstance(value, bool):
-                if value:
-                    string += "true"
-                else:
-                    string += "false"
-            else:
-                string += str(value)
-
-        if index != len(list_) - 1:
-            string += ","
-        string += "\n"
-
-    string = _dump_space(string, col_start_at_ - 4)
-    string += "]"
-    return string
-
-
 def format_dump(json_, col_start_at_=4):
-    string = ''
-
-    if isinstance(json_, list):
-        if json_:
-            string = _determine_last(_dump_list, string, json_, col_start_at_)
-
-    elif isinstance(json_, dict):
-        if json_:
-            string = _determine_last(_dump_dict, string, json_, col_start_at_)
-
-    return string
+    return json.dumps(json_, indent=4, sort_keys=True)
