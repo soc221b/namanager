@@ -1,10 +1,12 @@
-from namanager.main import import_settings, main
+from namanager.main import entry
 
 
 class TestMain():
     def test_import_settings(self):
-        import_settings(settings_file='namanager/settings.json')
+        pass
 
-    def test_main(self):
-        import_settings(settings_file='namanager/settings.json')
-        main()
+    def test_check(self):
+        pass
+
+    def test_entry(self):
+        entry('namanager/settings.json', False)

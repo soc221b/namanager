@@ -411,18 +411,19 @@ class TestNamanager():
         errors = []
         etc = {
             "CHECK_DIRS": [
-                os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
+                os.path.realpath(
+                    os.path.join(os.path.dirname(__file__), '..', '..'))
             ],
             "ONLY_FILES": [],
             "ONLY_DIRS": [],
             "IGNORE_FILES": [],
             "IGNORE_DIRS": [],
             "FILE_FORMATS": {
-                "LETTER_CASE": "lower_case",
+                "LETTER_CASE": "pascal_case",
                 "SEP": "dash_to_underscore"
             },
             "DIR_FORMATS": {
-                "LETTER_CASE": "lower_case",
+                "LETTER_CASE": "pascal_case",
                 "SEP": "dash_to_underscore"
             }
         }

@@ -1,5 +1,6 @@
 import namanager.tests.helper as helper
 import json
+import sys
 
 
 class TestHelper():
@@ -59,6 +60,7 @@ class TestHelper():
         test_data = (
             (True, 1, 1),
             (True, '1', '1'),
+            (True, r'1', '1'),
             (True, 1.0, 1.0),
             (True, [3, 2, 1], [1, 2, 3]),
             (True, {3, 2, 1}, {1, 2, 3}),
@@ -92,6 +94,22 @@ class TestHelper():
             assert d[0] == is_same(d[1], d[2]), Exception(
                 "expect: {0} in '{1}' and '{2}'".format(d[0], d[1], d[2]))
 
+        # Backward compability
+        if sys.version_info[0] < 3:  # pragma: no cover
+            test_data = (
+                (False, '1', u'1'),
+                (False, r'1', u'1'),
+            )
+        else:  # pragma: no cover
+            test_data = (
+                (True, '1', u'1'),
+                (True, r'1', u'1'),
+            )
+
+        for d in test_data:
+            assert d[0] == is_same(d[1], d[2], False), Exception(
+                "expect: {0} in '{1}' and '{2}'".format(d[0], d[1], d[2]))
+
     def test_format_dump(self):
         format_dump = helper.format_dump
 
@@ -103,5 +121,6 @@ class TestHelper():
 
         for d in data:
             actual = json.loads(format_dump(d))
-            assert helper.is_same(d, actual), Exception(
-                'format_dump() generate different code.')
+            assert helper.is_same(d, actual, True), Exception(
+                'format_dump() generate different code.'
+                '\nexpect:\n{0}\nactual:\n{1}'.format(d, actual))
