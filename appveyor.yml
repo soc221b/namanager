@@ -31,6 +31,7 @@ environment:
 
 init:
   - "echo %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%" # A status message
+  
 
 install:
   - "%PYTHON%/Scripts/pip.exe install -r requirements_dev.txt"
