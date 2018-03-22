@@ -10,8 +10,8 @@ namanager
 .. image:: https://codecov.io/gh/iattempt/namanager/branch/master/graph/badge.svg
         :target: https://codecov.io/gh/iattempt/namanager
 
-.. image::https://ci.appveyor.com/api/projects/status/po20kgsl21hn9cus/branch/master?svg=true
-        :target: https://ci.appveyor.com/api/projects/status/po20kgsl21hn9cus/branch/master
+.. image::https://ci.appveyor.com/api/projects/status/po20kgsl21hn9cus?svg=true
+        :target: https://ci.appveyor.com/project/iattempt/namanager
 
 A file or/and directory name manager which could determine names are/aren't expectable, and you could also automatically rename it.
 
