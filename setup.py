@@ -17,8 +17,10 @@ AUTHOR = (
 AUTHOR_EMAIL = 'iattempt.net@gmail.com'
 URL = 'https://github.com/iattempt/namanager'
 PACKAGES = {'namanager'}
+SCRIPTS = ['bin/namanager']
 KEYWORDS = ['name', 'manager', 'checker', 'formatter', 'filename']
-PYTHON_REQUIRES = '==3.4.*,==3.5.*,==3.6.*'
+INSTALL_REQUIRES = ['dicttoxml>=1.3.1', 'xmltodict>=0.11.0']
+PYTHON_REQUIRES = '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,'
 
 setuptools.setup(
     name=NAME,
@@ -30,6 +32,8 @@ setuptools.setup(
     author_email=AUTHOR_EMAIL,
     url=URL,
     packages=PACKAGES,
+    scripts=SCRIPTS,
     keywords=KEYWORDS,
+    install_requires=INSTALL_REQUIRES,
     python_requires=PYTHON_REQUIRES
 )
