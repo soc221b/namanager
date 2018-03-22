@@ -7,7 +7,7 @@ DESCRIPTION = (
     'A checker could check name of file/directory is expectable or not.'
 )
 LONG_DESCRIPTION = open(
-     os.path.join(os.path.dirname(__file__), 'README.md')).read()
+     os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 LICENSE = 'GNU General Public License v3.0'
 AUTHOR = (
