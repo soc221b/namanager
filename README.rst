@@ -28,10 +28,7 @@ How to use?
 Installation
 ~~~~~~~~~~~~
 
-* You needed pip installed, then just run the following command:
-
-.. code-block:: console
-    pip install namanager
+* First of all check you already have **pip** installed, and then just type in :code:`pip install namanager`
 
 Running
 ~~~~~~~
