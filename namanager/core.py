@@ -126,32 +126,67 @@ class Namanager():
                     root = dirpath
         return root
 
+    def _separate_with_in_out_particular_dir_patterns(self, re_patterns):
+        within_patterns = []
+        without_patterns = []
+
+        for pattern in re_patterns:
+            if pattern.rfind(os.sep) == -1:
+                without_patterns.append(pattern)
+            else:
+                within_patterns.append(pattern)
+
+        return within_patterns, without_patterns
+
+    def _separate_dir_and_file_part_of_patterns(self, re_patterns):
+        separated_patterns = []
+
+        for pattern in re_patterns:
+            latest_sep_index = pattern.rfind(os.sep)
+            dirname_pattern = pattern[:latest_sep_index] + '$'
+            filename_pattern = '^' + pattern[latest_sep_index + 1:]
+
+            separated_patterns.append({
+                "dirname": dirname_pattern,
+                "filename": filename_pattern
+            })
+
+        return separated_patterns
+
     def _include_file_by_match_list_in_walk(self, re_patterns, walk,
                                             root=None):
         if root is None:
             root = self._get_root_in_walk(walk)
 
         filtered_walk = []
-        for (dirpath, dirs, files) in walk:
-            for pattern in re_patterns:
-                filtered_files = []
-                filename_pattern = pattern
-                latest_sep_index = pattern.rfind(os.sep)
+        within, without = (
+            self._separate_with_in_out_particular_dir_patterns(re_patterns))
+        within = self._separate_dir_and_file_part_of_patterns(within)
 
-                # if pattern only apply to particular dir
-                if latest_sep_index != -1:
-                    dirname_pattern = pattern[:latest_sep_index] + '$'
-                    filename_pattern = '^' + pattern[latest_sep_index + 1:]
-                    rel_dirpath = dirpath[len(root):]
+        for (dirpath, dirs, files) in walk:
+            filtered = []
+
+            if without:
+                for filename in files:
+                    if self._is_string_matching(filename, without):
+                        filtered.append(filename)
+
+            if within:
+                rel_dirpath = dirpath[len(root):] if dirpath != root else '/'
+                for pattern in within:
                     if not self._is_string_matching(
-                       rel_dirpath, [dirname_pattern]):
+                       rel_dirpath, [pattern['dirname']]):
                         continue
 
-                for filename in files:
-                    if self._is_string_matching(filename, [filename_pattern]):
-                        filtered_files.append(filename)
-                if filtered_files:
-                    filtered_walk.append((dirpath, dirs, filtered_files))
+                    for filename in files:
+                        if self._is_string_matching(
+                           filename, [pattern['filename']]):
+                            filtered.append(filename)
+
+            # at least one file be included
+            if filtered:
+                filtered_walk.append((
+                    dirpath, dirs, filtered))
 
         return filtered_walk
 
