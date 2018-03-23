@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+from namanager.main import entry
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--settings", default=os.path.join(os.getcwd(),
+                    'settings.json'),
+                    help="Import settings.json.")
+parser.add_argument("--required", action='store_true',
+                    help="If namanager fails it will exit 1.")
+parser.add_argument("--with-xml", action='store_true',
+                    help="Generate as xml format.")
+parser.add_argument("--with-json", action='store_true',
+                    help="Generate as json format.")
+parser.add_argument("--with-readable", action='store_true',
+                    help="Default. Generate as dict (python) format.")
+
+args = parser.parse_args()
+
+if __name__ == '__main__':
+    if args.with_xml:
+        entry(args.settings, args.required, 'xml')
+    elif args.with_json:
+        entry(args.settings, args.required, 'json')
+    else:
+        entry(args.settings, args.required, 'readable')
