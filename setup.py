@@ -19,8 +19,8 @@ MAINTAINER = (
     'and Arnav Borborah (https://github.com/arnavb) '
 )
 MAINTAINER_EMAIL = (
-    'iattempt.net@gmail.com (Ernest Chang) '
-    'and arnavborborah11@gmail.com (Arnav Borborah) '
+    'iattempt.net@gmail.com'
+    ', arnavborborah11@gmail.com'
 )
 URL = 'https://github.com/iattempt/namanager'
 PACKAGES = {'namanager'}
