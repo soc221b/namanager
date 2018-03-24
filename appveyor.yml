@@ -44,7 +44,7 @@ build_script:
   - "%PYTHON%/Scripts/nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests"
   - "%PYTHON%/Scripts/flake8 . --exclude env,build"
   - "%PYTHON%/Scripts/pip uninstall -r requirements_dev.txt -y"
-  - "%PYTHON%/Scripts/pip install -r requirements.txt""
+  - "%PYTHON%/Scripts/pip install -r requirements.txt"
   - "%PYTHON% setup.py install"
   - "copy file_checker/main.py ../ && cd ../"
   - "%PYTHON% FileChecker/file_checker/main.py"
