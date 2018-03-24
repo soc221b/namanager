@@ -52,9 +52,9 @@ activate_env()
 {
     is_supports_venv
     if [[ $? -eq 1 ]]; then
-        $PYTHON -m venv $1
+        $PYTHON -m venv env/$1
         assert
-        source ./$1/bin/activate
+        source ./env/$1/bin/activate
         assert
         echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
         echo ""
@@ -105,7 +105,7 @@ Tearing down environment
 ================================================================================
 '''
 deactivate
-rm -rf dev dist
+rm -rf env
 $PIP uninstall -y -r requirements_dev.txt
 $PIP uninstall -y -r requirements.txt
 
@@ -135,7 +135,7 @@ echo '''
 Flake8
 ================================================================================
 '''
-flake8 . bin/namanager --exclude dev,dist,build
+flake8 . bin/namanager --exclude env
 assert
 
 echo '''
@@ -147,11 +147,11 @@ deactivate_env dev
 
 echo '''
 ================================================================================
-Setting up a distribute environment
+Setting up a manual-install environment
 ================================================================================
 '''
-activate_env dist
-$PYTHON setup.py install
+activate_env manual
+$PYTHON setup.py install --record namanager_record.txt
 assert
 
 echo '''
@@ -163,7 +163,45 @@ Run CLI
 mktemp_cwd -d
 rand_dir=$result
 cd $rand_dir
-for (( i = 0; i < 500; i++ )); do
+for (( i = 0; i < 200; i++ )); do
+    mktemp_cwd -d
+    mktemp_cwd
+done
+
+namanager --settings ../namanager/settings.json
+assert
+
+cd $NAMANAGER_ROOT_PATH
+rm -rf $rand_dir
+
+echo '''
+================================================================================
+Deactivate the manual-install environment
+================================================================================
+'''
+cat namanager_record.txt | xargs rm -rf
+rm -rf namanager_record.txt
+deactivate_env manual
+
+echo '''
+================================================================================
+Setting up a distribute environment
+================================================================================
+'''
+activate_env dist
+$PIP install namanager
+assert
+
+echo '''
+================================================================================
+Run CLI
+================================================================================
+'''
+# generate temp files
+mktemp_cwd -d
+rand_dir=$result
+cd $rand_dir
+for (( i = 0; i < 200; i++ )); do
     mktemp_cwd -d
     mktemp_cwd
 done
@@ -179,6 +217,7 @@ echo '''
 Deactivate the distribute environment
 ================================================================================
 '''
+$PIP uninstall -y namanager
 deactivate_env dist
 
 if [ $CI ]; then
@@ -198,9 +237,7 @@ else
 Rebuild local development environment
 ================================================================================
 '''
-    source ./dev/bin/activate
-    echo "*** VIRTUAL_ENV: $VIRTUAL_ENV ***"
-    echo ""
+    activate_env dev
     $PIP install -r requirements_dev.txt
 fi
 
