@@ -37,7 +37,7 @@ install:
   - "%PYTHON%/Scripts/pip.exe install -r requirements_dev.txt"
 
 before_build:
-  - "cwd = %cd%"
+  - "set cwd=%cd%"
   # TODO: What would the Windows equivalent of the commands you used be?
 
 build_script:
