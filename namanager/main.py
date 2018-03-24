@@ -48,38 +48,45 @@ def import_settings(settings_file):
                'DIR_FORMATS[\'{0}\'] has wrong key:{1}.'.format(k, v))
 
 
-def check(required=False, fmt='json'):  # pragma: no cover
+# def check(required=False, fmt='json', pretty_dump=False):  # pragma: no cover
+def check(**kwargs):
+    required = kwargs.get('required', False)
+    fmt = kwargs.get('fmt', 'json')
+    pretty_dump = kwargs.get('pretty_dump', False)  # noqa: F841
+
+    errors = []
+
     for d in SETTINGS_JSON['CHECK_DIRS']:
         checker = Namanager(SETTINGS_JSON)
+
         checker.check(d)
 
-        if fmt == 'readable':
-            RESULT = checker.get_dict()
-            for e in RESULT:
-                print(e)
-        else:
-            if fmt == 'dict':
-                RESULT = checker.get_dict()
-            elif fmt == 'json':
-                RESULT = checker.get_json()
-            elif fmt == 'xml':
-                RESULT = checker.get_xml()
-            print(RESULT)
-
-        print('In folder {0} :'.format(os.path.realpath(d)))
+        if fmt == 'dict':
+            RESULT = checker.get_dict(checker.error_info)
+        elif fmt == 'json':
+            RESULT = checker.get_json(checker.error_info, pretty_dump)
+        elif fmt == 'xml':
+            RESULT = checker.get_xml(checker.error_info, pretty_dump)
+        print(RESULT)
         if RESULT:
-            print('FAILED (error{0}={1})\n'.format(
+            errors.append('In folder {0} :'.format(os.path.realpath(d)))
+            errors.append('FAILED (error{0}={1})'.format(
                   's' if len(RESULT) > 1 else '',
-                  len(RESULT)))
-            if required:
-                exit(1)
-        else:
-            print('OK.\n')
+                  checker.error_info_count))
+
+    print("")
+    if errors:
+        for e in errors:
+            print(e)
+        if required:
+            exit(1)
+    else:
+        print('OK.\n')
 
 
-def entry(settings_file, required=False, fmt='json'):
+def entry(settings_file, **kwargs):
     import_settings(settings_file)
-    check(required, fmt)
+    check(**kwargs)
 
 
 if __name__ == '__main__':  # pragma: no cover

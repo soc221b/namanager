@@ -9,4 +9,19 @@ class TestMain():
         pass
 
     def test_entry(self):
-        entry('namanager/settings.json', False)
+        # no test for `required`
+        for fmt in ['xml', 'json', 'dict']:
+            for pretty_dump in [True, False]:
+                if fmt:
+                    kwargs = {
+                        'required': False,
+                        'pretty_dump': pretty_dump,
+                    }
+                else:
+                    kwargs = {
+                        'required': False,
+                        'fmt': fmt,
+                        'pretty_dump': pretty_dump,
+                    }
+
+                entry('namanager/settings.json', **kwargs)

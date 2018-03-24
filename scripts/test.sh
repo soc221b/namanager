@@ -27,12 +27,20 @@ VERSION_PATCH=${VERSION[2]}
 # Functions
 ################################################################################
 
+# you could pass expect error-code to $1
 assert()
 {
     error=$?
-    if [ $error -ne 0 ]; then
-        echo "exit ($error)"
-        error_code=1
+    if [[ $# -eq 1 ]]; then
+        if [ $error -ne $1 ]; then
+            echo "exit ($error)"
+            error_code=1
+        fi
+    else
+        if [ $error -ne 0 ]; then
+            echo "exit ($error)"
+            error_code=1
+        fi
     fi
 }
 
@@ -108,6 +116,11 @@ deactivate
 rm -rf env
 $PIP uninstall -y -r requirements_dev.txt
 $PIP uninstall -y -r requirements.txt
+$PIP uninstall -y namanager
+# check if the namanager has been installed.
+version=`namanager --version 2>/dev/null`
+assert 127 # command not found
+
 
 echo '''
 ================================================================================

@@ -1,8 +1,9 @@
 import setuptools
 import os
+import namanager
 
 NAME = 'namanager'
-VERSION = '0.1.0'
+VERSION = namanager.__version__
 DESCRIPTION = (
     "A file or/and directory name manager which could determine"
     "names are/aren't expectable, "

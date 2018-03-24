@@ -58,6 +58,7 @@ class TestNamanager():
 
     def test_properties(self, fc=Namanager()):
         assert not fc.error_info
+        assert not fc.error_info_count
         assert not fc.file_formats
         assert not fc.dir_formats
         assert not fc.only_files
@@ -627,15 +628,18 @@ class TestNamanager():
             {"_id": "5aa7e7247d6d91ca300e1fb3","index": 0,"guid": "319cb0fe-29b9-4d60-9fde-4e82aee9bc16","booleans": [True, False],"lists": [[True], [False]],"numbers": {'1':{'1':1}, '2':{'2':2}, '3':{'3':3}},"list": [213, 3],"isActive": False,"balance": "$2,803.51","picture": "http://placehold.it/32x32","age": 31,"eyeColor": "brown","name": "Esperanza Weeks","gender": "female","company": "EZENTIA","email": "esperanzaweeks@ezentia.com","phone": "+1 (930) 533-3206","address": "653 Division Avenue, Tilleda, Ohio, 5025","about": "Duis laborum dolor veniam aliqua nostrud velit excepteur qui. Est consectetur incididunt amet nulla pariatur. Do non consequat in occaecat quis esse incididunt. Dolore eu adipisicing esse ad quis et nisi ut ad. Adipisicing amet magna deserunt aliquip nulla laboris cupidatat velit qui ipsum deserunt. Nulla cupidatat eu nisi eu duis nostrud duis sint culpa consectetur fugiat do tempor laboris.","registered": "2014-11-26T08:32:11 -08:00","latitude": 83.870374,"longitude": 165.0311,"tags": ["non","laboris","sit","pariatur","enim","magna","qui"],"friends": [{"id": 0,"name": "Claudine Butler"},{"id": 1,"name": "Tate Potts"},{"id": 2,"name": "Clark Franco"}],"greeting": "Hello, Esperanza Weeks! You have 6 unread messages.","favoriteFruit": "apple"}, # noqa
         ]
 
-        for d in data:
-            fc._error_info = d
+        for datum in data:
             # get dict
-            helper.is_same_disorderly(d, fc.get_dict())
+            helper.is_same_disorderly(datum, fc.get_dict(datum))
+
             # get json
-            helper.is_same_disorderly(
-                d, json.dumps(fc.get_json(), indent=4, sort_keys=True))
+            actual = json.dumps(fc.get_json(datum, False))
+            helper.is_same_disorderly(datum, actual)
+            actual = json.dumps(fc.get_json(datum, True))
+            helper.is_same_disorderly(datum, actual)
+
             # get xml
-            helper.is_same_disorderly(
-                d, json.dumps(xmltodict.parse(fc.get_xml()),
-                              indent=4,
-                              sort_keys=True))
+            actual = json.dumps(xmltodict.parse(fc.get_xml(datum, False)))
+            helper.is_same_disorderly(datum, actual)
+            actual = json.dumps(xmltodict.parse(fc.get_xml(datum, True)))
+            helper.is_same_disorderly(datum, actual)
