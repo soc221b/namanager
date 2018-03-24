@@ -1,7 +1,7 @@
 version: "{build}"
 
 environment:
-  - matrix:
+  matrix:
     # Python 3.4
     - PYTHON: "C:\\Python34"
       PYTHON_VERSION: "3.4.4"
