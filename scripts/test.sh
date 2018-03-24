@@ -10,11 +10,12 @@ error_code=0
 # changes version which user defined
 # pass version to $1
 if [ $# -eq 1 ]; then
+    PIP=`which pip$1`
     PYTHON=`which python$1`
 else
+    PIP=`which pip`
     PYTHON=`which python`
 fi
-PIP="$PYTHON -m pip "
 
 # '2 7 14' or '3 6 4', etc.
 VERSION=`$PYTHON -c 'import sys; print("%i %i %i" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))'`
