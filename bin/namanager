@@ -15,7 +15,7 @@ parser.add_argument("--required",
                     action='store_true',
                     help="If namanager fails it will exit 1.")
 parser.add_argument("--with-readable",
-                    action='store_false',
+                    action='store_true',
                     help="Default. Generate as dict (python) format.")
 parser.add_argument("--with-xml",
                     action='store_true',
@@ -25,7 +25,7 @@ parser.add_argument("--with-json",
                     help="Generate as json format.")
 parser.add_argument("--pretty-dump",
                     action='store_true',
-                    help="Only works with --with-xml or --with-json")
+                    help="Only works with --with-xml or --with-json options")
 
 args = parser.parse_args()
 
