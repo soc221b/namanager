@@ -12,6 +12,7 @@ class Namanager():
         self.load_settings(settings)
 
         self._error_info = []
+        self._error_info_count = 0
 
     def init_settings(self):
         self._FILE_FORMATS = {}
@@ -66,6 +67,10 @@ class Namanager():
     @property
     def error_info(self):
         return self._error_info
+
+    @property
+    def error_info_count(self):
+        return self._error_info_count
 
     @property
     def file_formats(self):
@@ -289,6 +294,7 @@ class Namanager():
                         },
                         'dirpath': dirpath
                     })
+                    self._error_info_count += len(expect)
 
     def check_dir(self, root):
         """
@@ -317,16 +323,24 @@ class Namanager():
                     },
                     'dirpath': dirpath[:dirpath.rfind(os.sep)]
                 })
+                self._error_info_count += 1
 
     def check(self, root):
         self.check_dir(root)
         self.check_file(root)
 
-    def get_dict(self, error_info=None):
-        return self.error_info
+    def get_dict(self, data={}):
+        return data
 
-    def get_json(self, error_info=None):
-        return json.dumps(self.error_info)
+    def get_json(self, data={}, pretty_dump=False):
+        if pretty_dump:
+            return json.dumps(data, indent=4, sort_keys=True)
+        else:
+            return json.dumps(data)
 
-    def get_xml(self, error_info=None):
-        return parseString(dicttoxml.dicttoxml(self.error_info)).toprettyxml()
+    def get_xml(self, data={}, pretty_dump=False):
+        xml = dicttoxml.dicttoxml(data)
+        if pretty_dump:
+            return parseString(xml).toprettyxml()
+        else:
+            return xml

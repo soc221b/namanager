@@ -37,11 +37,37 @@ How to use?
 Installation
 ~~~~~~~~~~~~
 
-* First of all check you already have **pip** installed, and then just type in :code:`pip install namanager`
+* First of all check you already have **pip** installed, and then just type in:
+
+.. code-block:: sh
+
+    pip install namanager
+
+* Sometimes, you need to install on offline environments, hence that you could download *wheel* s from `PyPI <https://pypi.python.org/pypi/namanager>`_ or by **pip**:
+
+.. code-block:: sh
+
+    pip download namanager
+
+After moved wheels (involve dependencies) into your env, you could manually install it by following commands:
+
+.. code-block:: sh
+
+    pip install namanager-x.x.x-py2.py3-none-any.whl
 
 Running
 ~~~~~~~
 
 1) Configure your *settings.json*.
 
-2) Run command :code:`namanager` or :code:`namanager --settings /path/to/your/settings` if the settings file not existed in your current working directory or CWD.
+2) Run command
+
+.. code-block:: sh
+
+    namanager
+
+If the settings file doesn't existed in your current working directory or CWD:
+
+.. code-block:: sh
+
+    namanager --settings /path/to/your/settings
