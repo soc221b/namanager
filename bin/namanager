@@ -5,15 +5,19 @@ import os
 from namanager.main import entry
 
 parser = argparse.ArgumentParser()
+
 parser.add_argument("--version",
                     action='store_true',
                     help="print the Namanager version number and exit.")
+
 parser.add_argument("-s", "--settings",
                     default=os.path.join(os.getcwd(), 'settings.json'),
-                    help="Import settings.json.")
+                    help="Default is ./settings.json. Import settings.json.")
+
 parser.add_argument("--required",
                     action='store_true',
                     help="If namanager fails it will exit 1.")
+
 parser.add_argument("--with-readable",
                     action='store_true',
                     help="Default. Generate as dict (python) format.")
