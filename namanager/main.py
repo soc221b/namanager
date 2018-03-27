@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 from namanager.enums import FORMATS
 from namanager.core import Namanager
 from namanager.archieve_manager import ArchieveManager
@@ -49,6 +50,38 @@ def import_settings(settings_file):
                'DIR_FORMATS[\'{0}\'] has wrong key:{1}.'.format(k, v))
 
 
+def test_writing_permission(**kwargs):
+    """
+    param dirname:
+    type dirname: str
+    param required: default True
+    type required: True, False
+    param error_msg:
+    type error_msg: str
+    """
+
+    try:
+        dirname = kwargs.get('dirname', os.getcwd())
+        if dirname[-1] != os.sep:
+            dirname += os.sep
+        # test directory is exists or not and raise
+        os.path.realpath(dirname)
+
+        filename = ''.join([dirname, 'test_file'])
+        while os.path.exists(filename):
+            filename += '_'
+
+        with open(filename, 'w') as f:
+            f.write('test...')
+        os.remove(filename)
+
+    except Exception as e:
+        print(kwargs.get('error_msg', ''))
+        required = kwargs.get('required', True)
+        if required:
+            raise e
+
+
 def get_src_dst_pair(error_info):
     # we need to move this function to/into a better place
     src_dst_pair = []
@@ -64,6 +97,14 @@ def check(**kwargs):
     FMT = kwargs.get('fmt', 'json')
     PRETTY_DUMP = kwargs.get('pretty_dump', False)
     RENAME = kwargs.get('rename', False)
+    RENAME_BACKUP = kwargs.get('rename_backup', False)
+    RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
+    REVERT_FILE = kwargs.get('revert_file', None)
+
+    if REVERT_FILE is not None:
+        am = ArchieveManager()
+        with open(REVERT_FILE, 'r') as f:
+            am.rename(json.loads(f.read()))
 
     errors = []
 
@@ -85,6 +126,18 @@ def check(**kwargs):
                 am = ArchieveManager()
                 error_info = checker.get_dict(checker.error_info)
                 error_info = get_src_dst_pair(error_info)
+
+                if RENAME_BACKUP:
+                    test_writing_permission(dirname=RENAME_BACKUP_DIR)
+                    filename = 'namanager_rename_{:%Y%m%d%H%M%S}.bak'.format(
+                        datetime.datetime.now())
+                    with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
+                              'w') as f:
+                        pass
+                        f.write(json.dumps(
+                            am.gen_revert_path_pairs(error_info),
+                            indent=4, sort_keys=True))
+
                 am.rename(error_info)
 
             errors.append('In folder {0} :'.format(os.path.realpath(d)))

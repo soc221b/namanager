@@ -29,6 +29,60 @@ class ArchieveManager():
         for src, dst in dir_pairs:
             shutil.move(src, dst)
 
+    def gen_revert_path_pairs(self, path_pairs):
+        # Only implement for file/dir under same original directory
+        """
+        TODO:
+        Find more elegant and efficient way to convert files/directories
+        which upper hierarchy path have been renamed.
+
+        this function must be called before rename functions,
+        because we need to separate files/directories first.
+
+        When we want to rollback names,
+        we need different strategy to rename those be renamed files.
+        The deeper files/directories which have been renamed must be first.
+        e.g.,
+            rename:
+                /change/upper -> /change/new_upper
+                /change/upper/lower -> /change/new_upper/new_lower
+            revert:
+                /change/new_upper/new_lower -> /change/new_upper/lower
+                /change/new_upper -> /change/upper
+        """
+        file_pairs, dir_pairs = (
+            self._separate_file_dir_from_path_pair(path_pairs))
+        file_pairs = self._sort_path_pair(file_pairs)
+        dir_pairs = self._sort_path_pair(dir_pairs)
+        revert_path_pairs = []
+        renamed_mapping = {}
+
+        for pairs in [dir_pairs, file_pairs]:
+            for src, dst in pairs:
+                renamed_dirname = os.path.dirname(dst)
+
+                # find renamed_dirname
+                dirname_parts = renamed_dirname.split(os.sep)
+                # ['/root/to/path', '/root/to', '/root']
+                dirname_powerset = []
+                for r in range(len(dirname_parts) + 1, 1, -1):
+                    dirname_powerset.append(os.sep.join(dirname_parts[:r]))
+                for dn in dirname_powerset:
+                    if dn in renamed_mapping:
+                        renamed_dn = renamed_mapping[dn]
+                        renamed_dirname = (
+                            renamed_dn + renamed_dirname[len(dn):])
+                        break
+
+                renamed_dst = os.sep.join(
+                    [renamed_dirname, os.path.basename(dst)])
+                renamed_src = os.sep.join(
+                    [renamed_dirname, os.path.basename(src)])
+                revert_path_pairs.append((renamed_dst, renamed_src))
+                renamed_mapping[src] = renamed_dst
+
+        return revert_path_pairs
+
     def _separate_file_dir_from_path_pair(self, path_pairs):
         file_pairs = []
         dir_pairs = []

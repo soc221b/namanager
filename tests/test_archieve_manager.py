@@ -90,6 +90,33 @@ class TestArchieveManager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
+    def test_gen_revert_path_pairs(self):
+        am = ArchieveManager()
+        paths = self._mkdtemps_recur(1, 2, file_count=1)
+        rename_path_pairs = self._gen_src_dst_rename_pairs(paths)
+        expt_revert_path_pairs = self._gen_src_dst_revert_pairs(paths)
+
+        for pairs in itertools.permutations(rename_path_pairs):
+            actl_revert_path_pairs = (am.gen_revert_path_pairs(pairs))
+
+            is_same = (
+                helper.is_same_disorderly(
+                    [pair[0] for pair in expt_revert_path_pairs],
+                    [pair[0] for pair in actl_revert_path_pairs]) and
+                helper.is_same_disorderly(
+                    [pair[1] for pair in expt_revert_path_pairs],
+                    [pair[1] for pair in actl_revert_path_pairs]))
+
+            assert is_same, Exception(
+                    "revert pairs are wrong"
+                    "\nExpect:\n{0}\nActual:\n{1}\n".format(
+                        json.dumps(expt_revert_path_pairs,
+                                   indent=4, sort_keys=True),
+                        json.dumps(actl_revert_path_pairs,
+                                   indent=4, sort_keys=True)))
+
+        self._rm_paths([pair[0] for pair in rename_path_pairs])
+
     def test_separate_file_dir_from_path_pair(self):
         am = ArchieveManager()
         errors = []
