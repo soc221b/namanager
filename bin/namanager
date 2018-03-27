@@ -31,6 +31,10 @@ parser.add_argument("--pretty-dump",
                     action='store_true',
                     help="Only works with --with-xml or --with-json options")
 
+parser.add_argument("--rename",
+                    action='store_true',
+                    help="Automatically rename no matched files/directories.")
+
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -48,5 +52,6 @@ if __name__ == '__main__':
             'dict'
         ),
         'pretty_dump': args.pretty_dump,
+        'rename': args.rename,
     }
     entry(args.settings, **kwargs)

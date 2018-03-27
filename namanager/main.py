@@ -2,6 +2,7 @@ import os
 import json
 from namanager.enums import FORMATS
 from namanager.core import Namanager
+from namanager.archieve_manager import ArchieveManager
 
 SETTINGS_JSON = {}
 
@@ -48,10 +49,29 @@ def import_settings(settings_file):
                'DIR_FORMATS[\'{0}\'] has wrong key:{1}.'.format(k, v))
 
 
+def get_src_dst_pair(error_info):
+    # we need to move this function to/into a better place
+    src_dst_pair = []
+
+    for e in error_info:
+        dp = e['dirpath']
+        if 'filename' in e:
+            src_dst_pair.append((
+                os.sep.join([dp, e['filename']['actual']]),
+                os.sep.join([dp, e['filename']['expect']])))
+        if 'dirname' in e:
+            src_dst_pair.append((
+                os.sep.join([dp, e['dirname']['actual']]),
+                os.sep.join([dp, e['dirname']['expect']])))
+
+    return src_dst_pair
+
+
 def check(**kwargs):
     REQUIRED = kwargs.get('required', False)
     FMT = kwargs.get('fmt', 'json')
     PRETTY_DUMP = kwargs.get('pretty_dump', False)
+    RENAME = kwargs.get('rename', False)
 
     errors = []
 
@@ -69,6 +89,12 @@ def check(**kwargs):
 
         print(RESULT)
         if RESULT:
+            if RENAME:
+                am = ArchieveManager()
+                error_info = checker.get_dict(checker.error_info)
+                error_info = get_src_dst_pair(error_info)
+                am.rename(error_info)
+
             errors.append('In folder {0} :'.format(os.path.realpath(d)))
             errors.append('FAILED (error{0}={1})'.format(
                   's' if len(RESULT) > 1 else '',
