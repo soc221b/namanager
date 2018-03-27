@@ -318,8 +318,8 @@ class Namanager():
             if expect != actual:
                 self._error_info.append({
                     'dirname': {
-                        'expect': expect,
-                        'actual': actual
+                        'expect': expect[1:],
+                        'actual': actual[1:]
                     },
                     'dirpath': dirpath[:dirpath.rfind(os.sep)]
                 })
