@@ -54,15 +54,7 @@ def get_src_dst_pair(error_info):
     src_dst_pair = []
 
     for e in error_info:
-        dp = e['dirpath']
-        if 'filename' in e:
-            src_dst_pair.append((
-                os.sep.join([dp, e['filename']['actual']]),
-                os.sep.join([dp, e['filename']['expect']])))
-        if 'dirname' in e:
-            src_dst_pair.append((
-                os.sep.join([dp, e['dirname']['actual']]),
-                os.sep.join([dp, e['dirname']['expect']])))
+        src_dst_pair.append([e['actual'], e['expect']])
 
     return src_dst_pair
 
