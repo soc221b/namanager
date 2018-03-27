@@ -141,7 +141,7 @@ class TestArchieveManager():
 
             assert errors == [], Exception(helper.get_error_string(errors))
 
-        self._rm_paths([pair[1] for pair in path_pairs])
+        self._rm_paths([pair[0] for pair in path_pairs])
 
     def test_sort_path_pair(self):
         # only tests for directories
