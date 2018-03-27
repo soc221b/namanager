@@ -44,7 +44,7 @@ before_build:
   - "set NAMANAGER_ROOT_PATH=%~dp0"
   - "cd %NAMANAGER_ROOT_PATH%"
   - "set error_code=0"
-  - "(import sys; print(\"%i %i %i\" % (sys.version_info[0], sys.version_info[1], sys.version_info[2])))>>temp.txt"
+  - "(%PYTHON% -c \"import sys; print(\"%i %i %i\" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))\")>>temp.txt"
   - "set /p VERSION=<temp.txt"
   - "del temp.txt"
   - "set VERSION_MAJOR=%VERSION[0]%"
