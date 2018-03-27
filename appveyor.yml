@@ -34,10 +34,26 @@ init:
   
 
 install:
+  - "%PYTHON%/Scripts/pip.exe install --upgrade pip"
+  - "%PYTHON%/Scripts/pip.exe install pep8"
+  - "%PYTHON%/Scripts/pip.exe install autopep8"
   - "%PYTHON%/Scripts/pip.exe install -r requirements_dev.txt"
 
 before_build:
+  - "setlocal EnableDelayedExpansion"
   - "set cwd=%cd%"
+  - "set NAMANAGER_ROOT_PATH=%~dp0"
+  - "cd %NAMANAGER_ROOT_PATH%"
+  - "set error_code=0"
+  - |
+    for /f "tokens=* USEBACKQ" %%F IN (`import sys; print("%i %i %i" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))`) DO (
+      set VERSION=%%F
+    )
+  - "set VERSION=%VERSION%"
+  - "set VERSION_MAJOR=%VERSION[0]%"
+  - "set VERSION_MINOR=%VERSION[1]%"
+  - "set VERSION_PATCH=%VERSION[2]%"
+  - "endlocal"
   # TODO: What would the Windows equivalent of the commands you used be?
 
 build_script:
