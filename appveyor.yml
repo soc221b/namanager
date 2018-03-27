@@ -7,27 +7,27 @@ environment:
       PYTHON_VERSION: "3.4.4"
       PYTHON_ARCH: "32"
       
-    - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4.4"
-      PYTHON_ARCH: "64"
+    #- PYTHON: "C:\\Python34-x64"
+    #  PYTHON_VERSION: "3.4.4"
+    #  PYTHON_ARCH: "64"
       
     # Python 3.5
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.3"
-      PYTHON_ARCH: "32"
+    #- PYTHON: "C:\\Python35"
+    #  PYTHON_VERSION: "3.5.3"
+    #  PYTHON_ARCH: "32"
       
-    - PYTHON: "C:\\Python35-x64"
-      PYTHON_VERSION: "3.5.3"
-      PYTHON_ARCH: "64"
+    # - PYTHON: "C:\\Python35-x64"
+    #  PYTHON_VERSION: "3.5.3"
+    #  PYTHON_ARCH: "64"
     
     # Python 3.6
-    - PYTHON: "C:\\Python36"
-      PYTHON_VERSION: "3.6.4"
-      PYTHON_ARCH: "32"
+    # - PYTHON: "C:\\Python36"
+    #  PYTHON_VERSION: "3.6.4"
+    #  PYTHON_ARCH: "32"
       
-    - PYTHON: "C:\\Python36-x64"
-      PYTHON_VERSION: "3.6.4"
-      PYTHON_ARCH: "64"
+    # - PYTHON: "C:\\Python36-x64"
+    #  PYTHON_VERSION: "3.6.4"
+    #  PYTHON_ARCH: "64"
 
 init:
   - "echo %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%" # A status message
