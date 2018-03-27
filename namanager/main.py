@@ -48,11 +48,10 @@ def import_settings(settings_file):
                'DIR_FORMATS[\'{0}\'] has wrong key:{1}.'.format(k, v))
 
 
-# def check(required=False, fmt='json', pretty_dump=False):  # pragma: no cover
 def check(**kwargs):
-    required = kwargs.get('required', False)
-    fmt = kwargs.get('fmt', 'json')
-    pretty_dump = kwargs.get('pretty_dump', False)  # noqa: F841
+    REQUIRED = kwargs.get('required', False)
+    FMT = kwargs.get('fmt', 'json')
+    PRETTY_DUMP = kwargs.get('pretty_dump', False)
 
     errors = []
 
@@ -61,12 +60,13 @@ def check(**kwargs):
 
         checker.check(d)
 
-        if fmt == 'dict':
+        if FMT == 'dict':
             RESULT = checker.get_dict(checker.error_info)
-        elif fmt == 'json':
-            RESULT = checker.get_json(checker.error_info, pretty_dump)
-        elif fmt == 'xml':
-            RESULT = checker.get_xml(checker.error_info, pretty_dump)
+        elif FMT == 'json':
+            RESULT = checker.get_json(checker.error_info, PRETTY_DUMP)
+        elif FMT == 'xml':
+            RESULT = checker.get_xml(checker.error_info, PRETTY_DUMP)
+
         print(RESULT)
         if RESULT:
             errors.append('In folder {0} :'.format(os.path.realpath(d)))
@@ -78,7 +78,7 @@ def check(**kwargs):
     if errors:
         for e in errors:
             print(e)
-        if required:
+        if REQUIRED:
             exit(1)
     else:
         print('OK.\n')
