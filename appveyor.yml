@@ -41,8 +41,8 @@ install:
 before_build:
   - "set cwd=%cd%"
   - "cd"
-  - "set NAMANAGER_ROOT_PATH=%~dp0"
-  - "cd %NAMANAGER_ROOT_PATH%"
+  #- "set NAMANAGER_ROOT_PATH=%~dp0"
+  #- "cd %NAMANAGER_ROOT_PATH%"
   - "cd"
   - "set error_code=0"
   - "type nul > x.txt"
