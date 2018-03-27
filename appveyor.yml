@@ -34,7 +34,6 @@ init:
   
 
 install:
-  - "%PYTHON%/Scripts/pip.exe install --upgrade pip"
   - "%PYTHON%/Scripts/pip.exe install pep8"
   - "%PYTHON%/Scripts/pip.exe install autopep8"
   - "%PYTHON%/Scripts/pip.exe install -r requirements_dev.txt"
