@@ -17,13 +17,13 @@ class TestArchieveManager():
         paths = self._mkdtemps_recur(1, 1, filecount=1)
         path_pairs = self._gen_src_dst_rename_pairs(paths)
         renamed_path_pairs = self._gen_src_dst_renamed_pairs(paths)
-        recovery_path_pairs = self._gen_src_dst_recover_pairs(paths)
+        revert_path_pairs = self._gen_src_dst_revert_pairs(paths)
 
         for pairs in itertools.permutations(path_pairs):
             self._test_rename_before(pairs)
             am.rename(pairs)
             self._test_rename_after(renamed_path_pairs)
-            am.rename(recovery_path_pairs)
+            am.rename(revert_path_pairs)
 
         self._rm_paths([pair[0] for pair in pairs])
 
@@ -31,7 +31,7 @@ class TestArchieveManager():
         am = ArchieveManager()
         files = self._mktemps(2)
         file_pairs = self._gen_src_dst_rename_pairs(files)
-        recovery_file_pairs = self._gen_src_dst_recover_pairs(files)
+        revert_file_pairs = self._gen_src_dst_revert_pairs(files)
 
         for pairs in itertools.permutations(file_pairs):
             self._test_rename_before(pairs)
@@ -39,7 +39,7 @@ class TestArchieveManager():
             # no needs renmaed pairs for files,
             # because direcotires would not be changed
             self._test_rename_after(pairs)
-            am.rename_file(recovery_file_pairs)
+            am.rename_file(revert_file_pairs)
 
         self._rm_paths([pair[0] for pair in file_pairs])
 
@@ -48,13 +48,13 @@ class TestArchieveManager():
         dirs = self._mkdtemps_recur(2, 1)
         dir_pairs = self._gen_src_dst_rename_pairs(dirs)
         renamed_dir_pairs = self._gen_src_dst_renamed_pairs(dirs)
-        recovery_dir_pairs = self._gen_src_dst_recover_pairs(dirs)
+        revert_dir_pairs = self._gen_src_dst_revert_pairs(dirs)
 
         for perm_pairs in itertools.permutations(dir_pairs):
             self._test_rename_before(perm_pairs)
             am.rename_dir(perm_pairs)
             self._test_rename_after(renamed_dir_pairs)
-            am.rename_dir(recovery_dir_pairs)
+            am.rename_dir(revert_dir_pairs)
 
         self._rm_paths([pair[0] for pair in dir_pairs])
 
@@ -261,12 +261,12 @@ class TestArchieveManager():
 
         return pairs
 
-    def _gen_src_dst_recover_pairs(self, path):  # pragma: no cover
+    def _gen_src_dst_revert_pairs(self, path):  # pragma: no cover
         # haven't been tested
         if isinstance(path, (list, tuple, set)):
             pairs = []
             for p in path:
-                pairs.extend(self._gen_src_dst_recover_pairs(p))
+                pairs.extend(self._gen_src_dst_revert_pairs(p))
         else:
             dst_parts = []
             for path_part in path.split(os.sep):
