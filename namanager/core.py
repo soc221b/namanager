@@ -313,8 +313,8 @@ class Namanager():
 
             if expect != actual:
                 self._error_info.append({
-                    'expect': ''.join([dirpath, expect]),
-                    'actual': ''.join([dirpath, actual])
+                    'expect': os.sep.join([os.path.dirname(dirpath), expect]),
+                    'actual': os.sep.join([os.path.dirname(dirpath), actual])
                 })
                 self._error_info_count += 1
 
