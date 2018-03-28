@@ -276,11 +276,10 @@ class Namanager():
         for dirpath, dirs, files in walk:
             for f in files:
                 extension = (
-                    '' if f.find(r'\.') == -1 else '.' + f.split(r'\.')[-1]
+                    '' if f.rfind(r'.') == -1 else r'.' + f.split(r'.')[-1]
                 )
                 actual = f
                 expect = actual.replace(extension, '')
-
                 expect = util.convert_sep(expect, self.file_sep)
                 expect = util.convert_sentence_to_case(
                     expect, self.file_letter_case)
@@ -288,11 +287,8 @@ class Namanager():
 
                 if expect != actual:
                     self._error_info.append({
-                        'filename': {
-                            'expect': expect,
-                            'actual': actual
-                        },
-                        'dirpath': dirpath
+                        'expect': os.sep.join([dirpath, expect]),
+                        'actual': os.sep.join([dirpath, actual])
                     })
                     self._error_info_count += len(expect)
 
@@ -317,11 +313,8 @@ class Namanager():
 
             if expect != actual:
                 self._error_info.append({
-                    'dirname': {
-                        'expect': expect,
-                        'actual': actual
-                    },
-                    'dirpath': dirpath[:dirpath.rfind(os.sep)]
+                    'expect': os.sep.join([os.path.dirname(dirpath), expect]),
+                    'actual': os.sep.join([os.path.dirname(dirpath), actual])
                 })
                 self._error_info_count += 1
 

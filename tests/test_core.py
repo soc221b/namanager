@@ -607,13 +607,13 @@ class TestNamanager():
         fc.load_settings(etc)
         fc.check_file(etc['CHECK_DIRS'][0])
 
-        for f in fc.get_dict():
-            expect = f['filename']['expect']
-            actual = f['filename']['actual']
+        for f in fc.get_dict(fc.error_info):
+            expect = f['expect']
+            actual = f['actual']
             helper.append_to_error_if_not_expect_with_msg(
                 errors, len(expect) == len(actual), (
-                    "expect: {0}\nactual: {1}\nin: {2}".format(
-                        expect, actual, f['dirpath'])))
+                    "expect: {0}\nactual: {1}".format(expect, actual)))
+
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_check_dir(self):

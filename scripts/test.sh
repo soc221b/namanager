@@ -113,11 +113,26 @@ Tearing down environment
 ================================================================================
 '''
 deactivate
-rm -rf env
+rm -rf env build dist
+mv namanager/tests .
+
+# Prevent haven't completely install the package.
+
+# Try to correctly install namanager and remove it.
+$PIP install namanager
+$PIP uninstall -y namanager
+
+# Try to manually install namanager and remove it.
+$PIP install -r requirements.txt
+$PYTHON setup.py install --record namanager_record.txt
+cat namanager_record.txt | xargs rm -rf
+rm -rf namanager_record.txt
+
+# Initialize libs.
 $PIP uninstall -y -r requirements_dev.txt
 $PIP uninstall -y -r requirements.txt
-$PIP uninstall -y namanager
-# check if the namanager has been installed.
+
+# Check if the namanager has been installed or hasn't completely installed.
 version=`namanager --version 2>/dev/null`
 assert 127 # command not found
 
