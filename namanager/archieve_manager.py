@@ -59,9 +59,9 @@ class ArchieveManager():
 
         for pairs in [dir_pairs, file_pairs]:
             for src, dst in pairs:
+                # replace dirname
+                # if any hierarchical dirname has changed
                 renamed_dirname = os.path.dirname(dst)
-
-                # find renamed_dirname
                 dirname_parts = renamed_dirname.split(os.sep)
                 # ['/root/to/path', '/root/to', '/root']
                 dirname_powerset = []
@@ -79,6 +79,7 @@ class ArchieveManager():
                 renamed_src = os.sep.join(
                     [renamed_dirname, os.path.basename(src)])
                 revert_path_pairs.append((renamed_dst, renamed_src))
+
                 renamed_mapping[src] = renamed_dst
 
         return revert_path_pairs
