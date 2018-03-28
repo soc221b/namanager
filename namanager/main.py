@@ -133,7 +133,6 @@ def check(**kwargs):
                         datetime.datetime.now())
                     with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
                               'w') as f:
-                        pass
                         f.write(json.dumps(
                             am.gen_revert_path_pairs(error_info),
                             indent=4, sort_keys=True))
