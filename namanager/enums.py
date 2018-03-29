@@ -1,3 +1,5 @@
+# Please update related files if you modified these attributes
+
 # TODO:
 
 # Append char(s) to abbr:
@@ -43,9 +45,31 @@ FORMATS = {
         'lower_case',
         'camel_case',
         'pascal_case',
+        'ignore',
     ],
     'SEP': [
         'dash_to_underscore',
-        'underscore_to_dash'
+        'underscore_to_dash',
+        'ignore',
     ],
+}
+
+SETTINGS = {
+    "CHECK_DIRS": [],
+    "ONLY_FILES": [],
+    "ONLY_DIRS": [],
+    "IGNORE_FILES": [],
+    "IGNORE_DIRS": [],
+    "FILE_FORMATS": {
+        "LETTER_CASE": "ignore",
+        "SEP": [
+            "ignore",
+        ],
+    },
+    "DIR_FORMATS": {
+        "LETTER_CASE": "ignore",
+        "SEP": [
+            "ignore",
+        ],
+    },
 }

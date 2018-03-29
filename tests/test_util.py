@@ -2,7 +2,6 @@ import time
 
 import namanager.tests.helper as helper
 import namanager.util as util
-from namanager.enums import FORMATS
 
 
 class TestUtil():
@@ -230,17 +229,14 @@ class TestUtil():
 
         convert_sentence_to_case = util.convert_sentence_to_case
         errors = []
+        CASES = ['lower_case', 'upper_case', 'camel_case', 'pascal_case']
 
         # boundary
-        actl = convert_sentence_to_case('', [])
-        helper.append_to_error_if_not_expect_with_msg(
-            errors, '' == actl, (
-                "'' != '{0}'".format(actl)))
-        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
+        for case in CASES:
             helper.append_to_error_if_not_expect_with_msg(
-                errors, '' == convert_sentence_to_case('', list(case)), (
+                errors, '' == convert_sentence_to_case('', case), (
                     "'' != {0}".format(
-                        convert_sentence_to_case('', list(case)))))
+                        convert_sentence_to_case('', case))))
 
         # with any separator
         expect = {'lower_case': 'http_error&response*for.request-of?soap',
@@ -255,10 +251,10 @@ class TestUtil():
                    'Http_Error&Response*For.Request-Of?Soap',
                    ]
 
-        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
+        for case in CASES:
             for s in strings:
-                expt = expect[case[-1]]
-                actl = convert_sentence_to_case(s, case[-1])
+                expt = expect[case]
+                actl = convert_sentence_to_case(s, case)
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, expt == actl, (
                         "In format: {0} within any separator"
@@ -277,24 +273,26 @@ class TestUtil():
                    'HttpErrorResponseForRequestOfSoap',
                    ]
 
-        for case in helper.gen_all_possible_pair(FORMATS['LETTER_CASE']):
+        for case in CASES:
             for s in strings:
-                expt = expect[case[-1]]
-                actl = convert_sentence_to_case(s, case[-1])
+                expt = expect[case]
+                actl = convert_sentence_to_case(s, case)
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, expt == actl, (
                         "In format: {0} without any separator"
                         "\nexpect: {1} !=\nactual: {2}".format(
                             case, expt, actl)))
+
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_convert_sep(self):
         convert_sep = util.convert_sep
         errors = []
+        SEPS = ['dash_to_underscore', 'underscore_to_dash']
 
         # boundary
-        for sep in helper.gen_all_possible_pair(FORMATS['SEP']):
-            actl = convert_sep('', list(sep))
+        for sep in helper.gen_all_possible_pair(SEPS):
+            actl = convert_sep('', sep)
             helper.append_to_error_if_not_expect_with_msg(
                 errors, '' == actl, (
                     "'' != {0}".format(actl)))

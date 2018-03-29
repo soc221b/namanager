@@ -59,24 +59,34 @@ def convert_sep(string, cases):
     for case in cases:
         if case == 'dash_to_underscore':
             string = string.replace('-', '_')
-        if case == 'underscore_to_dash':
+        elif case == 'underscore_to_dash':
             string = string.replace('_', '-')
+        else:
+            raise KeyError(
+                "key {0} is not found in the set of existing keys.".format(
+                    case))
+
     return string
 
 
 def convert_word_to_case(word, case):
     """
-    Only support pascal case,
-    because camel case is sensible for multiple words,
-    user can just change first letter to lowercase.
+    Camel case is insensible for single word.
+
+    User can convert all words to pascal case
+    and then change first letter to lowercase
+    if one want to convert words to camel case.
     """
 
     if case == 'upper_case':
         word = word.upper()
-    if case == 'lower_case':
+    elif case == 'lower_case':
         word = word.lower()
-    if case == 'pascal_case':
+    elif case == 'pascal_case':
         word = word[0].upper() + word[1:].lower()
+    else:
+        raise KeyError(
+            "key {0} is not found in the set of existing keys.".foramt(case))
 
     return word
 
@@ -110,5 +120,9 @@ def convert_words_to_case(words, case):
     elif case in ['upper_case', 'lower_case', 'pascal_case']:
         for w in words:
             converted_words.append(convert_word_to_case(w, case))
+
+    else:
+        raise KeyError(
+            "key {0} is not found in the set of existing keys.".format(case))
 
     return converted_words

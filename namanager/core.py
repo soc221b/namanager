@@ -4,6 +4,7 @@ import json
 import dicttoxml
 from xml.dom.minidom import parseString
 import namanager.util as util
+import namanager.enums as enums
 
 
 class Namanager():
@@ -15,16 +16,28 @@ class Namanager():
         self._error_info_count = 0
 
     def init_settings(self):
-        self._FILE_FORMATS = {}
-        self._DIR_FORMATS = {}
-        self._ONLY_FILES = []
-        self._ONLY_DIRS = []
-        self._IGNORE_FILES = []
-        self._IGNORE_DIRS = []
-        self._FILE_SEP = ''
-        self._FILE_LETTER_CASE = ''
-        self._DIR_SEP = ''
-        self._DIR_LETTER_CASE = ''
+        # Please update `enums` if you modified these attributes
+        self._FILE_FORMATS = (
+            enums.SETTINGS['FILE_FORMATS'])
+        self._FILE_SEP = (
+            enums.SETTINGS['FILE_FORMATS']['SEP'])
+        self._FILE_LETTER_CASE = (
+            enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])
+        self._ONLY_FILES = (
+            enums.SETTINGS['ONLY_FILES'])
+        self._IGNORE_FILES = (
+            enums.SETTINGS['IGNORE_FILES'])
+
+        self._DIR_FORMATS = (
+            enums.SETTINGS['DIR_FORMATS'])
+        self._DIR_SEP = (
+            enums.SETTINGS['DIR_FORMATS']['SEP'])
+        self._DIR_LETTER_CASE = (
+            enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])
+        self._ONLY_DIRS = (
+            enums.SETTINGS['ONLY_DIRS'])
+        self._IGNORE_DIRS = (
+            enums.SETTINGS['IGNORE_DIRS'])
 
     def _convert_os_sep_of_str_in_list(self, strlist):
         # needs to test
@@ -34,35 +47,28 @@ class Namanager():
         return converted_strlist
 
     def load_settings(self, settings={}):
-        if 'FILE_FORMATS' in settings:
-            self._FILE_FORMATS = settings['FILE_FORMATS']
-            if 'SEP' in self._FILE_FORMATS:
-                self._FILE_SEP = self._FILE_FORMATS['SEP']
-            if 'LETTER_CASE' in self._FILE_FORMATS:
-                self._FILE_LETTER_CASE = self._FILE_FORMATS['LETTER_CASE']
-        if 'DIR_FORMATS' in settings:
-            self._DIR_FORMATS = settings['DIR_FORMATS']
-            if 'SEP' in self._DIR_FORMATS:
-                self._DIR_SEP = self._DIR_FORMATS['SEP']
-            if 'LETTER_CASE' in self._DIR_FORMATS:
-                self._DIR_LETTER_CASE = self._DIR_FORMATS['LETTER_CASE']
-        if 'ONLY_FILES' in settings:
-            self._ONLY_FILES = settings['ONLY_FILES']
-        if 'ONLY_DIRS' in settings:
-            self._ONLY_DIRS = settings['ONLY_DIRS']
-        if 'IGNORE_FILES' in settings:
-            self._IGNORE_FILES = settings['IGNORE_FILES']
-        if 'IGNORE_DIRS' in settings:
-            self._IGNORE_DIRS = settings['IGNORE_DIRS']
-
+        # Please update `enums` if you modified these attributes
+        self._FILE_FORMATS = settings.get(
+            'FILE_FORMATS', enums.SETTINGS['FILE_FORMATS'])
+        self._FILE_SEP = self._FILE_FORMATS.get(
+            'SEP', enums.SETTINGS['FILE_FORMATS']['SEP'])
+        self._FILE_LETTER_CASE = self._FILE_FORMATS.get(
+            'LETTER_CASE', enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])
         self._ONLY_FILES = self._convert_os_sep_of_str_in_list(
-            self._ONLY_FILES)
-        self._ONLY_DIRS = self._convert_os_sep_of_str_in_list(
-            self._ONLY_DIRS)
+            settings.get('ONLY_FILES', enums.SETTINGS['ONLY_FILES']))
         self._IGNORE_FILES = self._convert_os_sep_of_str_in_list(
-            self._IGNORE_FILES)
+            settings.get('IGNORE_FILES', enums.SETTINGS['IGNORE_FILES']))
+
+        self._DIR_FORMATS = settings.get(
+            'DIR_FORMATS', enums.SETTINGS['DIR_FORMATS'])
+        self._DIR_SEP = self._DIR_FORMATS.get(
+            'SEP', enums.SETTINGS['DIR_FORMATS']['SEP'])
+        self._DIR_LETTER_CASE = self._DIR_FORMATS.get(
+            'LETTER_CASE', enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])
+        self._ONLY_DIRS = self._convert_os_sep_of_str_in_list(
+            settings.get('ONLY_DIRS', enums.SETTINGS['ONLY_DIRS']))
         self._IGNORE_DIRS = self._convert_os_sep_of_str_in_list(
-            self._IGNORE_DIRS)
+            settings.get('IGNORE_DIRS', enums.SETTINGS['IGNORE_DIRS']))
 
     @property
     def error_info(self):
@@ -281,9 +287,10 @@ class Namanager():
                 actual = f
                 expect = actual.replace(extension, '')
 
-                expect = util.convert_sep(expect, self.file_sep)
-                expect = util.convert_sentence_to_case(
-                    expect, self.file_letter_case)
+                expect = util.convert_sep(expect, [self.file_sep])
+                if self.dir_letter_case != 'ignore':
+                    expect = util.convert_sentence_to_case(
+                        expect, self.file_letter_case)
                 expect += extension
 
                 if expect != actual:
@@ -311,9 +318,10 @@ class Namanager():
         for dirpath, dirs, files in walk:
             actual = dirpath[dirpath.rfind(os.sep):]
             expect = actual
-            expect = util.convert_sep(expect, self.dir_sep)
-            expect = util.convert_sentence_to_case(
-                expect, self.dir_letter_case)
+            expect = util.convert_sep(expect, [self.dir_sep])
+            if self.dir_letter_case != 'ignore':
+                expect = util.convert_sentence_to_case(
+                    expect, self.dir_letter_case)
 
             if expect != actual:
                 self._error_info.append({
