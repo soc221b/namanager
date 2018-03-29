@@ -8,7 +8,7 @@ namanager
         :target: https://travis-ci.org/iattempt/namanager
         :alt: see build status of Unix-like: https://travis-ci.org/iattempt/namanager
 
-.. image:: https://img.shields.io/appveyor/ci/iattempt/namanager.svg?style=flat&label=Windows
+.. image:: https://img.shields.io/appveyor/ci/iattempt/namanager/master.svg?style=flat&label=Windows
         :target: https://ci.appveyor.com/project/iattempt/namanager
         :alt: see build status of Windows: https://ci.appveyor.com/project/iattempt/namanager/branch/master
 
