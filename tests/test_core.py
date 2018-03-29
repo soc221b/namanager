@@ -427,6 +427,14 @@ class TestNamanager():
             ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
         ]
         patterns = {
+            'test root': [
+                r'^/$',
+                r'/$',
+            ],
+            'test any dir': [
+                r'/',
+                r'^/',
+            ],
             'test particular dir': [
                 r'a',
             ],
@@ -447,6 +455,20 @@ class TestNamanager():
             ],
         }
         expect_pairs = {
+            'test root': [
+                ('/root/to/path', ['aa', 'ba', 'ca'], [
+                    'not.mdfile', 'notmd', 'is.md']),
+            ],
+            'test any dir': [
+                ('/root/to/path', ['aa', 'ba', 'ca'], [
+                    'not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/aa', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/aa/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+            ],
             'test particular dir': [
                 ('/root/to/path/aa', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
                 ('/root/to/path/aa/aa', [], ['not.mdfile', 'notmd', 'is.md']),
@@ -507,6 +529,14 @@ class TestNamanager():
             ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
         ]
         patterns = {
+            'test root': [
+                r'^/$',
+                r'/$',
+            ],
+            'test any dir': [
+                r'/',
+                r'^/',
+            ],
             'test particular dir': [
                 r'a',
             ],
@@ -527,6 +557,16 @@ class TestNamanager():
             ],
         }
         expect_pairs = {
+            'test root': [
+                ('/root/to/path/aa', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/aa/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+            ],
+            'test any dir': [
+            ],
             'test particular dir': [
                 ('/root/to/path', ['aa', 'ba', 'ca'], [
                     'not.mdfile', 'notmd', 'is.md']),

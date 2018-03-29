@@ -227,6 +227,8 @@ class Namanager():
         filtered_walk = []
         for (dirpath, dirs, files) in walk:
             rel_dirpath = dirpath[len(root):]
+            if rel_dirpath == '':
+                rel_dirpath = '/'
             if self._is_string_matching(rel_dirpath, re_patterns):
                 filtered_walk.append((dirpath, dirs, files))
 
