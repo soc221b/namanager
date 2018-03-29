@@ -4,19 +4,19 @@ namanager
 
 .. include-documentation-begin-marker
 
-.. image:: https://travis-ci.org/iattempt/namanager.svg?branch=master
+.. image:: https://img.shields.io/travis/iattempt/namanager/master.svg?style=flat&label=Linux
         :target: https://travis-ci.org/iattempt/namanager
         :alt: see build status of Unix-like: https://travis-ci.org/iattempt/namanager
 
-.. image:: https://ci.appveyor.com/api/projects/status/ovpdobns85n3d86k/branch/master?svg=true
+.. image:: https://img.shields.io/appveyor/ci/iattempt/namanager.svg?style=flat&label=Windows
         :target: https://ci.appveyor.com/project/iattempt/namanager/branch/master
         :alt: see build status of Windows: https://ci.appveyor.com/project/iattempt/namanager/branch/master
 
-.. image:: https://codecov.io/gh/iattempt/namanager/branch/master/graph/badge.svg
+.. image:: https://img.shields.io/codecov/c/github/iattempt/namanager/master.svg?style=flat
         :target: https://codecov.io/gh/iattempt/namanager
         :alt: see code coverage status: https://codecov.io/gh/iattempt/namanager
 
-.. image:: https://img.shields.io/pypi/v/namanager.svg?style=flat-square
+.. image:: https://img.shields.io/pypi/v/namanager.svg?style=flat
     :target: https://pypi.python.org/pypi/namanager
 
 A file or/and directory name manager which could determine names are/aren't expectable, and you could also automatically rename it.
