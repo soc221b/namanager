@@ -50,7 +50,6 @@ FORMATS = {
     'SEP': [
         'dash_to_underscore',
         'underscore_to_dash',
-        'ignore',
     ],
 }
 
@@ -62,14 +61,10 @@ SETTINGS = {
     "IGNORE_DIRS": [],
     "FILE_FORMATS": {
         "LETTER_CASE": "ignore",
-        "SEP": [
-            "ignore",
-        ],
+        "SEP": [],
     },
     "DIR_FORMATS": {
         "LETTER_CASE": "ignore",
-        "SEP": [
-            "ignore",
-        ],
+        "SEP": [],
     },
 }

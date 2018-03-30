@@ -620,11 +620,11 @@ class TestNamanager():
             "IGNORE_DIRS": [],
             "FILE_FORMATS": {
                 "LETTER_CASE": "pascal_case",
-                "SEP": "dash_to_underscore",
+                "SEP": ["dash_to_underscore"],
             },
             "DIR_FORMATS": {
                 "LETTER_CASE": "pascal_case",
-                "SEP": "dash_to_underscore",
+                "SEP": ["dash_to_underscore"],
             },
         }
 
