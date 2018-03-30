@@ -160,44 +160,6 @@ deactivate_env dev
 
 echo '''
 ================================================================================
-Setting up a manual-install environment
-================================================================================
-'''
-activate_env manual
-$PYTHON setup.py install --record namanager_record.txt
-assert
-
-echo '''
-================================================================================
-Run CLI
-================================================================================
-'''
-# generate temp files
-mktemp_cwd -d
-rand_dir=$result
-cd $rand_dir
-for (( i = 0; i < 200; i++ )); do
-    mktemp_cwd -d
-    mktemp_cwd
-done
-
-namanager --settings ../namanager/settings.json
-assert
-
-cd $NAMANAGER_ROOT_PATH
-rm -rf $rand_dir
-
-echo '''
-================================================================================
-Deactivate the manual-install environment
-================================================================================
-'''
-cat namanager_record.txt | xargs rm -rf
-rm -rf namanager_record.txt
-deactivate_env manual
-
-echo '''
-================================================================================
 Setting up a distribute environment
 ================================================================================
 '''
