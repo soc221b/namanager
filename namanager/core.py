@@ -326,17 +326,8 @@ class Namanager():
         walk = self._get_file_list(walk)
         for dirpath, dirs, files in walk:
             for f in files:
-                extension = (
-                    '' if f.find(r'\.') == -1 else '.' + f.split(r'\.')[-1]
-                )
                 actual = f
-                expect = actual.replace(extension, '')
-
-                expect = util.convert_sep(expect, [self.file_sep])
-                if self.dir_letter_case != 'ignore':
-                    expect = util.convert_sentence_to_case(
-                        expect, self.file_letter_case)
-                expect += extension
+                expect = self.get_expect_filename(f)
 
                 if expect != actual:
                     self._error_info.append({
@@ -361,12 +352,9 @@ class Namanager():
         walk = self._convert_walk_to_list(root)
         walk = self._get_dir_list(walk)
         for dirpath, dirs, files in walk:
-            actual = dirpath[dirpath.rfind(os.sep):]
-            expect = actual
-            expect = util.convert_sep(expect, [self.dir_sep])
-            if self.dir_letter_case != 'ignore':
-                expect = util.convert_sentence_to_case(
-                    expect, self.dir_letter_case)
+            dirpath_dirname = os.path.dirname(dirpath)
+            actual = os.sep + dirpath.split(os.sep)[-1]
+            expect = self.get_expect_dirname(actual)
 
             if expect != actual:
                 self._error_info.append({
@@ -374,9 +362,38 @@ class Namanager():
                         'expect': expect,
                         'actual': actual
                     },
-                    'dirpath': dirpath[:dirpath.rfind(os.sep)]
+                    'dirpath': dirpath_dirname
                 })
                 self._error_info_count += 1
+
+    def get_extension(self, filename):
+        extension = (''
+                     if filename.find(r'\.') == -1
+                     else '.' + filename.split(r'\.')[-1])
+        return extension
+
+    def get_filename_without_extension(self, filename):
+        extension = self.get_extension(filename)
+        return filename[:filename.rfind(extension)]
+
+    def get_expect_filename(self, filename):
+        name = self.get_filename_without_extension(filename)
+        extension = self.get_extension(filename)
+
+        name = util.convert_sep(name, self.file_sep)
+        if self.dir_letter_case != 'ignore':
+            name = util.convert_sentence_to_case(
+                name, self.file_letter_case)
+
+        return name + extension
+
+    def get_expect_dirname(self, dirname):
+        dirname = util.convert_sep(dirname, self.dir_sep)
+        if self.dir_letter_case != 'ignore':
+            dirname = util.convert_sentence_to_case(
+                dirname, self.dir_letter_case)
+
+        return dirname
 
     def check(self, root):
         self.check_dir(root)
