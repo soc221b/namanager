@@ -122,12 +122,6 @@ mv namanager/tests .
 $PIP install namanager
 $PIP uninstall -y namanager
 
-# Try to manually install namanager and remove it.
-$PIP install -r requirements.txt
-$PYTHON setup.py install --record namanager_record.txt
-cat namanager_record.txt | xargs rm -rf
-rm -rf namanager_record.txt
-
 # Initialize libs.
 $PIP uninstall -y -r requirements_dev.txt
 $PIP uninstall -y -r requirements.txt
