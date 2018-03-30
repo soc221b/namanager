@@ -202,7 +202,11 @@ Setting up a distribute environment
 ================================================================================
 '''
 activate_env dist
-$PIP install namanager
+$PYTHON setup.py sdist
+assert
+$PYTHON setup.py bdist_wheel --universal
+assert
+$PIP install dist/namanager-`$PYTHON setup.py -V`-py2.py3-none-any.whl
 assert
 
 echo '''
@@ -230,7 +234,7 @@ echo '''
 Deactivate the distribute environment
 ================================================================================
 '''
-$PIP uninstall -y namanager
+$PIP uninstall -y dist/namanager-`$PYTHON setup.py -V`-py2.py3-none-any.whl
 deactivate_env dist
 
 if [ $CI ]; then
