@@ -11,6 +11,7 @@ class Namanager():
     def __init__(self, settings={}):
         self.init_settings()
         self.load_settings(settings)
+        self.verify_setting_type()
 
         self._error_info = []
         self._error_info_count = 0
@@ -45,6 +46,50 @@ class Namanager():
         for s in strlist:
             converted_strlist.append(s.replace('/', os.sep))
         return converted_strlist
+
+    def name(self, obj, callingLocals=locals()):
+        name = None
+        for k, v in list(callingLocals.items()):
+            if v is obj:
+                name = k
+        return name
+
+    def verify_setting_type(self):
+        errors = []
+
+        settings = [
+            {'s': self._FILE_FORMATS,
+             't': type(enums.SETTINGS['FILE_FORMATS'])},
+            {'s': self._FILE_SEP,
+             't': type(enums.SETTINGS['FILE_FORMATS']['SEP'])},
+            {'s': self._FILE_LETTER_CASE,
+             't': type(enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])},
+            {'s': self._ONLY_FILES,
+             't': type(enums.SETTINGS['ONLY_FILES'])},
+            {'s': self._IGNORE_FILES,
+             't': type(enums.SETTINGS['IGNORE_FILES'])},
+            {'s': self._DIR_FORMATS,
+             't': type(enums.SETTINGS['DIR_FORMATS'])},
+            {'s': self._DIR_SEP,
+             't': type(enums.SETTINGS['DIR_FORMATS']['SEP'])},
+            {'s': self._DIR_LETTER_CASE,
+             't': type(enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])},
+            {'s': self._ONLY_DIRS,
+             't': type(enums.SETTINGS['ONLY_DIRS'])},
+            {'s': self._IGNORE_DIRS,
+             't': type(enums.SETTINGS['IGNORE_DIRS'])},
+        ]
+
+        for setting in settings:
+            if not isinstance(setting['s'], setting['t']):
+                errors.append("Type of {0} must be {1}.".format(
+                    self.name(setting['s'], self.__dict__), setting['t']))
+
+        err_str = '\n'
+        for error in errors:
+            err_str += error + '\n'
+
+        assert errors == [], Exception(err_str)
 
     def load_settings(self, settings={}):
         # Please update `enums` if you modified these attributes
