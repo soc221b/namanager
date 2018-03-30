@@ -97,8 +97,9 @@ class Namanager():
             'FILE_FORMATS', enums.SETTINGS['FILE_FORMATS'])
         self._FILE_SEP = self._FILE_FORMATS.get(
             'SEP', enums.SETTINGS['FILE_FORMATS']['SEP'])
-        self._FILE_LETTER_CASE = self._FILE_FORMATS.get(
-            'LETTER_CASE', enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])
+        self._FILE_LETTER_CASE = str(
+            self._FILE_FORMATS.get(
+                'LETTER_CASE', enums.SETTINGS['FILE_FORMATS']['LETTER_CASE']))
         self._ONLY_FILES = self._convert_os_sep_of_str_in_list(
             settings.get('ONLY_FILES', enums.SETTINGS['ONLY_FILES']))
         self._IGNORE_FILES = self._convert_os_sep_of_str_in_list(
@@ -108,8 +109,9 @@ class Namanager():
             'DIR_FORMATS', enums.SETTINGS['DIR_FORMATS'])
         self._DIR_SEP = self._DIR_FORMATS.get(
             'SEP', enums.SETTINGS['DIR_FORMATS']['SEP'])
-        self._DIR_LETTER_CASE = self._DIR_FORMATS.get(
-            'LETTER_CASE', enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])
+        self._DIR_LETTER_CASE = str(
+            self._DIR_FORMATS.get(
+                'LETTER_CASE', enums.SETTINGS['DIR_FORMATS']['LETTER_CASE']))
         self._ONLY_DIRS = self._convert_os_sep_of_str_in_list(
             settings.get('ONLY_DIRS', enums.SETTINGS['ONLY_DIRS']))
         self._IGNORE_DIRS = self._convert_os_sep_of_str_in_list(
