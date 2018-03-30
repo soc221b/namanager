@@ -188,6 +188,8 @@ Run CLI
 # generate temp files
 mktemp_cwd -d
 rand_dir=$result
+# also prevent import by relative way.
+# if build has wrongs, error(s) will be occurs.
 cd $rand_dir
 for (( i = 0; i < 200; i++ )); do
     mktemp_cwd -d
