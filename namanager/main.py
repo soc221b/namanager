@@ -99,6 +99,7 @@ def check(**kwargs):
     RENAME = kwargs.get('rename', False)
     RENAME_BACKUP = kwargs.get('rename_backup', False)
     RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
+    RENAME_RECOVER = kwargs.get('rename_recover', False)
     REVERT_FILE = kwargs.get('revert_file', None)
 
     if REVERT_FILE is not None:
@@ -137,7 +138,12 @@ def check(**kwargs):
                             am.gen_revert_path_pairs(error_info),
                             indent=4, sort_keys=True))
 
-                am.rename(error_info)
+                error_pairs = am.rename(error_info)
+
+                if RENAME_RECOVER and error_pairs:
+                    # try to directly revert all paths
+                    recover_pairs = am.gen_revert_path_pairs(error_info)
+                    am.rename(recover_pairs)
 
             errors.append('In folder {0} :'.format(os.path.realpath(d)))
             errors.append('FAILED (error{0}={1})'.format(

@@ -52,6 +52,9 @@ parser.add_argument("--rename-no-backup",
 parser.add_argument("--rename-backup-dir",
                     default=os.getcwd(),
                     help="Save backup file into specify directory.")
+parser.add_argument("--rename-recover",
+                    action='store_true',
+                    help="Recover paths after any rename failed.")
 parser.add_argument("--revert-rename",
                     default=None,
                     metavar="BACKUP_FILE",
@@ -84,6 +87,7 @@ if __name__ == '__main__':
             True
         ),
         'rename_backup_dir': args.rename_backup_dir,
+        'rename_recover': args.rename_recover,
         'revert_file': args.revert_rename,
     }
     entry(args.settings, **kwargs)
