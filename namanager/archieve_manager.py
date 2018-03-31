@@ -7,27 +7,25 @@ class ArchieveManager():
     Strategy:
         1. file rename first
         2. deeper first
+
+    :type path_pairs: list of tuple, e.g., [(src, dst)]
     """
 
     def rename(self, path_pairs):
-        """rename
-        :param path_pairs:
-        :type path_pairs: list of tuple, e.g., [(src, dst)]
-        """
         file_pairs, dir_pairs = (
             self._separate_file_dir_from_path_pair(path_pairs))
-        self.rename_file(file_pairs)
-        self.rename_dir(dir_pairs)
 
-    def rename_file(self, file_pairs):
-        file_pairs = self._sort_path_pair(file_pairs, reverse=True)
-        for src, dst in file_pairs:
-            shutil.move(src, dst)
+        self._rename(file_pairs)
+        self._rename(dir_pairs)
 
-    def rename_dir(self, dir_pairs):
-        dir_pairs = self._sort_path_pair(dir_pairs, reverse=True)
-        for src, dst in dir_pairs:
-            shutil.move(src, dst)
+    def _rename(self, path_pairs):
+        path_pairs = self._sort_path_pair(path_pairs, reverse=True)
+
+        for src, dst in path_pairs:
+            try:
+                shutil.move(src, dst)
+            except Exception:
+                pass
 
     def gen_revert_path_pairs(self, path_pairs):
         # Only implement for file/dir under same original directory
