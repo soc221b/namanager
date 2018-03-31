@@ -21,9 +21,9 @@ class TestArchieveManager():
 
         for pairs in itertools.permutations(path_pairs):
             self._test_rename_before(pairs)
-            am.rename(pairs)
+            assert [] == am.rename(pairs)
             self._test_rename_after(renamed_path_pairs)
-            am.rename(revert_path_pairs)
+            assert [] == am.rename(revert_path_pairs)
 
         self._rm_paths([pair[0] for pair in pairs])
 
@@ -35,11 +35,11 @@ class TestArchieveManager():
 
         for pairs in itertools.permutations(file_pairs):
             self._test_rename_before(pairs)
-            am.rename(pairs)
+            assert [] == am.rename(pairs)
             # no needs renmaed pairs for files,
             # because direcotires would not be changed
             self._test_rename_after(pairs)
-            am.rename(revert_file_pairs)
+            assert [] == am.rename(revert_file_pairs)
 
         self._rm_paths([pair[0] for pair in file_pairs])
 
@@ -52,9 +52,9 @@ class TestArchieveManager():
 
         for perm_pairs in itertools.permutations(dir_pairs):
             self._test_rename_before(perm_pairs)
-            am.rename(perm_pairs)
+            assert [] == am.rename(perm_pairs)
             self._test_rename_after(renamed_dir_pairs)
-            am.rename(revert_dir_pairs)
+            assert [] == am.rename(revert_dir_pairs)
 
         self._rm_paths([pair[0] for pair in dir_pairs])
 

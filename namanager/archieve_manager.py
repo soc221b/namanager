@@ -12,20 +12,32 @@ class ArchieveManager():
     """
 
     def rename(self, path_pairs):
+        """
+        :return: pairs which doesn't be renamed
+        """
+        error_pairs = []
         file_pairs, dir_pairs = (
             self._separate_file_dir_from_path_pair(path_pairs))
 
-        self._rename(file_pairs)
-        self._rename(dir_pairs)
+        error_pairs.extend(self._rename(file_pairs))
+        error_pairs.extend(self._rename(dir_pairs))
+
+        return error_pairs
 
     def _rename(self, path_pairs):
+        """
+        :return: pairs which doesn't be renamed
+        """
+        error_pairs = []
         path_pairs = self._sort_path_pair(path_pairs, reverse=True)
 
         for src, dst in path_pairs:
             try:
                 shutil.move(src, dst)
             except Exception:
-                pass
+                error_pairs.append([src, dst])
+
+        return error_pairs
 
     def gen_revert_path_pairs(self, path_pairs):
         # Only implement for file/dir under same original directory
