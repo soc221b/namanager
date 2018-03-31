@@ -94,7 +94,8 @@ def get_src_dst_pair(error_info):
 
 def get_bak_filename(**kwargs):
     prefix = kwargs.get('prefix', '')
-    when = kwargs.get('when', '{:%Y%m%d%H%M%S}'.format(datetime.datetime.now()))
+    when = kwargs.get('when', '{:%Y%m%d%H%M%S}'.format(
+        datetime.datetime.now()))
 
     return prefix + when + '.bak'
 
