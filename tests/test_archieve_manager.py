@@ -36,7 +36,7 @@ class TestArchieveManager():
         for pairs in itertools.permutations(file_pairs):
             self._test_rename_before(pairs)
             assert [] == am.rename(pairs)
-            # no needs renmaed pairs for files,
+            # no needs renamed pairs for files,
             # because direcotires would not be changed
             self._test_rename_after(pairs)
             assert [] == am.rename(revert_file_pairs)
