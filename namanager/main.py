@@ -92,6 +92,13 @@ def get_src_dst_pair(error_info):
     return src_dst_pair
 
 
+def get_bak_filename(**kwargs):
+    prefix = kwargs.get('prefix', '')
+    when = kwargs.get('when', '{:%Y%m%d%H%M%S}'.format(datetime.datetime.now()))
+
+    return prefix + when + '.bak'
+
+
 def check(**kwargs):
     REQUIRED = kwargs.get('required', False)
     FMT = kwargs.get('fmt', 'json')
@@ -130,8 +137,7 @@ def check(**kwargs):
 
                 if RENAME_BACKUP:
                     test_writing_permission(dirname=RENAME_BACKUP_DIR)
-                    filename = 'namanager_rename_{:%Y%m%d%H%M%S}.bak'.format(
-                        datetime.datetime.now())
+                    filename = get_bak_filename(prefix='namanager_rename_')
                     with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
                               'w') as f:
                         f.write(json.dumps(
