@@ -89,7 +89,8 @@ class Namanager():
         for error in errors:
             err_str += error + '\n'
 
-        assert errors == [], Exception(err_str)
+        if errors:
+            raise TypeError(err_str)
 
     def load_settings(self, settings={}):
         # Please update `enums` if you modified these attributes

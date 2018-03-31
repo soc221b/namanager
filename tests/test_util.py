@@ -221,6 +221,38 @@ class TestUtil():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
+    def test_convert_word_to_case(self):
+        # only test exceptions
+        convert_word_to_case = util.convert_word_to_case
+        errors = []
+
+        try:
+            case = 'some_case'
+            actual = convert_word_to_case('abc', case)
+            errors.append(  # pragma: no cover
+                "passing: {0}\nexpect: raise KeyError\nactual: {1}.".format(
+                    case, actual))
+        except KeyError:
+            assert True
+
+        assert errors == [], Exception(helper.get_error_string(errors))
+
+    def test_convert_words_to_case(self):
+        # only test exceptions
+        convert_words_to_case = util.convert_words_to_case
+        errors = []
+
+        try:
+            case = 'some_case'
+            actual = convert_words_to_case('abc', case)
+            errors.append(  # pragma: no cover
+                "passing: {0}\nexpect: raise KeyError\nactual: {1}.".format(
+                    case, actual))
+        except KeyError:
+            assert True
+
+        assert errors == [], Exception(helper.get_error_string(errors))
+
     def test_convert_sentence_to_case(self):
         """test_convert_sentence_to_case
         This test is assumed that
@@ -329,5 +361,14 @@ class TestUtil():
         actl = convert_sep('a_a', ['underscore_to_dash'])
         helper.append_to_error_if_not_expect_with_msg(errors, 'a-a' == actl, (
             "expect 'a-a' != actlual '{0}'".format(actl)))
+
+        # not support
+        try:
+            actl = convert_sep('_', ['abc'])
+            errors.append(
+                "expect raise KeyError actual '{0}'.".format(
+                    actl))  # pragma: no cover
+        except KeyError:
+            assert True
 
         assert errors == [], Exception(helper.get_error_string(errors))

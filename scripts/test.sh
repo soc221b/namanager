@@ -17,16 +17,23 @@ else
     PYTHON=`which python`
 fi
 
+if [ "`$PIP -V`" != "`$PYTHON -m pip -V`" ]; then
+    $PIP -V
+    $PYTHON -V
+    echo "Version of pip and python must be same."
+    exit 1
+fi
+
 # '2 7 14' or '3 6 4', etc.
 VERSION=`$PYTHON -c 'import sys; print("%i %i %i" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))'`
 VERSION=($VERSION)
 VERSION_MAJOR=${VERSION[0]}
 VERSION_MINOR=${VERSION[1]}
 VERSION_PATCH=${VERSION[2]}
+
 ################################################################################
 # Functions
 ################################################################################
-
 # you could pass expect error-code to $1
 assert()
 {
@@ -102,10 +109,16 @@ mktemp_cwd()
 ################################################################################
 # Main
 ################################################################################
+echo '''
+================================================================================
+Environment information
+================================================================================
+'''
 echo $SHELL
 echo `which $PIP`
 echo `which $PYTHON`
-echo ""
+echo `$PIP -V`
+echo `$PYTHON -V`
 
 echo '''
 ================================================================================
@@ -113,11 +126,20 @@ Tearing down environment
 ================================================================================
 '''
 deactivate
-rm -rf env
+rm -rf env build dist
+mv namanager/tests .
+
+# Prevent haven't completely install the package.
+
+# Try to correctly install namanager and remove it.
+$PIP install namanager
+$PIP uninstall -y namanager
+
+# Initialize libs.
 $PIP uninstall -y -r requirements_dev.txt
 $PIP uninstall -y -r requirements.txt
-$PIP uninstall -y namanager
-# check if the namanager has been installed.
+
+# Check if the namanager has been installed or hasn't completely installed.
 version=`namanager --version 2>/dev/null`
 assert 127 # command not found
 
@@ -179,6 +201,8 @@ Run CLI
 # generate temp files
 mktemp_cwd -d
 rand_dir=$result
+# also prevent import by relative way.
+# if build has wrongs, error(s) will be occurs.
 cd $rand_dir
 for (( i = 0; i < 200; i++ )); do
     mktemp_cwd -d

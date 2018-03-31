@@ -86,7 +86,7 @@ def convert_word_to_case(word, case):
         word = word[0].upper() + word[1:].lower()
     else:
         raise KeyError(
-            "key {0} is not found in the set of existing keys.".foramt(case))
+            "key {0} is not found in the set of existing keys.".format(case))
 
     return word
 
