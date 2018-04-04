@@ -1,10 +1,9 @@
 import os
 import json
 import datetime
+import sys
 from namanager.core import Namanager
 from namanager.archieve_manager import ArchieveManager
-
-SETTINGS_JSON = {}
 
 
 def raiser(condition, msg):
@@ -13,12 +12,25 @@ def raiser(condition, msg):
 
 
 def import_settings(settings_file):
-    global SETTINGS_JSON
+    settings_json = {}
+    try:
+        with open(settings_file, 'r') as s:
+            settings_json = json.loads(s.read())
+    except Exception as e:
+        file_not_found = False
+        if sys.version_info[0] >= 3:
+            if isinstance(e, FileNotFoundError):  # noqa: F821
+                file_not_found = True
+        elif isinstance(e, IOError):  # noqa: F821
+            file_not_found = True
+        if file_not_found:
+            print('File: {0} not found'.format(settings_file))
+        else:
+            raise e
 
-    with open(settings_file, 'r') as s:
-        SETTINGS_JSON = json.loads(s.read())
+    raiser(isinstance(settings_json, dict), 'settings must be dict.')
 
-    raiser(isinstance(SETTINGS_JSON, dict), 'settings must be dict.')
+    return settings_json
 
 
 def test_writing_permission(**kwargs):
@@ -71,80 +83,140 @@ def get_bak_filename(**kwargs):
     return prefix + when + '.bak'
 
 
-def check(**kwargs):
-    REQUIRED = kwargs.get('required', False)
-    FMT = kwargs.get('fmt', 'json')
-    PRETTY_DUMP = kwargs.get('pretty_dump', False)
-    RENAME = kwargs.get('rename', False)
-    RENAME_BACKUP = kwargs.get('rename_backup', False)
-    RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
-    RENAME_RECOVER = kwargs.get('rename_recover', False)
-    REVERT_FILE = kwargs.get('revert_file', None)
+def find_recent_backup_files():
+    backup_files = []
+    for path in os.listdir():
+        if path.startswith('namanager_rename_'):
+            backup_files.append(path)
+    return backup_files
 
-    if REVERT_FILE is not None:
+
+def revert(**kwargs):
+    result = {'errors': []}
+    REVERT_FILE = kwargs.get('revert_file', None)
+    REVERT_LAST = kwargs.get('revert_last', False)
+    if REVERT_FILE is None or REVERT_LAST:
+        backup_files = find_recent_backup_files()
+        if len(backup_files) == 1:
+            REVERT_FILE = backup_files[0]
+        elif len(backup_files) > 1:
+            if REVERT_LAST:
+                backup_files.sort(reverse=True)
+                REVERT_FILE = backup_files[0]
+            else:
+                result['errors'].append(
+                    'There are so many backup files, please specify file.')
+        elif len(backup_files) == 0:
+            result['errors'].append(
+                'No backup file are detected, please specify file.')
+
+    try:
         am = ArchieveManager()
         with open(REVERT_FILE, 'r') as f:
             am.rename(json.loads(f.read()))
+    except Exception as e:
+        result['errors'].append(e)
+    return result
 
-    errors = []
-    revert_path_pairs = []
+
+def check(**kwargs):
+    result = {'errors': [], 'unexpected_pairs': []}
+    SETTINGS = kwargs.get('settings',
+                          os.path.join(os.getcwd(), 'settings.json'))
+    FMT = kwargs.get('fmt', 'json')
+    PRETTY_DUMP = kwargs.get('pretty_dump', False)
+    settings_json = import_settings(SETTINGS)
+    error_infos = []
+
+    for d in settings_json['CHECK_DIRS']:
+        checker = Namanager(settings_json)
+        checker.check(d)
+
+        if checker.error_info:
+            error_infos.extend(checker.error_info)
+
+            result['errors'].append(
+                'In folder {0} :'.format(os.path.realpath(d)))
+            result['errors'].append(
+                'FAILED (error={0})'.format(checker.error_info_count))
+
+    if FMT == 'dict':
+        print(checker.get_dict(error_infos))
+    elif FMT == 'json':
+        print(checker.get_json(error_infos, PRETTY_DUMP))
+    elif FMT == 'xml':
+        print(checker.get_xml(error_infos, PRETTY_DUMP))
+    elif FMT == 'nodump':
+        result['unexpected_pairs'].extend(checker.get_dict(error_infos))
+
+    return result
+
+
+def rename(rename_pairs, **kwargs):
+    result = {'errors': []}
+    RENAME_BACKUP = kwargs.get('rename_backup', False)
+    RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
+    RENAME_RECOVER = kwargs.get('rename_recover', False)
+
     if RENAME_BACKUP:
         test_writing_permission(dirname=RENAME_BACKUP_DIR)
 
-    for d in SETTINGS_JSON['CHECK_DIRS']:
-        checker = Namanager(SETTINGS_JSON)
+    am = ArchieveManager()
+    rename_pairs = get_src_dst_pair(rename_pairs)
 
-        checker.check(d)
-
-        if FMT == 'dict':
-            RESULT = checker.get_dict(checker.error_info)
-        elif FMT == 'json':
-            RESULT = checker.get_json(checker.error_info, PRETTY_DUMP)
-        elif FMT == 'xml':
-            RESULT = checker.get_xml(checker.error_info, PRETTY_DUMP)
-
-        print(RESULT)
-        if RESULT:
-            if RENAME:
-                am = ArchieveManager()
-                error_info = checker.get_dict(checker.error_info)
-                error_info = get_src_dst_pair(error_info)
-
-                if RENAME_BACKUP:
-                    revert_path_pairs.extend(
-                        am.gen_revert_path_pairs(error_info))
-
-                error_pairs = am.rename(error_info)
-
-                if RENAME_RECOVER and error_pairs:
-                    # try to directly revert all paths
-                    recover_pairs = am.gen_revert_path_pairs(error_info)
-                    am.rename(recover_pairs)
-
-            errors.append('In folder {0} :'.format(os.path.realpath(d)))
-            errors.append('FAILED (error{0}={1})'.format(
-                  's' if len(RESULT) > 1 else '',
-                  checker.error_info_count))
-
-    print("")
     if RENAME_BACKUP:
+        revert_pairs = am.gen_revert_path_pairs(rename_pairs)
         filename = get_bak_filename(prefix='namanager_rename_')
         with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
                   'w') as f:
-            f.write(json.dumps(revert_path_pairs, indent=4, sort_keys=True))
+            f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
+
+    error_pairs = am.rename(rename_pairs)
+
+    if error_pairs:
+        # TODO: output more information
+        if RENAME_RECOVER:
+            # try to directly revert all paths
+            recover_pairs = am.gen_revert_path_pairs(rename_pairs)
+            am.rename(recover_pairs)
+            result['errors'].append("Failed to rename (Recovered).")
+
+        else:
+            result['errors'].append('Some paths can not be renamed.')
+
+    return result
+
+
+def entry(**kwargs):
+    REQUIRED = kwargs.get('required', False)
+    VERSION = kwargs.get('version', False)
+    REVERT = kwargs.get('revert', False)
+    RENAME = kwargs.get('rename', False)
+    errors = []
+
+    if VERSION:
+        import namanager
+        print(namanager.__version__)
+
+    elif RENAME:
+        kwargs['fmt'] = 'nodump'
+        result = check(**kwargs)
+        errors.extend(result['errors'])
+        unexpected_pairs = result['unexpected_pairs']
+
+        result = rename(unexpected_pairs, **kwargs)
+        errors.extend(result['errors'])
+
+    elif REVERT:
+        result = revert(**kwargs)
+        errors.extend(result['errors'])
+
+    else:
+        result = check(**kwargs)
+        errors.extend(result['errors'])
+
     if errors:
         for e in errors:
             print(e)
         if REQUIRED:
             exit(1)
-    else:
-        print('OK.\n')
-
-
-def entry(settings_file, **kwargs):
-    import_settings(settings_file)
-    check(**kwargs)
-
-
-if __name__ == '__main__':  # pragma: no cover
-    entry('namanager/file_checker/settings.json')
