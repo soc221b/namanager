@@ -87,6 +87,9 @@ def check(**kwargs):
             am.rename(json.loads(f.read()))
 
     errors = []
+    revert_path_pairs = []
+    if RENAME_BACKUP:
+        test_writing_permission(dirname=RENAME_BACKUP_DIR)
 
     for d in SETTINGS_JSON['CHECK_DIRS']:
         checker = Namanager(SETTINGS_JSON)
@@ -108,13 +111,8 @@ def check(**kwargs):
                 error_info = get_src_dst_pair(error_info)
 
                 if RENAME_BACKUP:
-                    test_writing_permission(dirname=RENAME_BACKUP_DIR)
-                    filename = get_bak_filename(prefix='namanager_rename_')
-                    with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
-                              'w') as f:
-                        f.write(json.dumps(
-                            am.gen_revert_path_pairs(error_info),
-                            indent=4, sort_keys=True))
+                    revert_path_pairs.extend(
+                        am.gen_revert_path_pairs(error_info))
 
                 error_pairs = am.rename(error_info)
 
@@ -129,6 +127,11 @@ def check(**kwargs):
                   checker.error_info_count))
 
     print("")
+    if RENAME_BACKUP:
+        filename = get_bak_filename(prefix='namanager_rename_')
+        with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
+                  'w') as f:
+            f.write(json.dumps(revert_path_pairs, indent=4, sort_keys=True))
     if errors:
         for e in errors:
             print(e)
