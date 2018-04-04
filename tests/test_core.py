@@ -5,15 +5,17 @@ import itertools
 import xmltodict
 import namanager.tests.helper as helper
 from namanager.core import Namanager
+import namanager.enums as enums
 
 
 class TestNamanager():
     def test_init_settings(self):
         fc = Namanager()
-        self.test_load_settings(fc)
-
         fc.init_settings()
+        self.test_properties(fc)
 
+        self.test_load_settings(fc)
+        fc.init_settings()
         self.test_properties(fc)
 
     def test_convert_os_sep_of_str_in_list(self):
@@ -32,6 +34,48 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
+    def test_name(self):
+        fc = Namanager()
+        errors = []
+        foo = 123
+        global bar
+        bar = 456
+        self.baz = 789
+
+        data = [
+            {'expect': 'foo', 'actual': fc.name(foo, locals())},
+            {'expect': None, 'actual': fc.name(bar, locals())},
+            {'expect': None, 'actual': fc.name(self.baz, locals())},
+            {'expect': 'bar', 'actual': fc.name(bar, globals())},
+            {'expect': None, 'actual': fc.name(foo, globals())},
+            {'expect': None, 'actual': fc.name(self.baz, globals())},
+            {'expect': 'baz', 'actual': fc.name(self.baz, self.__dict__)},
+            {'expect': None, 'actual': fc.name(foo, self.__dict__)},
+            {'expect': None, 'actual': fc.name(bar, self.__dict__)},
+        ]
+
+        for datum in data:
+            helper.append_to_error_if_not_expect_with_msg(
+                errors,
+                datum['expect'] == datum['actual'],
+                "Expect: {0}\nActual: {1}".format(
+                    datum['expect'], datum['actual']))
+
+        assert errors == [], Exception(helper.get_error_string(errors))
+
+    def test_verify_setting_type(self):
+        fc = Namanager()
+        errors = []
+
+        fc._FILE_FORMATS = 123
+        try:
+            fc.verify_setting_type()
+            errors.append("expect: raise TypeError.")
+        except TypeError:
+            assert True
+
+        assert errors == [], Exception(helper.get_error_string(errors))
+
     def test_load_settings(self, fc=Namanager()):
         settings = {
             # "CHECK_DIRS": ["123"],
@@ -39,8 +83,8 @@ class TestNamanager():
             "ONLY_DIRS": ["123"],
             "IGNORE_FILES": ["123"],
             "IGNORE_DIRS": ["123"],
-            "FILE_FORMATS": {"LETTER_CASE": "123", "SEP": "123"},
-            "DIR_FORMATS": {"LETTER_CASE": "123", "SEP": "123"}
+            "FILE_FORMATS": {"LETTER_CASE": "123", "SEP": ["123"]},
+            "DIR_FORMATS": {"LETTER_CASE": "123", "SEP": ["123"]}
         }
 
         fc.load_settings(settings)
@@ -49,26 +93,48 @@ class TestNamanager():
         assert fc.only_dirs == ["123"]
         assert fc.ignore_files == ["123"]
         assert fc.ignore_dirs == ["123"]
-        assert fc.file_formats == {"LETTER_CASE": "123", "SEP": "123"}
-        assert fc.dir_formats == {"LETTER_CASE": "123", "SEP": "123"}
+        assert fc.file_formats == {"LETTER_CASE": "123", "SEP": ["123"]}
+        assert fc.dir_formats == {"LETTER_CASE": "123", "SEP": ["123"]}
         assert "123" == fc.file_letter_case
-        assert "123" == fc.file_sep
+        assert ["123"] == fc.file_sep
         assert "123" == fc.dir_letter_case
-        assert "123" == fc.dir_sep
+        assert ["123"] == fc.dir_sep
 
     def test_properties(self, fc=Namanager()):
-        assert not fc.error_info
-        assert not fc.error_info_count
-        assert not fc.file_formats
-        assert not fc.dir_formats
-        assert not fc.only_files
-        assert not fc.only_dirs
-        assert not fc.ignore_files
-        assert not fc.ignore_dirs
-        assert not fc.file_sep
-        assert not fc.file_letter_case
-        assert not fc.dir_sep
-        assert not fc.dir_letter_case
+        errors = []
+
+        data = [
+            {"expect": enums.SETTINGS['FILE_FORMATS'],
+             "actual": fc.file_formats},
+            {"expect": enums.SETTINGS['DIR_FORMATS'],
+             "actual": fc.dir_formats},
+            {"expect": enums.SETTINGS['ONLY_FILES'],
+             "actual": fc.only_files},
+            {"expect": enums.SETTINGS['ONLY_DIRS'],
+             "actual": fc.only_dirs},
+            {"expect": enums.SETTINGS['IGNORE_FILES'],
+             "actual": fc.ignore_files},
+            {"expect": enums.SETTINGS['IGNORE_DIRS'],
+             "actual": fc.ignore_dirs},
+            {"expect": enums.SETTINGS['FILE_FORMATS']['SEP'],
+             "actual": fc.file_sep},
+            {"expect": enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'],
+             "actual": fc.file_letter_case},
+            {"expect": enums.SETTINGS['DIR_FORMATS']['SEP'],
+             "actual": fc.dir_sep},
+            {"expect": enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'],
+             "actual": fc.dir_letter_case},
+        ]
+
+        for datum in data:
+            expt, actl = datum['expect'], datum['actual']
+            helper.append_to_error_if_not_expect_with_msg(
+                errors,
+                helper.is_same_disorderly(expt, actl),
+                "Property is wrong:\n"
+                "Expect:\n{0}\nActual:\n{1}".format(expt, actl))
+
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_is_string_matching(self):
         fc = Namanager()
@@ -636,11 +702,11 @@ class TestNamanager():
             "IGNORE_DIRS": [],
             "FILE_FORMATS": {
                 "LETTER_CASE": "pascal_case",
-                "SEP": "dash_to_underscore",
+                "SEP": ["dash_to_underscore"],
             },
             "DIR_FORMATS": {
                 "LETTER_CASE": "pascal_case",
-                "SEP": "dash_to_underscore",
+                "SEP": ["dash_to_underscore"],
             },
         }
 

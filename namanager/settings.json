@@ -18,11 +18,11 @@
     ],
     "FILE_FORMATS": {
         "LETTER_CASE": "camel_case",
-        "SEP": "dash_to_underscore"
+        "SEP": ["dash_to_underscore"]
     },
     "DIR_FORMATS": {
         "LETTER_CASE": "upper_case",
-        "SEP": "dash_to_underscore"
+        "SEP": ["dash_to_underscore"]
     },
 
     "_comment": {
