@@ -48,7 +48,7 @@ class TestMain():
             unique_path = path
             while os.path.exists(unique_path):
                 unique_path += '-'
-            os.move(path, unique_path)
+            os.rename(path, unique_path)
             return unique_path
 
     def test_cli_init_under_dir(self):
@@ -69,7 +69,7 @@ class TestMain():
         assert os.path.exists(init_filename)
         assert driver.result['errors'] == []
         if recover_filename is not None:
-            os.move(recover_filename, init_filename)
+            os.rename(recover_filename, init_filename)
 
     def test_cli_init_as_file(self):
         driver = Driver()
@@ -89,7 +89,7 @@ class TestMain():
         assert os.path.exists(init_filename)
         assert driver.result['errors'] == []
         if recover_filename is not None:
-            os.move(recover_filename, init_filename)
+            os.rename(recover_filename, init_filename)
 
     def test_cli_with_readable(self):
         driver = Driver()
