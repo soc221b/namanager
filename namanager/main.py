@@ -155,7 +155,7 @@ class Driver():
 
     def rename_backup(self, rename_pairs, **kwargs):
         am = ArchieveManager()
-        RENAME_BACKUP = kwargs.get('rename_backup', False)
+        RENAME_BACKUP = kwargs.get('rename_backup', True)
         RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
 
         if RENAME_BACKUP:
