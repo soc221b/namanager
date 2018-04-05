@@ -84,9 +84,10 @@ class Driver():
 
         return prefix + when + '.bak'
 
-    def find_recent_backup_files(self):
+    def find_recent_backup_files(self, **kwargs):
+        dirname = kwargs.get('dirname', os.getcwd())
         backup_files = []
-        for path in os.listdir(os.getcwd()):
+        for path in os.listdir(dirname):
             if path.startswith('namanager_rename_'):
                 backup_files.append(path)
         return backup_files
