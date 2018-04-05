@@ -250,6 +250,7 @@ class TestMain():
 
         driver.entry(**kwargs)
 
+        assert os.path.isfile(driver.result['rename_backup_name'])
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
         os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
@@ -275,6 +276,7 @@ class TestMain():
 
         driver.entry(**kwargs)
 
+        assert os.path.isfile(driver.result['rename_backup_name'])
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
         os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
@@ -301,6 +303,7 @@ class TestMain():
 
         driver.entry(**kwargs)
 
+        assert os.path.isfile(driver.result['rename_backup_name'])
         assert os.path.exists(backup_filename)
         os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
