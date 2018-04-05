@@ -245,6 +245,7 @@ class TestMain():
             'rename': True,
             'rename_backup_path': dirs[0],
         }
+        assert os.path.isdir(dirs[0])
         assert driver.find_recent_backup_files(dirname=dirs[0]) == []
 
         driver.entry(**kwargs)
@@ -269,6 +270,7 @@ class TestMain():
             'rename': True,
             'rename_backup_path': dirs[0],
         }
+        assert os.path.isdir(dirs[0])
         assert driver.find_recent_backup_files(dirname=dirs[0]) == []
 
         driver.entry(**kwargs)
@@ -294,6 +296,7 @@ class TestMain():
             'rename': True,
             'rename_backup_path': os.sep.join([dirs[0], '123']),
         }
+        assert os.path.isdir(dirs[0])
         assert not os.path.exists(backup_filename)
 
         driver.entry(**kwargs)
