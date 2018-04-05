@@ -105,3 +105,4 @@ if __name__ == '__main__':
 
     driver = Driver()
     driver.entry(**kwargs)
+    exit(driver.exit_code)

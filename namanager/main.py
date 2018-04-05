@@ -46,10 +46,15 @@ def test_writing_permission(**kwargs):
 class Driver():
     def __init__(self):
         self._result = {'errors': []}
+        self._exit_code = 0
 
     @property
     def result(self):
         return self._result
+
+    @property
+    def exit_code(self):
+        return self._exit_code
 
     def import_settings(self, settings_file):
         settings_json = {}
@@ -223,4 +228,4 @@ class Driver():
             for e in self._result['errors']:
                 print(e)
             if REQUIRED:
-                exit(1)
+                self._exit_code = 1
