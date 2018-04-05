@@ -1,4 +1,4 @@
-from namanager.main import entry
+from namanager.main import Driver
 
 
 class TestMain():
@@ -9,6 +9,7 @@ class TestMain():
         pass
 
     def test_entry(self):
+        driver = Driver()
         # no test for `required`
         for fmt in ['xml', 'json', 'dict']:
             for pretty_dump in [True, False]:
@@ -24,7 +25,7 @@ class TestMain():
                         'pretty_dump': pretty_dump,
                     }
                 kwargs['settings'] = 'namanager/settings.json'
-                entry(**kwargs)
+                driver.entry(**kwargs)
 
     def test_cli_version(self):
         kwargs = {

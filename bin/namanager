@@ -2,7 +2,7 @@
 
 import argparse
 import os
-from namanager.main import entry
+from namanager.main import Driver
 
 parser = argparse.ArgumentParser()
 
@@ -101,4 +101,6 @@ if __name__ == '__main__':
         'revert_last': args.revert_last,
         'revert_file': args.revert_file if args.revert_last is False else None,
     }
-    entry(**kwargs)
+
+    driver = Driver()
+    driver.entry(**kwargs)
