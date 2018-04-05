@@ -59,9 +59,9 @@ parser.add_argument("--rename-no-backup",
                     you can NOT revert paths
                     which are renamed by --rename option.
                     """)
-parser.add_argument("--rename-backup-dir",
+parser.add_argument("--rename-backup-path",
                     default=os.getcwd(),
-                    help="Save backup file into specify directory.")
+                    help="Save backup file into specify directory/file.")
 parser.add_argument("--rename-recover",
                     action='store_true',
                     help="Recover paths after any rename failed.")
@@ -105,7 +105,7 @@ if __name__ == '__main__':
         'rename_backup': (
             False if args.rename_no_backup else True
         ),
-        'rename_backup_dir': args.rename_backup_dir,
+        'rename_backup_path': args.rename_backup_path,
         'rename_recover': args.rename_recover,
         'revert': args.revert,
         'revert_last': args.revert_last,

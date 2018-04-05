@@ -229,10 +229,12 @@ class TestMain():
         assert driver.find_recent_backup_files() == []
         assert driver.result['errors'] == []
 
-    def test_cli_rename_backup_dir(self):
+    def test_cli_rename_backup_path(self):
         driver = Driver()
         dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
                                prefix=self.TMPFILE_PREFIX)
+        files = helper.mktemps(  # noqa: F841
+            3, root=dirs[0], prefix=self.TMPFILE_PREFIX)
         kwargs = {
             'settings_json': {
                 'CHECK_DIRS': dirs,
@@ -241,13 +243,62 @@ class TestMain():
                 },
             },
             'rename': True,
-            'rename_backup_dir': dirs[0],
+            'rename_backup_path': dirs[0],
         }
         assert driver.find_recent_backup_files(dirname=dirs[0]) == []
 
         driver.entry(**kwargs)
 
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
+        os.remove(driver.result['rename_backup_name'])
+        assert driver.result['errors'] == []
+
+    def test_cli_rename_backup_path_to_dir(self):
+        driver = Driver()
+        dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
+                               prefix=self.TMPFILE_PREFIX)
+        files = helper.mktemps(  # noqa: F841
+            3, root=dirs[0], prefix=self.TMPFILE_PREFIX)
+        kwargs = {
+            'settings_json': {
+                'CHECK_DIRS': dirs,
+                "DIR_FORMATS": {
+                    "LETTER_CASE": "upper_case",
+                },
+            },
+            'rename': True,
+            'rename_backup_path': dirs[0],
+        }
+        assert driver.find_recent_backup_files(dirname=dirs[0]) == []
+
+        driver.entry(**kwargs)
+
+        assert driver.find_recent_backup_files(dirname=dirs[0]) != []
+        os.remove(driver.result['rename_backup_name'])
+        assert driver.result['errors'] == []
+
+    def test_cli_rename_backup_path_to_file(self):
+        driver = Driver()
+        dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
+                               prefix=self.TMPFILE_PREFIX)
+        files = helper.mktemps(  # noqa: F841
+            3, root=dirs[0], prefix=self.TMPFILE_PREFIX)
+        backup_filename = os.sep.join([dirs[0], '123'])
+        kwargs = {
+            'settings_json': {
+                'CHECK_DIRS': dirs,
+                "DIR_FORMATS": {
+                    "LETTER_CASE": "upper_case",
+                },
+            },
+            'rename': True,
+            'rename_backup_path': os.sep.join([dirs[0], '123']),
+        }
+        assert not os.path.exists(backup_filename)
+
+        driver.entry(**kwargs)
+
+        assert os.path.exists(backup_filename)
         os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
 

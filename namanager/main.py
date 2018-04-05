@@ -186,15 +186,19 @@ class Driver():
     def rename_backup(self, rename_pairs, **kwargs):
         am = ArchieveManager()
         RENAME_BACKUP = kwargs.get('rename_backup', True)
-        RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
 
         if RENAME_BACKUP:
-            test_writing_permission(dirname=RENAME_BACKUP_DIR)
+            RENAME_BACKUP_PATH = kwargs.get('rename_backup_path', os.getcwd())
+            if os.path.isdir(RENAME_BACKUP_PATH):
+                RENAME_BACKUP_PATH = os.sep.join([
+                    RENAME_BACKUP_PATH,
+                    self.get_bak_filename(prefix='namanager_rename_')])
+
+            test_writing_permission(
+                dirname=os.path.dirname(RENAME_BACKUP_PATH))
             revert_pairs = am.gen_revert_path_pairs(rename_pairs)
-            self._result['rename_backup_name'] = os.sep.join([
-                RENAME_BACKUP_DIR,
-                self.get_bak_filename(prefix='namanager_rename_')])
-            with open(self._result['rename_backup_name'], 'w') as f:
+            self._result['rename_backup_name'] = RENAME_BACKUP_PATH
+            with open(RENAME_BACKUP_PATH, 'w') as f:
                 f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
 
     def rename(self, rename_pairs, **kwargs):
