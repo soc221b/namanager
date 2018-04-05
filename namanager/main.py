@@ -35,6 +35,10 @@ def test_writing_permission(**kwargs):
 
         with open(filename, 'w') as f:
             f.write('test...')
+
+        with open(filename, 'r') as f:
+            f.read()
+
         os.remove(filename)
 
     except Exception as e:
