@@ -18,6 +18,9 @@ parser.add_argument("--required",
                     action='store_true',
                     help="If namanager fails it will exit 1.")
 
+parser.add_argument("--count",
+                    action='store_true',
+                    help="Output information of error count.")
 parser.add_argument("--with-readable",
                     action='store_true',
                     help="Default. Generate as dict (python) format.")
@@ -82,6 +85,7 @@ if __name__ == '__main__':
         'version': args.version,
         'settings': args.settings,
         'required': args.required,
+        'count': args.count,
         'fmt': (
             'xml' if args.with_xml else
             'json' if args.with_json else

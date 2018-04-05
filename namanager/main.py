@@ -120,6 +120,7 @@ class Driver():
         settings_json = kwargs.get(
             'settings_json',
             self.import_settings(os.path.join(os.getcwd(), 'settings.json')))
+        COUNT = kwargs.get('count', False)
         FMT = kwargs.get('fmt', 'json')
         PRETTY_DUMP = kwargs.get('pretty_dump', False)
         unexpected_pairs = []
@@ -130,11 +131,11 @@ class Driver():
 
             if checker.error_info:
                 unexpected_pairs.extend(checker.error_info)
-
-                self.result['errors'].append(
-                    'In folder {0} :'.format(os.path.realpath(d)))
-                self.result['errors'].append(
-                    'FAILED (error={0})'.format(checker.error_info_count))
+                if COUNT:
+                    self.result['errors'].append(
+                        'In folder {0} :'.format(os.path.realpath(d)))
+                    self.result['errors'].append(
+                        'FAILED (error={0})'.format(checker.error_info_count))
 
         if FMT == 'readable':
             s = ""
