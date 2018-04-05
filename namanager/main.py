@@ -70,7 +70,8 @@ class Driver():
             elif isinstance(e, IOError):  # noqa: F821
                 file_not_found = True
             if file_not_found:
-                print('File: {0} not found'.format(settings_file))
+                self._result['errors'].append(
+                    'File: {0} not found'.format(settings_file))
             else:
                 raise e
 
