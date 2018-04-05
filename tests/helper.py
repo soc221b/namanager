@@ -1,7 +1,84 @@
+import os
+import tempfile
 import random
 import itertools
 import string
 import collections
+
+
+def mktemps(count, **kwargs):  # pragma: no cover
+    # haven't been tested
+    filenames = []
+
+    for i in range(count):
+        filenames.append(mktemp(**kwargs))
+
+    return filenames
+
+
+def mkdtemps(count, **kwargs):  # pragma: no cover
+    # haven't been tested
+    dirnames = []
+
+    for i in range(count):
+        dirnames.append(mkdtemp(**kwargs))
+
+    return dirnames
+
+
+def mkdtemps_recur(dir_count=0, recur_count=0, **kwargs):  # pragma: no cover
+    # haven't been tested
+    file_count = kwargs.get('file_count', 0)
+    prefix = kwargs.get('prefix', '')
+
+    dirnames = mkdtemps(dir_count, **kwargs)
+    filenames = []
+    for dn in dirnames:
+        filenames.extend(mktemps(file_count, root=dn,
+                         prefix=prefix))
+
+    pathnames = dirnames + filenames
+    if recur_count > 0:
+        for dn in dirnames[:]:
+            pathnames.extend(mkdtemps_recur(dir_count,
+                                            recur_count - 1,
+                                            file_count=file_count,
+                                            root=dn,
+                                            prefix=prefix))
+
+    return pathnames
+
+
+def mktemp(**kwargs):  # pragma: no cover
+    # haven't been tested
+    root = kwargs.get('root', os.path.dirname(__file__))
+    prefix = kwargs.get('prefix', '')
+    dirname = os.path.realpath(root)
+    tmpfile = tempfile.mkstemp(dir=dirname, prefix=prefix)[1]
+
+    return os.path.realpath(tmpfile)
+
+
+def mkdtemp(**kwargs):  # pragma: no cover
+    # haven't been tested
+    root = kwargs.get('root', os.path.dirname(__file__))
+    prefix = kwargs.get('prefix', '')
+
+    dirname = os.path.realpath(root)
+    tmpdir = tempfile.mkdtemp(dir=dirname, prefix=prefix)
+
+    return os.path.realpath(tmpdir)
+
+
+def rm_paths(paths):
+    paths.sort(key=lambda p: len(p.split(os.sep)), reverse=True)
+
+    for path in paths:
+        if os.path.isfile(path):
+            os.remove(path)
+    for path in paths:
+        if os.path.isdir(path):
+            os.rmdir(path)
 
 
 def get_error_string(errors):
