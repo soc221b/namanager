@@ -1,6 +1,7 @@
 import os
 import time
 import namanager.tests.helper as helper
+import namanager.enums as enums
 from namanager.main import Driver
 # from filelock import FileLock
 
@@ -13,12 +14,6 @@ class TestMain():
             [os.path.realpath(os.path.dirname(__file__)), 'test_root'])
         if not os.path.exists(self.TMP_ROOT):
             os.mkdir(self.TMP_ROOT)
-
-    def test_import_settings(self):
-        pass
-
-    def test_check(self):
-        pass
 
     def test_cli_version(self):
         driver = Driver()
@@ -39,9 +34,6 @@ class TestMain():
         driver.entry(**kwargs)
 
         assert driver.result['errors'] == []
-
-    def test_cli_required(self):
-        pass
 
     def temporarity_move_path(self, path):
         if os.path.exists(path):
@@ -88,6 +80,29 @@ class TestMain():
 
         assert os.path.exists(init_filename)
         assert driver.result['errors'] == []
+        if recover_filename is not None:
+            os.rename(recover_filename, init_filename)
+
+    def test_import_settings(self):
+        driver = Driver()
+        init_dir = helper.mkdtemps(1, root=self.TMP_ROOT,
+                                   prefix=self.TMPFILE_PREFIX)[0]
+        init_filename = os.sep.join([init_dir, 'settings.json'])
+        recover_filename = None
+        kwargs = {
+            'init': True,
+            'init_path': init_dir,
+        }
+        expect = enums.SETTINGS
+        if os.path.exists(init_filename):
+            recover_filename = self.temporarity_move_path(init_filename)
+
+        driver.entry(**kwargs)
+        actual = driver.import_settings(init_filename)
+
+        assert helper.is_same_disorderly(expect, actual)
+        assert driver.result['errors'] == []
+        os.remove(init_filename)
         if recover_filename is not None:
             os.rename(recover_filename, init_filename)
 
