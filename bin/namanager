@@ -10,6 +10,13 @@ parser.add_argument("--version",
                     action='store_true',
                     help="print the Namanager version number and exit.")
 
+parser.add_argument("--init",
+                    action='store_true',
+                    help="Output a initial settings file.")
+parser.add_argument("--init-path",
+                    default=os.getcwd(),
+                    metavar="PATH",
+                    help="Store initial settings file to PATH.")
 parser.add_argument("-s", "--settings",
                     default=os.path.join(os.getcwd(), 'settings.json'),
                     help="Default is ./settings.json. Import settings.json.")
@@ -83,6 +90,8 @@ args = parser.parse_args()
 if __name__ == '__main__':
     kwargs = {
         'version': args.version,
+        'init': args.init,
+        'init_path': args.init_path,
         'settings': args.settings,
         'required': args.required,
         'count': args.count,

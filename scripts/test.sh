@@ -209,7 +209,7 @@ for (( i = 0; i < 200; i++ )); do
     mktemp_cwd
 done
 
-namanager --settings ../namanager/settings.json
+namanager --settings ../tests/settings.json
 assert
 
 cd $NAMANAGER_ROOT_PATH

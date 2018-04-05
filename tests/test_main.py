@@ -43,6 +43,54 @@ class TestMain():
     def test_cli_required(self):
         pass
 
+    def temporarity_move_path(self, path):
+        if os.path.exists(path):
+            unique_path = path
+            while os.path.exists(unique_path):
+                unique_path += '-'
+            os.move(path, unique_path)
+            return unique_path
+
+    def test_cli_init_under_dir(self):
+        driver = Driver()
+        init_dir = helper.mkdtemps(1, root=self.TMP_ROOT,
+                                   prefix=self.TMPFILE_PREFIX)[0]
+        init_filename = os.sep.join([init_dir, 'settings.json'])
+        recover_filename = None
+        kwargs = {
+            'init': True,
+            'init_path': init_dir,
+        }
+        if os.path.exists(init_filename):
+            recover_filename = self.temporarity_move_path(init_filename)
+
+        driver.entry(**kwargs)
+
+        assert os.path.exists(init_filename)
+        assert driver.result['errors'] == []
+        if recover_filename is not None:
+            os.move(recover_filename, init_filename)
+
+    def test_cli_init_as_file(self):
+        driver = Driver()
+        dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
+                               prefix=self.TMPFILE_PREFIX)
+        init_filename = os.path.join(dirs[0], '123.json')
+        recover_filename = None
+        kwargs = {
+            'init': True,
+            'init_path': init_filename,
+        }
+        if os.path.exists(init_filename):
+            recover_filename = self.temporarity_move_path(init_filename)
+
+        driver.entry(**kwargs)
+
+        assert os.path.exists(init_filename)
+        assert driver.result['errors'] == []
+        if recover_filename is not None:
+            os.move(recover_filename, init_filename)
+
     def test_cli_with_readable(self):
         driver = Driver()
         kwargs = {

@@ -4,6 +4,7 @@ import datetime
 import sys
 from namanager.core import Namanager
 from namanager.archieve_manager import ArchieveManager
+import namanager.enums as enums
 
 
 def raiser(condition, msg):
@@ -126,10 +127,28 @@ class Driver():
         except Exception as e:
             self._result['errors'].append(e)
 
+    def generate_init_settings(self, **kwargs):
+        INIT_PATH = kwargs.get('init_path', os.getcwd())
+        settings = json.dumps(enums.SETTINGS, indent=4, sort_keys=True)
+        settings_file = (os.path.join(INIT_PATH, 'settings.json')
+                         if os.path.isdir(INIT_PATH)
+                         else INIT_PATH)
+        if os.path.exists(settings_file):
+            self.result['errors'].append(
+                'File existed. Cannot output settings file to {0}.\n'.format(
+                    settings_file))
+            return
+        try:
+            with open(settings_file, 'w') as f:
+                f.write(settings)
+        except Exception as e:
+            self.result['errors'].append(
+                'Cannot output settings file to {0}.\n'
+                'Error: {1}'.format(
+                    settings_file, e))
+
     def check(self, **kwargs):
-        settings_json = kwargs.get(
-            'settings_json',
-            self.import_settings(os.path.join(os.getcwd(), 'settings.json')))
+        settings_json = kwargs.get('settings_json', enums.SETTINGS)
         COUNT = kwargs.get('count', False)
         FMT = kwargs.get('fmt', 'json')
         PRETTY_DUMP = kwargs.get('pretty_dump', False)
@@ -199,12 +218,16 @@ class Driver():
     def entry(self, **kwargs):
         REQUIRED = kwargs.get('required', False)
         VERSION = kwargs.get('version', False)
+        INIT = kwargs.get('init', False)
         REVERT = kwargs.get('revert', False)
         RENAME = kwargs.get('rename', False)
 
         if VERSION:
             import namanager
             print(namanager.__version__)
+
+        elif INIT:
+            self.generate_init_settings(**kwargs)
 
         elif RENAME:
             SETTINGS = kwargs.get('settings', False)
