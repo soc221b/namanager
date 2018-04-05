@@ -243,6 +243,7 @@ class TestMain():
                 },
             },
             'rename': True,
+            'rename_backup': True,
             'rename_backup_path': dirs[0],
         }
         assert os.path.isdir(dirs[0])
