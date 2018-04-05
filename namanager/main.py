@@ -44,6 +44,9 @@ def test_writing_permission(**kwargs):
 
 
 class Driver():
+    def __init__(self):
+        self.result = {'errors': []}
+
     def import_settings(self, settings_file):
         settings_json = {}
         try:
@@ -89,7 +92,6 @@ class Driver():
         return backup_files
 
     def revert(self, **kwargs):
-        result = {'errors': []}
         REVERT_FILE = kwargs.get('revert_file', None)
         REVERT_LAST = kwargs.get('revert_last', False)
         if REVERT_FILE is None or REVERT_LAST:
@@ -101,10 +103,10 @@ class Driver():
                     backup_files.sort(reverse=True)
                     REVERT_FILE = backup_files[0]
                 else:
-                    result['errors'].append(
+                    self.result['errors'].append(
                         'There are so many backup files, please specify file.')
             elif len(backup_files) == 0:
-                result['errors'].append(
+                self.result['errors'].append(
                     'No backup file are detected, please specify file.')
 
         try:
@@ -112,11 +114,9 @@ class Driver():
             with open(REVERT_FILE, 'r') as f:
                 am.rename(json.loads(f.read()))
         except Exception as e:
-            result['errors'].append(e)
-        return result
+            self.result['errors'].append(e)
 
     def check(self, **kwargs):
-        result = {'errors': [], 'unexpected_pairs': []}
         settings_json = kwargs.get(
             'settings_json',
             self.import_settings(os.path.join(os.getcwd(), 'settings.json')))
@@ -131,9 +131,9 @@ class Driver():
             if checker.error_info:
                 error_infos.extend(checker.error_info)
 
-                result['errors'].append(
+                self.result['errors'].append(
                     'In folder {0} :'.format(os.path.realpath(d)))
-                result['errors'].append(
+                self.result['errors'].append(
                     'FAILED (error={0})'.format(checker.error_info_count))
 
         if FMT == 'dict':
@@ -143,9 +143,7 @@ class Driver():
         elif FMT == 'xml':
             print(checker.get_xml(error_infos, PRETTY_DUMP))
         elif FMT == 'nodump':
-            result['unexpected_pairs'].extend(checker.get_dict(error_infos))
-
-        return result
+            self.result['unexpected_pairs'] = checker.get_dict(error_infos)
 
     def rename_backup(self, rename_pairs, **kwargs):
         am = ArchieveManager()
@@ -164,7 +162,6 @@ class Driver():
                 self.rename_backup_name))
 
     def rename(self, rename_pairs, **kwargs):
-        result = {'errors': []}
         RENAME_RECOVER = kwargs.get('rename_recover', False)
         am = ArchieveManager()
         rename_pairs = self.get_src_dst_pair(rename_pairs)
@@ -178,19 +175,16 @@ class Driver():
                 # try to directly revert all paths
                 recover_pairs = am.gen_revert_path_pairs(rename_pairs)
                 am.rename(recover_pairs)
-                result['errors'].append("Failed to rename (Recovered).")
+                self.result['errors'].append("Failed to rename (Recovered).")
 
             else:
-                result['errors'].append('Some paths can not be renamed.')
-
-        return result
+                self.result['errors'].append('Some paths can not be renamed.')
 
     def entry(self, **kwargs):
         REQUIRED = kwargs.get('required', False)
         VERSION = kwargs.get('version', False)
         REVERT = kwargs.get('revert', False)
         RENAME = kwargs.get('rename', False)
-        errors = []
 
         if VERSION:
             import namanager
@@ -201,26 +195,20 @@ class Driver():
             if SETTINGS:
                 kwargs['settings_json'] = self.import_settings(SETTINGS)
             kwargs['fmt'] = 'nodump'
-            result = self.check(**kwargs)
-            errors.extend(result['errors'])
-            unexpected_pairs = result['unexpected_pairs']
-
-            result = self.rename(unexpected_pairs, **kwargs)
-            errors.extend(result['errors'])
+            self.check(**kwargs)
+            self.rename(self.result['unexpected_pairs'], **kwargs)
 
         elif REVERT:
-            result = self.revert(**kwargs)
-            errors.extend(result['errors'])
+            self.revert(**kwargs)
 
         else:
             SETTINGS = kwargs.get('settings', False)
             if SETTINGS:
                 kwargs['settings_json'] = self.import_settings(SETTINGS)
-            result = self.check(**kwargs)
-            errors.extend(result['errors'])
+            self.check(**kwargs)
 
-        if errors:
-            for e in errors:
+        if self.result['errors']:
+            for e in self.result['errors']:
                 print(e)
             if REQUIRED:
                 exit(1)
