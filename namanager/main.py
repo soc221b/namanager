@@ -147,24 +147,28 @@ class Driver():
 
         return result
 
-    def rename(self, rename_pairs, **kwargs):
-        result = {'errors': []}
+    def rename_backup(self, rename_pairs, **kwargs):
+        am = ArchieveManager()
         RENAME_BACKUP = kwargs.get('rename_backup', False)
         RENAME_BACKUP_DIR = kwargs.get('rename_backup_dir', os.getcwd())
-        RENAME_RECOVER = kwargs.get('rename_recover', False)
 
         if RENAME_BACKUP:
             test_writing_permission(dirname=RENAME_BACKUP_DIR)
+            revert_pairs = am.gen_revert_path_pairs(rename_pairs)
+            self.rename_backup_name = os.sep.join([
+                RENAME_BACKUP_DIR,
+                self.get_bak_filename(prefix='namanager_rename_')])
+            with open(self.rename_backup_name, 'w') as f:
+                f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
+            print("Output backup to '{0}'".format(
+                self.rename_backup_name))
 
+    def rename(self, rename_pairs, **kwargs):
+        result = {'errors': []}
+        RENAME_RECOVER = kwargs.get('rename_recover', False)
         am = ArchieveManager()
         rename_pairs = self.get_src_dst_pair(rename_pairs)
-
-        if RENAME_BACKUP:
-            revert_pairs = am.gen_revert_path_pairs(rename_pairs)
-            filename = self.get_bak_filename(prefix='namanager_rename_')
-            with open(os.sep.join([RENAME_BACKUP_DIR, filename]),
-                      'w') as f:
-                f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
+        self.rename_backup(rename_pairs, **kwargs)
 
         error_pairs = am.rename(rename_pairs)
 
