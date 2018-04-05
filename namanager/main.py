@@ -121,11 +121,11 @@ def revert(**kwargs):
 
 def check(**kwargs):
     result = {'errors': [], 'unexpected_pairs': []}
-    SETTINGS = kwargs.get('settings',
-                          os.path.join(os.getcwd(), 'settings.json'))
+    settings_json = kwargs.get(
+        'settings_json',
+        import_settings(os.path.join(os.getcwd(), 'settings.json')))
     FMT = kwargs.get('fmt', 'json')
     PRETTY_DUMP = kwargs.get('pretty_dump', False)
-    settings_json = import_settings(SETTINGS)
     error_infos = []
 
     for d in settings_json['CHECK_DIRS']:
@@ -199,6 +199,9 @@ def entry(**kwargs):
         print(namanager.__version__)
 
     elif RENAME:
+        SETTINGS = kwargs.get('settings', False)
+        if SETTINGS:
+            kwargs['settings_json'] = import_settings(SETTINGS)
         kwargs['fmt'] = 'nodump'
         result = check(**kwargs)
         errors.extend(result['errors'])
@@ -212,6 +215,9 @@ def entry(**kwargs):
         errors.extend(result['errors'])
 
     else:
+        SETTINGS = kwargs.get('settings', False)
+        if SETTINGS:
+            kwargs['settings_json'] = import_settings(SETTINGS)
         result = check(**kwargs)
         errors.extend(result['errors'])
 

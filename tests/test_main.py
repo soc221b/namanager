@@ -34,7 +34,7 @@ class TestMain():
 
     def test_cli_settings(self):
         kwargs = {
-            'settings': 'namanager/settings.json',
+            'settings_json': {'CHECK_DIRS': ['../']},
         }
         entry(**kwargs)
 
@@ -43,34 +43,34 @@ class TestMain():
 
     def test_cli_with_readable(self):
         kwargs = {
-            'settings': 'namanager/settings.json',
+            'settings_json': {'CHECK_DIRS': ['../']},
             'fmt': 'dict',
         }
         entry(**kwargs)
 
     def test_cli_with_xml(self):
         kwargs = {
-            'settings': 'namanager/settings.json',
+            'settings_json': {'CHECK_DIRS': ['../']},
             'fmt': 'xml',
         }
         entry(**kwargs)
 
     def test_cli_with_json(self):
         kwargs = {
-            'settings': 'namanager/settings.json',
+            'settings_json': {'CHECK_DIRS': ['../']},
             'fmt': 'json',
         }
         entry(**kwargs)
 
     def test_cli_pretty_dump(self):
         kwargs = {
-            'settings': 'namanager/settings.json',
+            'settings_json': {'CHECK_DIRS': ['../']},
             'fmt': 'json',
             'pretty_dump': True,
         }
         entry(**kwargs)
         kwargs = {
-            'settings': 'namanager/settings.json',
+            'settings_json': {'CHECK_DIRS': ['../']},
             'fmt': 'xml',
             'pretty_dump': True,
         }
