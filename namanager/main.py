@@ -98,9 +98,12 @@ class Driver():
     def find_recent_backup_files(self, **kwargs):
         dirname = kwargs.get('dirname', os.getcwd())
         backup_files = []
-        for path in os.listdir(dirname):
-            if path.startswith('namanager_rename_'):
-                backup_files.append(path)
+        for dirpath, dirs, files in os.walk(dirname):
+            for f in files:
+                if f.startswith('namanager_rename_'):
+                    backup_files.append(f)
+            break
+
         return backup_files
 
     def revert(self, **kwargs):
