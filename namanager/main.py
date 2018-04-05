@@ -122,28 +122,35 @@ class Driver():
             self.import_settings(os.path.join(os.getcwd(), 'settings.json')))
         FMT = kwargs.get('fmt', 'json')
         PRETTY_DUMP = kwargs.get('pretty_dump', False)
-        error_infos = []
+        unexpected_pairs = []
+        checker = Namanager(settings_json)
 
         for d in settings_json['CHECK_DIRS']:
-            checker = Namanager(settings_json)
             checker.check(d)
 
             if checker.error_info:
-                error_infos.extend(checker.error_info)
+                unexpected_pairs.extend(checker.error_info)
 
                 self.result['errors'].append(
                     'In folder {0} :'.format(os.path.realpath(d)))
                 self.result['errors'].append(
                     'FAILED (error={0})'.format(checker.error_info_count))
 
-        if FMT == 'dict':
-            print(checker.get_dict(error_infos))
+        if FMT == 'readable':
+            s = ""
+            for pair in checker.get_dict(unexpected_pairs):
+                s += 'expect: {0}\n'.format(pair['expect'])
+                s += 'actual: {0}\n\n'.format(pair['actual'])
+            self.result['unexpected_pairs'] = s
         elif FMT == 'json':
-            print(checker.get_json(error_infos, PRETTY_DUMP))
+            self.result['unexpected_pairs'] = (
+                checker.get_json(unexpected_pairs, PRETTY_DUMP))
         elif FMT == 'xml':
-            print(checker.get_xml(error_infos, PRETTY_DUMP))
+            self.result['unexpected_pairs'] = (
+                checker.get_xml(unexpected_pairs, PRETTY_DUMP))
         elif FMT == 'nodump':
-            self.result['unexpected_pairs'] = checker.get_dict(error_infos)
+            self.result['unexpected_pairs'] = (
+                checker.get_dict(unexpected_pairs))
 
     def rename_backup(self, rename_pairs, **kwargs):
         am = ArchieveManager()
@@ -206,6 +213,7 @@ class Driver():
             if SETTINGS:
                 kwargs['settings_json'] = self.import_settings(SETTINGS)
             self.check(**kwargs)
+            print(self.result['unexpected_pairs'])
 
         if self.result['errors']:
             for e in self.result['errors']:

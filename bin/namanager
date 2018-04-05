@@ -85,8 +85,7 @@ if __name__ == '__main__':
         'fmt': (
             'xml' if args.with_xml else
             'json' if args.with_json else
-            'dict' if args.with_json else
-            'dict'
+            'readable'
         ),
         'pretty_dump': args.pretty_dump,
         'rename': args.rename,
