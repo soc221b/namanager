@@ -312,7 +312,18 @@ class TestMain():
         os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
 
-    def test_required(self):
+    def test_required_success(self):
+        driver = Driver()
+        kwargs = {'required': True}
+        for backup_file in driver.find_recent_backup_files():
+            os.remove(backup_file)
+        assert driver.find_recent_backup_files() == []
+
+        driver.entry(**kwargs)
+
+        assert driver.exit_code == 0
+
+    def test_required_failed(self):
         driver = Driver()
         revert_kwargs = {'revert': True, 'revert_last': True, 'required': True}
         for backup_file in driver.find_recent_backup_files():
