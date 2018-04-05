@@ -294,7 +294,7 @@ class TestMain():
                 },
             },
             'rename': True,
-            'rename_backup_path': os.sep.join([dirs[0], '123']),
+            'rename_backup_path': backup_filename,
         }
         assert os.path.isdir(dirs[0])
         assert not os.path.exists(backup_filename)
