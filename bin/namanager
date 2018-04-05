@@ -94,9 +94,7 @@ if __name__ == '__main__':
         'pretty_dump': args.pretty_dump,
         'rename': args.rename,
         'rename_backup': (
-            False if args.rename_no_backup else
-            True if args.rename_backup else
-            True
+            False if args.rename_no_backup else True
         ),
         'rename_backup_dir': args.rename_backup_dir,
         'rename_recover': args.rename_recover,
