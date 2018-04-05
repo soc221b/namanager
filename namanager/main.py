@@ -45,7 +45,11 @@ def test_writing_permission(**kwargs):
 
 class Driver():
     def __init__(self):
-        self.result = {'errors': []}
+        self._result = {'errors': []}
+
+    @property
+    def result(self):
+        return self._result
 
     def import_settings(self, settings_file):
         settings_json = {}
@@ -104,10 +108,10 @@ class Driver():
                     backup_files.sort(reverse=True)
                     REVERT_FILE = backup_files[0]
                 else:
-                    self.result['errors'].append(
+                    self._result['errors'].append(
                         'There are so many backup files, please specify file.')
             elif len(backup_files) == 0:
-                self.result['errors'].append(
+                self._result['errors'].append(
                     'No backup file are detected, please specify file.')
 
         try:
@@ -115,7 +119,7 @@ class Driver():
             with open(REVERT_FILE, 'r') as f:
                 am.rename(json.loads(f.read()))
         except Exception as e:
-            self.result['errors'].append(e)
+            self._result['errors'].append(e)
 
     def check(self, **kwargs):
         settings_json = kwargs.get(
@@ -133,9 +137,9 @@ class Driver():
             if checker.error_info:
                 unexpected_pairs.extend(checker.error_info)
                 if COUNT:
-                    self.result['errors'].append(
+                    self._result['errors'].append(
                         'In folder {0} :'.format(os.path.realpath(d)))
-                    self.result['errors'].append(
+                    self._result['errors'].append(
                         'FAILED (error={0})'.format(checker.error_info_count))
 
         if FMT == 'readable':
@@ -143,15 +147,15 @@ class Driver():
             for pair in checker.get_dict(unexpected_pairs):
                 s += 'expect: {0}\n'.format(pair['expect'])
                 s += 'actual: {0}\n\n'.format(pair['actual'])
-            self.result['unexpected_pairs'] = s
+            self._result['unexpected_pairs'] = s
         elif FMT == 'json':
-            self.result['unexpected_pairs'] = (
+            self._result['unexpected_pairs'] = (
                 checker.get_json(unexpected_pairs, PRETTY_DUMP))
         elif FMT == 'xml':
-            self.result['unexpected_pairs'] = (
+            self._result['unexpected_pairs'] = (
                 checker.get_xml(unexpected_pairs, PRETTY_DUMP))
         elif FMT == 'nodump':
-            self.result['unexpected_pairs'] = (
+            self._result['unexpected_pairs'] = (
                 checker.get_dict(unexpected_pairs))
 
     def rename_backup(self, rename_pairs, **kwargs):
@@ -162,10 +166,10 @@ class Driver():
         if RENAME_BACKUP:
             test_writing_permission(dirname=RENAME_BACKUP_DIR)
             revert_pairs = am.gen_revert_path_pairs(rename_pairs)
-            self.result['rename_backup_name'] = os.sep.join([
+            self._result['rename_backup_name'] = os.sep.join([
                 RENAME_BACKUP_DIR,
                 self.get_bak_filename(prefix='namanager_rename_')])
-            with open(self.result['rename_backup_name'], 'w') as f:
+            with open(self._result['rename_backup_name'], 'w') as f:
                 f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
 
     def rename(self, rename_pairs, **kwargs):
@@ -182,10 +186,10 @@ class Driver():
                 # try to directly revert all paths
                 recover_pairs = am.gen_revert_path_pairs(rename_pairs)
                 am.rename(recover_pairs)
-                self.result['errors'].append("Failed to rename (Recovered).")
+                self._result['errors'].append("Failed to rename (Recovered).")
 
             else:
-                self.result['errors'].append('Some paths can not be renamed.')
+                self._result['errors'].append('Some paths can not be renamed.')
 
     def entry(self, **kwargs):
         REQUIRED = kwargs.get('required', False)
@@ -203,7 +207,7 @@ class Driver():
                 kwargs['settings_json'] = self.import_settings(SETTINGS)
             kwargs['fmt'] = 'nodump'
             self.check(**kwargs)
-            self.rename(self.result['unexpected_pairs'], **kwargs)
+            self.rename(self._result['unexpected_pairs'], **kwargs)
 
         elif REVERT:
             self.revert(**kwargs)
@@ -213,10 +217,10 @@ class Driver():
             if SETTINGS:
                 kwargs['settings_json'] = self.import_settings(SETTINGS)
             self.check(**kwargs)
-            print(self.result['unexpected_pairs'])
+            print(self._result['unexpected_pairs'])
 
-        if self.result['errors']:
-            for e in self.result['errors']:
+        if self._result['errors']:
+            for e in self._result['errors']:
                 print(e)
             if REQUIRED:
                 exit(1)
