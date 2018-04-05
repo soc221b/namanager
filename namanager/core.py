@@ -380,7 +380,7 @@ class Namanager():
         extension = self.get_extension(filename)
 
         name = util.convert_sep(name, self.file_sep)
-        if self.dir_letter_case != 'ignore':
+        if self.file_letter_case != 'ignore':
             name = util.convert_sentence_to_case(
                 name, self.file_letter_case)
 
