@@ -161,13 +161,11 @@ class Driver():
         if RENAME_BACKUP:
             test_writing_permission(dirname=RENAME_BACKUP_DIR)
             revert_pairs = am.gen_revert_path_pairs(rename_pairs)
-            self.rename_backup_name = os.sep.join([
+            self.result['rename_backup_name'] = os.sep.join([
                 RENAME_BACKUP_DIR,
                 self.get_bak_filename(prefix='namanager_rename_')])
-            with open(self.rename_backup_name, 'w') as f:
+            with open(self.result['rename_backup_name'], 'w') as f:
                 f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
-            print("Output backup to '{0}'".format(
-                self.rename_backup_name))
 
     def rename(self, rename_pairs, **kwargs):
         RENAME_RECOVER = kwargs.get('rename_recover', False)
