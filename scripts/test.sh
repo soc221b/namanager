@@ -160,7 +160,7 @@ Unit tests
 '''
 mv tests namanager
 assert
-nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
+nosetests --tests namanager.tests -v --with-coverage --cover-erase --cover-html --cover-tests
 assert
 mv namanager/tests .
 assert
