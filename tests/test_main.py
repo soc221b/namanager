@@ -245,15 +245,15 @@ class TestMain():
             'rename_backup': True,
             'rename_backup_path': dirs[0],
         }
-        logger.debug('before')
-        logger.info(os.listdir(dirs[0]))
+        logger().debug('before')
+        logger().info(os.listdir(dirs[0]))
         assert driver.find_recent_backup_files(dirname=dirs[0]) == []
 
         driver.entry(**kwargs)
 
-        logger.debug('after')
-        logger.info(os.listdir(dirs[0]))
-        logger.info(driver.result['rename_backup_name'])
+        logger().debug('after')
+        logger().info(os.listdir(dirs[0]))
+        logger().info(driver.result['rename_backup_name'])
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
         assert driver.result['errors'] == []
         os.remove(driver.result['rename_backup_name'])
@@ -272,15 +272,15 @@ class TestMain():
             'rename': True,
             'rename_backup_path': dirs[0],
         }
-        logger.debug('before')
-        logger.info(os.listdir(dirs[0]))
+        logger().debug('before')
+        logger().info(os.listdir(dirs[0]))
         assert driver.find_recent_backup_files(dirname=dirs[0]) == []
 
         driver.entry(**kwargs)
 
-        logger.debug('after')
-        logger.info(os.listdir(dirs[0]))
-        logger.info(driver.result['rename_backup_name'])
+        logger().debug('after')
+        logger().info(os.listdir(dirs[0]))
+        logger().info(driver.result['rename_backup_name'])
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
         assert driver.result['errors'] == []
         os.remove(driver.result['rename_backup_name'])
@@ -300,15 +300,15 @@ class TestMain():
             'rename': True,
             'rename_backup_path': backup_filename,
         }
-        logger.debug('before')
-        logger.info(os.listdir(dirs[0]))
+        logger().debug('before')
+        logger().info(os.listdir(dirs[0]))
         assert not os.path.isfile(backup_filename)
 
         driver.entry(**kwargs)
 
-        logger.debug('after')
-        logger.info(os.listdir(dirs[0]))
-        logger.info(driver.result['rename_backup_name'])
+        logger().debug('after')
+        logger().info(os.listdir(dirs[0]))
+        logger().info(driver.result['rename_backup_name'])
         assert os.path.isfile(backup_filename)
         assert driver.result['errors'] == []
         os.remove(driver.result['rename_backup_name'])

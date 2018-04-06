@@ -3,7 +3,7 @@ import logging
 import os
 
 
-def _logger():
+def logger():
     global _logger_instances
     # inspect.stack(1)[2]: caller infomations.
     caller_filename = inspect.stack(1)[2][1]
@@ -14,4 +14,3 @@ def _logger():
 
 
 _logger_instances = {}
-logger = _logger()
