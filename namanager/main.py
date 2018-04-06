@@ -4,6 +4,7 @@ import datetime
 import sys
 from namanager.core import Namanager
 from namanager.archieve_manager import ArchieveManager
+from namanager.logger import logger
 import namanager.enums as enums
 
 
@@ -28,6 +29,7 @@ def test_writing_permission(**kwargs):
             dirname += os.sep
         # test directory is exists or not and raise
         os.path.realpath(dirname)
+        logger().info('dirname: {0}'.format(dirname))
 
         filename = ''.join([dirname, 'test_file'])
         while os.path.exists(filename):
@@ -35,9 +37,11 @@ def test_writing_permission(**kwargs):
 
         with open(filename, 'w') as f:
             f.write('test...')
+            logger().info('successfully wrote: {0}.'.format(filename))
 
         with open(filename, 'r') as f:
             f.read()
+            logger().info('successfully read: {0}.'.format(filename))
 
         os.remove(filename)
 
@@ -193,6 +197,7 @@ class Driver():
     def rename_backup(self, rename_pairs, **kwargs):
         am = ArchieveManager()
         RENAME_BACKUP = kwargs.get('rename_backup', True)
+        logger().info('backup flag: {0}'.format(RENAME_BACKUP))
 
         if RENAME_BACKUP:
             RENAME_BACKUP_PATH = kwargs.get('rename_backup_path', os.getcwd())
@@ -200,13 +205,15 @@ class Driver():
                 RENAME_BACKUP_PATH = os.sep.join([
                     RENAME_BACKUP_PATH,
                     self.get_bak_filename(prefix='namanager_rename_')])
-
+            logger().info('backup path: {0}'.format(RENAME_BACKUP_PATH))
             test_writing_permission(
                 dirname=os.path.dirname(RENAME_BACKUP_PATH))
             revert_pairs = am.gen_revert_path_pairs(rename_pairs)
             self._result['rename_backup_name'] = RENAME_BACKUP_PATH
             with open(RENAME_BACKUP_PATH, 'w') as f:
                 f.write(json.dumps(revert_pairs, indent=4, sort_keys=True))
+                logger().info('successfully wrote backup: {0}.'.format(
+                    RENAME_BACKUP_PATH))
 
     def rename(self, rename_pairs, **kwargs):
         RENAME_RECOVER = kwargs.get('rename_recover', False)
