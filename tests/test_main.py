@@ -234,8 +234,6 @@ class TestMain():
         driver = Driver()
         dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
                                prefix=self.TMPFILE_PREFIX)
-        files = helper.mktemps(  # noqa: F841
-            3, root=dirs[0], prefix=self.TMPFILE_PREFIX)
         kwargs = {
             'settings_json': {
                 'CHECK_DIRS': dirs,
@@ -264,8 +262,6 @@ class TestMain():
         driver = Driver()
         dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
                                prefix=self.TMPFILE_PREFIX)
-        files = helper.mktemps(  # noqa: F841
-            3, root=dirs[0], prefix=self.TMPFILE_PREFIX)
         kwargs = {
             'settings_json': {
                 'CHECK_DIRS': dirs,
@@ -293,8 +289,6 @@ class TestMain():
         driver = Driver()
         dirs = helper.mkdtemps(1, root=self.TMP_ROOT,
                                prefix=self.TMPFILE_PREFIX)
-        files = helper.mktemps(  # noqa: F841
-            3, root=dirs[0], prefix=self.TMPFILE_PREFIX)
         backup_filename = os.sep.join([dirs[0], '123'])
         kwargs = {
             'settings_json': {
