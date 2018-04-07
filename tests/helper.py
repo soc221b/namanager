@@ -47,8 +47,9 @@ def is_in_tuple(x, t):
 
 
 def is_equal(a, b):
-    return ((a == b and
-            (not is_in_tuple(a, (None, True, False))) and
+    return (((a == b) and
+             (type(a) == type(b)) and
+             (not is_in_tuple(a, (None, True, False))) and
              (not is_in_tuple(b, (None, True, False)))) or
             (a is None and b is None) or
             (a is True and b is True) or

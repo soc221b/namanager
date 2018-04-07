@@ -155,34 +155,74 @@ class TestHelper():
     def test_is_equal(self):
         is_equal = helper.is_equal
         errors = []
-        test_data = [
-            [True, 1, 1],
-            [False, 1, '1'],
-            [False, 1, [1]],
-            [False, 1, tuple({1})],
-            [False, 1, {1}],
-            [False, 1, {1: 1}],
-            [False, 1, True],
-            [True, 0, 0],
-            [False, 0, ''],
-            [False, 0, []],
-            [False, 0, tuple()],
-            [False, 0, set({})],
-            [False, 0, dict({})],
-            [False, 0, False],
-            [True, None, None],
-            [False, 1, None],
-            [False, 0, None],
-        ]
+        truthy = [True, 1, 1.1, 1j, [1], (1,), {1}, {1: 1}, 's']
+        falsy = [
+            None, False, 0, 0.0, 0j, list(), tuple(), set(), dict(), str()]
 
-        for d in test_data:
-            for _ in [1, 2]:
+        # test true
+        for data in [truthy, falsy]:
+            for datum in data:
                 helper.append_to_error_if_not_expect_with_msg(
                     errors,
-                    d[0] is is_equal(d[1], d[2]),
-                    "Expect: {0} equals ({1}:{2} == {3}:{4})".format(
-                        d[0], type(d[1]), d[1], type(d[2]), d[2]))
-                d[1], d[2] = d[2], d[1]
+                    True is is_equal(datum, datum),
+                    "Expect: True\nvalue1: {0}\nvalue2: {1}".format(
+                        datum, datum))
+        # test false
+        for data in [truthy, falsy]:
+            for i1 in range(0, len(data)):
+                for i2 in range(i1 + 1, len(data)):
+                    helper.append_to_error_if_not_expect_with_msg(
+                        errors,
+                        False is is_equal(data[i1], data[i2]),
+                        "Expect: False\nvalue1: {0}\nvalue2: {1}".format(
+                            data[i1], data[i2]))
+        # test __len__ and __bool__ of objects
+        for t in truthy:
+            if t is not True:
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors,
+                    False is is_equal(bool(TruthyCls()), t),
+                    "Expect: False\nvalue1: {0}(TruthyClass)"
+                    "\nvalue2: {1}".format(bool(TruthyCls()), t))
+            if t is not 1:
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors,
+                    False is is_equal(len(TruthyCls()), t),
+                    "Expect: False\nvalue1: {0}(TruthyClass)"
+                    "\nvalue2: {1}".format(len(TruthyCls()), t))
+        for t in falsy:
+            if t is not False:
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors,
+                    False is is_equal(bool(FalsyCls()), t),
+                    "Expect: False\nvalue1: {0}(FalsyClass)"
+                    "\nvalue2: {1}".format(bool(FalsyCls()), t))
+            if t is not 0:
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors,
+                    False is is_equal(len(FalsyCls()), t),
+                    "Expect: False\nvalue1: {0}(FalsyClass)"
+                    "\nvalue2: {1}".format(len(FalsyCls()), t))
+        helper.append_to_error_if_not_expect_with_msg(
+            errors,
+            True is is_equal(bool(TruthyCls()), True),
+            "Expect: True\nvalue1: {0} (FalsyClass)"
+            "\nvalue2: True".format(bool(TruthyCls())))
+        helper.append_to_error_if_not_expect_with_msg(
+            errors,
+            True is is_equal(len(TruthyCls()), 1),
+            "Expect: True\nvalue1: {0} (FalsyClass)"
+            "\nvalue2: 1".format(len(TruthyCls())))
+        helper.append_to_error_if_not_expect_with_msg(
+            errors,
+            True is is_equal(bool(FalsyCls()), False),
+            "Expect: True\nvalue1: {0} (FalsyClass)"
+            "\nvalue2: False".format(bool(FalsyCls())))
+        helper.append_to_error_if_not_expect_with_msg(
+            errors,
+            True is is_equal(len(FalsyCls()), 0),
+            "Expect: True\nvalue1: {0} (FalsyClass)"
+            "\nvalue2: 0".format(len(FalsyCls())))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
@@ -259,3 +299,19 @@ class TestHelper():
             )
 
         assert errors == [], Exception(helper.get_error_string(errors))
+
+
+class FalsyCls():
+    def __len__(self):
+        return 0
+
+    def __bool__(self):
+        return False
+
+
+class TruthyCls():
+    def __len__(self):
+        return 1
+
+    def __bool__(self):
+        return True
