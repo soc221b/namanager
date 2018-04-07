@@ -12,13 +12,13 @@ class TestUtil():
         gen_unique_str = util.gen_unique_str
         u = gen_unique_str('')
 
+        # functional testing
         s = ''
         assert gen_unique_str(s) not in s, Exception(
             "'{0}' is in '{1}'".format(gen_unique_str(s), s))
         s = u
         assert gen_unique_str(s) not in s, Exception(
             "'{0}' is in '{1}'".format(gen_unique_str(s), s))
-
         # benchmark
         start = time.time()
         for i in range(0, 1000):
@@ -31,8 +31,6 @@ class TestUtil():
     def test_get_first_word(self):
         get_first_word = util.get_first_word
         errors = []
-
-        # asserts
         words = {'': ('', -1, 0),
                  'H': ('H', 0, 1),
                  'HTTP': ('HTTP', 0, 4),
@@ -51,13 +49,13 @@ class TestUtil():
                  'http*Protocol': ('http', 0, 4),
                  }
 
+        # functional testing
         for s, expect in words.items():
             actual = get_first_word(s)
             helper.append_to_error_if_not_expect_with_msg(
                 errors, expect == actual, (
                     "expect is '{0}', actual is '{1}'".format(
                         expect, actual)))
-
         # benchmark
         start = time.time()
         for i in range(0, 1000):
@@ -76,7 +74,6 @@ class TestUtil():
         get_words = util.get_words
         convert_words_to_case = util.convert_words_to_case
         errors = []
-
         test_data = {'lower_case': [
                         '',
                         '.',
@@ -140,12 +137,10 @@ class TestUtil():
                         '....HttpErrorResponseForRequestOfSoap....',
                         ]
                      }
-
         words_only = [[], [], []]
         for i in range(0, len(test_data['pascal_case']) - 2):
             words_only.append(
                 ['http', 'error', 'response', 'for', 'request', 'of', 'soap'])
-
         words_with_other_char = [
             [],
             ['.'],
@@ -250,6 +245,28 @@ class TestUtil():
         convert_sentence_to_case = util.convert_sentence_to_case
         errors = []
         CASES = ['lower_case', 'upper_case', 'camel_case', 'pascal_case']
+        expect_with_separator = {
+            'lower_case': 'http.error.response.for.request.of.soap',
+            'upper_case': 'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+            'camel_case': 'http.Error.Response.For.Request.Of.Soap',
+            'pascal_case': 'Http.Error.Response.For.Request.Of.Soap',
+        }
+        strings_with_separator = [
+            'http.error.response.for.request.of.soap',
+            'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+            'http.Error.Response.For.Request.Of.Soap',
+            'Http.Error.Response.For.Request.Of.Soap',
+        ]
+        expect_without_separator = {
+            'lower_case': 'httperrorresponseforrequestofsoap',
+            'upper_case': 'HTTPERRORRESPONSEFORREQUESTOFSOAP',
+            'camel_case': 'httpErrorResponseForRequestOfSoap',
+            'pascal_case': 'HttpErrorResponseForRequestOfSoap',
+        }
+        strings_without_separator = [
+            'httpErrorResponseForRequestOfSoap',
+            'HttpErrorResponseForRequestOfSoap',
+        ]
 
         # boundary
         for case in CASES:
@@ -257,46 +274,21 @@ class TestUtil():
                 errors, '' == convert_sentence_to_case('', case), (
                     "'' != {0}".format(
                         convert_sentence_to_case('', case))))
-
-        # with any separator
-        expect = {'lower_case': 'http.error.response.for.request.of.soap',
-                  'upper_case': 'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
-                  'camel_case': 'http.Error.Response.For.Request.Of.Soap',
-                  'pascal_case': 'Http.Error.Response.For.Request.Of.Soap',
-                  }
-
-        strings = ['http.error.response.for.request.of.soap',
-                   'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
-                   'http.Error.Response.For.Request.Of.Soap',
-                   'Http.Error.Response.For.Request.Of.Soap',
-                   ]
-
+        # with separator
         for case in CASES:
-            for s in strings:
+            for s in strings_with_separator:
                 for sep in ESCAPE_CHARS:
-                    expt = expect[case].replace(r'.', sep)
+                    expt = expect_with_separator[case].replace(r'.', sep)
                     actl = convert_sentence_to_case(s.replace(r'.', sep), case)
                     helper.append_to_error_if_not_expect_with_msg(
                         errors, expt == actl, (
                             "In format: {0} within any separator"
                             "\nexpect: {1} !=\nactual: {2}".format(
                                 case, expt, actl)))
-
-        # without any separator
-        # httperrorresponseforrequestofsoap
-        expect = {'lower_case': 'httperrorresponseforrequestofsoap',
-                  'upper_case': 'HTTPERRORRESPONSEFORREQUESTOFSOAP',
-                  'camel_case': 'httpErrorResponseForRequestOfSoap',
-                  'pascal_case': 'HttpErrorResponseForRequestOfSoap',
-                  }
-
-        strings = ['httpErrorResponseForRequestOfSoap',
-                   'HttpErrorResponseForRequestOfSoap',
-                   ]
-
+        # without separator
         for case in CASES:
-            for s in strings:
-                expt = expect[case]
+            for s in strings_without_separator:
+                expt = expect_without_separator[case]
                 actl = convert_sentence_to_case(s, case)
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, expt == actl, (
@@ -322,7 +314,6 @@ class TestUtil():
             helper.append_to_error_if_not_expect_with_msg(
                 errors, s == actl, (
                     "{0} != {1}".format(s, actl)))
-
         # dash_to_underscore
         actl = convert_sep('-', ['dash_to_underscore'])
         helper.append_to_error_if_not_expect_with_msg(errors, '_' == actl, (
@@ -336,7 +327,6 @@ class TestUtil():
         actl = convert_sep('a-a', ['dash_to_underscore'])
         helper.append_to_error_if_not_expect_with_msg(errors, 'a_a' == actl, (
             "expect 'a_a' != actlual '{0}'".format(actl)))
-
         # underscore_to_dash
         actl = convert_sep('_', ['underscore_to_dash'])
         helper.append_to_error_if_not_expect_with_msg(errors, '-' == actl, (
@@ -350,7 +340,6 @@ class TestUtil():
         actl = convert_sep('a_a', ['underscore_to_dash'])
         helper.append_to_error_if_not_expect_with_msg(errors, 'a-a' == actl, (
             "expect 'a-a' != actlual '{0}'".format(actl)))
-
         # not support
         try:
             actl = convert_sep('_', ['abc'])
