@@ -53,6 +53,7 @@ FORMATS = {
     ],
 }
 
+# Default settings
 SETTINGS = {
     "CHECK_DIRS": [],
     "ONLY_FILES": [],
