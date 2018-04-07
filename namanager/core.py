@@ -49,7 +49,6 @@ class Namanager():
 
     def verify_setting_type(self):
         errors = []
-
         settings = [
             {'s': self._FILE_FORMATS,
              't': type(enums.SETTINGS['FILE_FORMATS'])},
@@ -167,7 +166,7 @@ class Namanager():
         return False
 
     def _convert_walk_to_list(self, root):
-        return [tp for tp in os.walk(os.path.realpath(root))]
+        return [path_info for path_info in os.walk(os.path.realpath(root))]
 
     def _get_root_in_walk(self, walk):
         root = ''
