@@ -696,13 +696,13 @@ class TestNamanager():
 
         for datum in data:
             # get dict
-            helper.is_same_disorderly(datum, fc.get_dict(datum))
+            assert helper.is_same_disorderly(datum, fc.get_dict(datum))
 
             # get json
-            actual = json.dumps(fc.get_json(datum, False))
-            helper.is_same_disorderly(datum, actual)
-            actual = json.dumps(fc.get_json(datum, True))
-            helper.is_same_disorderly(datum, actual)
+            actual = json.loads(fc.get_json(datum, False))
+            assert helper.is_same_disorderly(datum, actual)
+            actual = json.loads(fc.get_json(datum, True))
+            assert helper.is_same_disorderly(datum, actual)
 
             # get xml
             actual = json.dumps(xmltodict.parse(fc.get_xml(datum, False)))
