@@ -179,7 +179,7 @@ class TestUtil():
                 with_or_not = "without"
 
             for case, sentences in test_data.items():
-                for i, sent in enumerate(sentences):
+                for i, sentence in enumerate(sentences):
                     if include_non_letter:
                         words = words_with_other_char[i]
                     else:
@@ -191,14 +191,14 @@ class TestUtil():
                         for e in words:
                             expt += [e.replace(r'.', sep)]
                         expt = convert_words_to_case(expt, case)
-                        actl = get_words(sent.replace(r'.', sep),
+                        actl = get_words(sentence.replace(r'.', sep),
                                          include_non_letter)
 
                         helper.append_to_error_if_not_expect_with_msg(
                             errors, actl == expt, (
                                 "The '{0}' {1} non-alphabet in {2}"
                                 "\nexpect: {3}\nactual: {4}").format(
-                                    sent.replace(r'.', sep),
+                                    sentence.replace(r'.', sep),
                                     with_or_not, case, expt,
                                     actl))
 
