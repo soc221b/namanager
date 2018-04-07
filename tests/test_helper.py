@@ -129,7 +129,7 @@ class TestHelper():
             for index_j, data_j in enumerate(test_data):
                 helper.append_to_error_if_not_expect_with_msg(
                     errors,
-                    (index_i == index_j) is is_in_tuple(data_i, [data_j]),
+                    (index_i == index_j) is is_in_tuple(data_i, (data_j,)),
                     "Expect: {0} equals ({1} in [{2}])".format(
                         (index_i == index_j), data_i, data_j))
         # test multiple
@@ -140,13 +140,13 @@ class TestHelper():
                     exclude.append(data_j)
             helper.append_to_error_if_not_expect_with_msg(
                 errors,
-                not is_in_tuple(data_i, exclude),
+                not is_in_tuple(data_i, tuple(exclude)),
                 "Expect: False equals ({0} in {1})".format(
                     data_i, exclude))
         for i in test_data:
             helper.append_to_error_if_not_expect_with_msg(
                 errors,
-                is_in_tuple(i, test_data),
+                is_in_tuple(i, tuple(test_data)),
                 "Expect: True equals ({0} in {1})".format(
                     i, test_data))
 
