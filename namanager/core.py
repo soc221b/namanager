@@ -77,11 +77,10 @@ class Namanager():
                 errors.append("Type of {0} must be {1}.".format(
                     util.name(setting['s'], self.__dict__), setting['t']))
 
-        err_str = '\n'
-        for error in errors:
-            err_str += error + '\n'
-
         if errors:
+            err_str = '\n'
+            for error in errors:
+                err_str += error + '\n'
             raise TypeError(err_str)
 
     def load_settings(self, settings={}):
