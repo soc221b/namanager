@@ -157,7 +157,7 @@ class TestNamanager():
 
         assert actl == expt
 
-    def test_separate_with_in_out_particular_dir_patterns(self):
+    def test_divide_full_part_path_patterns(self):
         fc = Namanager()
         errors = []
         data = [
@@ -182,7 +182,7 @@ class TestNamanager():
         ]
 
         actual_within, actual_without = (
-            fc._separate_with_in_out_particular_dir_patterns(data))
+            fc._divide_full_part_path_patterns(data))
 
         helper.append_to_error_if_not_expect_with_msg(
             errors,
@@ -201,7 +201,7 @@ class TestNamanager():
             )
         )
 
-    def test_separate_dir_and_file_part_of_patterns(self):
+    def test_divide_file_and_dir_name_of_patterns(self):
         fc = Namanager()
         errors = []
         data = [
@@ -234,7 +234,7 @@ class TestNamanager():
             },
         ]
 
-        actual_patterns = fc._separate_dir_and_file_part_of_patterns(data)
+        actual_patterns = fc._divide_file_and_dir_name_of_patterns(data)
 
         helper.append_to_error_if_not_expect_with_msg(
             errors,

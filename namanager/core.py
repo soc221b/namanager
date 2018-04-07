@@ -176,19 +176,19 @@ class Namanager():
                     root = dirpath
         return root
 
-    def _separate_with_in_out_particular_dir_patterns(self, re_patterns):
-        within_patterns = []
-        without_patterns = []
+    def _divide_full_part_path_patterns(self, re_patterns):
+        full_path_patterns = []
+        part_path_patterns = []
 
         for pattern in re_patterns:
             if pattern.rfind(os.sep) == -1:
-                without_patterns.append(pattern)
+                part_path_patterns.append(pattern)
             else:
-                within_patterns.append(pattern)
+                full_path_patterns.append(pattern)
 
-        return within_patterns, without_patterns
+        return full_path_patterns, part_path_patterns
 
-    def _separate_dir_and_file_part_of_patterns(self, re_patterns):
+    def _divide_file_and_dir_name_of_patterns(self, re_patterns):
         separated_patterns = []
 
         for pattern in re_patterns:
@@ -210,8 +210,8 @@ class Namanager():
 
         filtered_walk = []
         within, without = (
-            self._separate_with_in_out_particular_dir_patterns(re_patterns))
-        within = self._separate_dir_and_file_part_of_patterns(within)
+            self._divide_full_part_path_patterns(re_patterns))
+        within = self._divide_file_and_dir_name_of_patterns(within)
 
         for (dirpath, dirs, files) in walk:
             filtered = []
