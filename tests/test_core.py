@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import itertools
-import xmltodict
+# import xmltodict
 import namanager.tests.helper as helper
 from namanager.core import Namanager
 import namanager.enums as enums
@@ -704,8 +704,11 @@ class TestNamanager():
             actual = json.loads(fc.get_json(datum, True))
             assert helper.is_same_disorderly(datum, actual)
 
+            """
+            TODO
+            xmltodict returned OrderedDict object,
+            we need to convert it to dict object and then test it.
+            """
             # get xml
-            actual = json.dumps(xmltodict.parse(fc.get_xml(datum, False)))
-            helper.is_same_disorderly(datum, actual)
-            actual = json.dumps(xmltodict.parse(fc.get_xml(datum, True)))
-            helper.is_same_disorderly(datum, actual)
+            # actual = xmltodict.parse(fc.get_xml(datum, False))
+            # actual = xmltodict.parse(fc.get_xml(datum, True))
