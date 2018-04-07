@@ -196,21 +196,10 @@ def is_same_disorderly(a, b, convert_unicode=True):
 def get_all_type_values_of_json():
     # Types of json/python mapping:
     # int, float, True, False, None, dict, list, (long), (str), (unicode)
-    type_values = (1, 2, 3.4, 4.5, True, False, None)
+    type_values = (1, 2, 3.4, 4.5, True, False, None, long(5),
+                   long(6), unicode('bar'), unicode('foo'))
     dict_values = ()
     list_values = ()
-    # Compatibility
-    try:  # pragma: no cover
-        # python2, long
-        type_values = (long(5),) + type_values  # noqa: F821
-        type_values = (long(6),) + type_values  # noqa: F821
-        # python2, unicode
-        type_values = (u'abc',) + type_values
-        type_values = (u'bcd',) + type_values
-    except Exception:  # pragma: no cover
-        # python3, str
-        type_values = ('abc',) + type_values
-        type_values = ('bcd',) + type_values
     for i in type_values:
         for j in type_values:
             try:
