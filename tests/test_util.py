@@ -4,6 +4,9 @@ import namanager.tests.helper as helper
 import namanager.util as util
 
 
+ESCAPE_CHARS = ['.', '*', '?', '/', "\\", '^', '$']
+
+
 class TestUtil():
     def test_gen_unique_str(self):
         gen_unique_str = util.gen_unique_str
@@ -78,37 +81,37 @@ class TestUtil():
                         '',
                         '.',
                         '....',
-                        'http_error&response.for.request-of?soap',
-                        '.http_error&response.for.request-of?soap',
-                        'http_error&response.for.request-of?soap.',
-                        '.http_error&response.for.request-of?soap.',
-                        '....http_error&response.for.request-of?soap',
-                        'http_error&response.for.request-of?soap....',
-                        '....http_error&response.for.request-of?soap....',
+                        'http.error.response.for.request.of.soap',
+                        '.http.error.response.for.request.of.soap',
+                        'http.error.response.for.request.of.soap.',
+                        '.http.error.response.for.request.of.soap.',
+                        '....http.error.response.for.request.of.soap',
+                        'http.error.response.for.request.of.soap....',
+                        '....http.error.response.for.request.of.soap....',
                         ],
                      'upper_case': [
                         '',
                         '.',
                         '....',
-                        'HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP',
-                        '.HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP',
-                        'HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP.',
-                        '.HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP.',
-                        '....HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP',
-                        'HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP....',
-                        '....HTTP_ERROR&RESPONSE.FOR.REQUEST-OF?SOAP....',
+                        'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+                        '.HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+                        'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP.',
+                        '.HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP.',
+                        '....HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+                        'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP....',
+                        '....HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP....',
                         ],
                      'camel_case': [
                         '',
                         '.',
                         '....',
-                        'http_Error&Response.For.Request-Of?Soap',
-                        '.http_Error&Response.For.Request-Of?Soap',
-                        'http_Error&Response.For.Request-Of?Soap.',
-                        '.http_Error&Response.For.Request-Of?Soap.',
-                        '....http_Error&Response.For.Request-Of?Soap',
-                        'http_Error&Response.For.Request-Of?Soap....',
-                        '....http_Error&Response.For.Request-Of?Soap....',
+                        'http.Error.Response.For.Request.Of.Soap',
+                        '.http.Error.Response.For.Request.Of.Soap',
+                        'http.Error.Response.For.Request.Of.Soap.',
+                        '.http.Error.Response.For.Request.Of.Soap.',
+                        '....http.Error.Response.For.Request.Of.Soap',
+                        'http.Error.Response.For.Request.Of.Soap....',
+                        '....http.Error.Response.For.Request.Of.Soap....',
                         'httpErrorResponseForRequestOfSoap',
                         '.httpErrorResponseForRequestOfSoap',
                         'httpErrorResponseForRequestOfSoap.',
@@ -121,13 +124,13 @@ class TestUtil():
                         '',
                         '.',
                         '....',
-                        'Http_Error&Response.For.Request-Of?Soap',
-                        '.Http_Error&Response.For.Request-Of?Soap',
-                        'Http_Error&Response.For.Request-Of?Soap.',
-                        '.Http_Error&Response.For.Request-Of?Soap.',
-                        '....Http_Error&Response.For.Request-Of?Soap',
-                        'Http_Error&Response.For.Request-Of?Soap....',
-                        '....Http_Error&Response.For.Request-Of?Soap....',
+                        'Http.Error.Response.For.Request.Of.Soap',
+                        '.Http.Error.Response.For.Request.Of.Soap',
+                        'Http.Error.Response.For.Request.Of.Soap.',
+                        '.Http.Error.Response.For.Request.Of.Soap.',
+                        '....Http.Error.Response.For.Request.Of.Soap',
+                        'Http.Error.Response.For.Request.Of.Soap....',
+                        '....Http.Error.Response.For.Request.Of.Soap....',
                         'HttpErrorResponseForRequestOfSoap',
                         '.HttpErrorResponseForRequestOfSoap',
                         'HttpErrorResponseForRequestOfSoap.',
@@ -138,44 +141,29 @@ class TestUtil():
                         ]
                      }
 
-        words_only = [
-            [],
-            [],
-            [],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-            ['http', 'error', 'response', 'for', 'request', 'of', 'soap'],
-        ]
+        words_only = [[], [], []]
+        for i in range(0, len(test_data['pascal_case']) - 2):
+            words_only.append(
+                ['http', 'error', 'response', 'for', 'request', 'of', 'soap'])
 
         words_with_other_char = [
             [],
             ['.'],
             ['....'],
-            ['http', '_', 'error', '&', 'response', '.', 'for', '.', 'request',
-             '-', 'of', '?', 'soap'],
-            ['.', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
-             'request', '-', 'of', '?', 'soap'],
-            ['http', '_', 'error', '&', 'response', '.', 'for', '.', 'request',
-             '-', 'of', '?', 'soap', '.'],
-            ['.', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
-             'request', '-', 'of', '?', 'soap', '.'],
-            ['....', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
-             'request', '-', 'of', '?', 'soap'],
-            ['http', '_', 'error', '&', 'response', '.', 'for', '.', 'request',
-             '-', 'of', '?', 'soap', '....'],
-            ['....', 'http', '_', 'error', '&', 'response', '.', 'for', '.',
-             'request', '-', 'of', '?', 'soap', '....'],
+            ['http', '.', 'error', '.', 'response', '.', 'for', '.', 'request',
+             '.', 'of', '.', 'soap'],
+            ['.', 'http', '.', 'error', '.', 'response', '.', 'for', '.',
+             'request', '.', 'of', '.', 'soap'],
+            ['http', '.', 'error', '.', 'response', '.', 'for', '.', 'request',
+             '.', 'of', '.', 'soap', '.'],
+            ['.', 'http', '.', 'error', '.', 'response', '.', 'for', '.',
+             'request', '.', 'of', '.', 'soap', '.'],
+            ['....', 'http', '.', 'error', '.', 'response', '.', 'for', '.',
+             'request', '.', 'of', '.', 'soap'],
+            ['http', '.', 'error', '.', 'response', '.', 'for', '.', 'request',
+             '.', 'of', '.', 'soap', '....'],
+            ['....', 'http', '.', 'error', '.', 'response', '.', 'for', '.',
+             'request', '.', 'of', '.', 'soap', '....'],
             ['Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap'],
             ['.', 'Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap'],
             ['Http', 'Error', 'Response', 'For', 'Request', 'Of', 'Soap', '.'],
@@ -202,13 +190,13 @@ class TestUtil():
                     else:
                         words = words_only[i]
 
-                    for sep in ['.', '*', '?', '1', '/', "\\", '^', '$']:
-                        # substitute escape signs
+                    for sep in ESCAPE_CHARS:
+                        # substitute escape charachars
                         expt = []
                         for e in words:
                             expt += [e.replace(r'.', sep)]
                         expt = convert_words_to_case(expt, case)
-                        actl = get_words(sent.replace('.', sep),
+                        actl = get_words(sent.replace(r'.', sep),
                                          include_non_letter)
 
                         helper.append_to_error_if_not_expect_with_msg(
@@ -271,27 +259,28 @@ class TestUtil():
                         convert_sentence_to_case('', case))))
 
         # with any separator
-        expect = {'lower_case': 'http_error&response*for.request-of?soap',
-                  'upper_case': 'HTTP_ERROR&RESPONSE*FOR.REQUEST-OF?SOAP',
-                  'camel_case': 'http_Error&Response*For.Request-Of?Soap',
-                  'pascal_case': 'Http_Error&Response*For.Request-Of?Soap',
+        expect = {'lower_case': 'http.error.response.for.request.of.soap',
+                  'upper_case': 'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+                  'camel_case': 'http.Error.Response.For.Request.Of.Soap',
+                  'pascal_case': 'Http.Error.Response.For.Request.Of.Soap',
                   }
 
-        strings = ['http_error&response*for.request-of?soap',
-                   'HTTP_ERROR&RESPONSE*FOR.REQUEST-OF?SOAP',
-                   'http_Error&Response*For.Request-Of?Soap',
-                   'Http_Error&Response*For.Request-Of?Soap',
+        strings = ['http.error.response.for.request.of.soap',
+                   'HTTP.ERROR.RESPONSE.FOR.REQUEST.OF.SOAP',
+                   'http.Error.Response.For.Request.Of.Soap',
+                   'Http.Error.Response.For.Request.Of.Soap',
                    ]
 
         for case in CASES:
             for s in strings:
-                expt = expect[case]
-                actl = convert_sentence_to_case(s, case)
-                helper.append_to_error_if_not_expect_with_msg(
-                    errors, expt == actl, (
-                        "In format: {0} within any separator"
-                        "\nexpect: {1} !=\nactual: {2}".format(
-                            case, expt, actl)))
+                for sep in ESCAPE_CHARS:
+                    expt = expect[case].replace(r'.', sep)
+                    actl = convert_sentence_to_case(s.replace(r'.', sep), case)
+                    helper.append_to_error_if_not_expect_with_msg(
+                        errors, expt == actl, (
+                            "In format: {0} within any separator"
+                            "\nexpect: {1} !=\nactual: {2}".format(
+                                case, expt, actl)))
 
         # without any separator
         # httperrorresponseforrequestofsoap
