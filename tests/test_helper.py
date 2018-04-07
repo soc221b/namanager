@@ -6,6 +6,7 @@ import itertools
 class TestHelper():
     def test_get_error_string(self):
         get_error_string = helper.get_error_string
+
         assert isinstance(get_error_string([]), str)
         assert isinstance(get_error_string(['a', 'b']), str)
 
@@ -31,28 +32,38 @@ class TestHelper():
 
     def test_gen_all_possible_pair(self):
         gen_all_possible_pair = helper.gen_all_possible_pair
-        assert (gen_all_possible_pair('') == [])
-        assert (gen_all_possible_pair('a') == [('a',)])
-        assert (gen_all_possible_pair('ab') == [
-            ('a',), ('b',), ('a', 'b'), ('b', 'a')
-        ])
-        assert (gen_all_possible_pair('abc') == [
-            ('a',), ('b',), ('c',), ('a', 'b'), ('b', 'a'), ('a', 'c'),
-            ('c', 'a'), ('b', 'c'), ('c', 'b'), ('a', 'b', 'c'),
-            ('a', 'c', 'b'), ('b', 'a', 'c'), ('b', 'c', 'a'),
-            ('c', 'a', 'b'), ('c', 'b', 'a')
-        ])
-        assert (gen_all_possible_pair([]) == [])
-        assert (gen_all_possible_pair(['a']) == [('a',)])
-        assert (gen_all_possible_pair(['a', 'bc']) == [
-            ('a',), ('bc',), ('a', 'bc'), ('bc', 'a')
-        ])
-        assert (gen_all_possible_pair(['a', 'bc', 'def']) == [
-            ('a',), ('bc',), ('def',), ('a', 'bc'), ('bc', 'a'), ('a', 'def'),
-            ('def', 'a'), ('bc', 'def'), ('def', 'bc'), ('a', 'bc', 'def'),
-            ('a', 'def', 'bc'), ('bc', 'a', 'def'), ('bc', 'def', 'a'),
-            ('def', 'a', 'bc'), ('def', 'bc', 'a')
-        ])
+        errors = []
+        data = [
+            '',
+            'a',
+            'ab',
+            'abc',
+            [],
+            ['a'],
+            ['a', 'bc'],
+            ['a', 'bc', 'def'],
+        ]
+        expect = [
+            [],
+            [('a', )],
+            [('a', ), ('b', ), ('a', 'b'), ('b', 'a')],
+            [('a', ), ('b', ), ('c', ), ('a', 'b'), ('b', 'a'), ('a', 'c'), ('c', 'a'), ('b', 'c'), ('c', 'b'), ('a', 'b', 'c'), ('a', 'c', 'b'), ('b', 'a', 'c'), ('b', 'c', 'a'), ('c', 'a', 'b'), ('c', 'b', 'a')],  # noqa: E501
+            [],
+            [('a', )],
+            [('a', ), ('bc', ), ('a', 'bc'), ('bc', 'a')],
+            [('a', ), ('bc', ), ('def', ), ('a', 'bc'), ('bc', 'a'), ('a', 'def'), ('def', 'a'), ('bc', 'def'), ('def', 'bc'), ('a', 'bc', 'def'), ('a', 'def', 'bc'), ('bc', 'a', 'def'), ('bc', 'def', 'a'), ('def', 'a', 'bc'), ('def', 'bc', 'a')],  # noqa: E501
+        ]
+
+        actual = []
+        for datum in data:
+            actual.append(gen_all_possible_pair(datum))
+        for i in range(0, len(data)):
+            helper.append_to_error_if_not_expect_with_msg(
+                errors,
+                expect[i] == actual[i],
+                "Expect:\n{0}\nActual:\n{1}".format(expect[i], actual[i]))
+
+        assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_get_all_type_values_of_json(self):
         get_all_type_values_of_json = helper.get_all_type_values_of_json
