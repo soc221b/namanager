@@ -3,6 +3,16 @@ import itertools
 import string
 import collections
 
+# Backward Compatibility
+try:
+    unicode()
+except NameError:
+    unicode = str
+try:
+    long()
+except NameError:
+    long = int
+
 
 def get_error_string(errors):
     err_str = '\n'
@@ -121,7 +131,10 @@ def _is_same_disorderly_dict(a, b, convert_unicode=True):
                 if not _is_same_disorderly(a[k], b[k], convert_unicode):
                     return False
             elif not is_equal(v, b[k]):
-                return False
+                if (str(v) != str(b[k]) and
+                   isinstance(v, (str, unicode)) and
+                   isinstance(b[k], (str, unicode))):
+                    return False
         else:
             return False
     return True
