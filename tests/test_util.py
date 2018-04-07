@@ -8,6 +8,34 @@ ESCAPE_CHARS = ['.', '*', '?', '/', "\\", '^', '$']
 
 
 class TestUtil():
+    def test_name(self):
+        name = util.name
+        errors = []
+        foo = 123
+        global bar
+        bar = 456
+        self.baz = 789
+        data = [
+            {'expect': 'foo', 'actual': name(foo, locals())},
+            {'expect': None, 'actual': name(bar, locals())},
+            {'expect': None, 'actual': name(self.baz, locals())},
+            {'expect': 'bar', 'actual': name(bar, globals())},
+            {'expect': None, 'actual': name(foo, globals())},
+            {'expect': None, 'actual': name(self.baz, globals())},
+            {'expect': 'baz', 'actual': name(self.baz, self.__dict__)},
+            {'expect': None, 'actual': name(foo, self.__dict__)},
+            {'expect': None, 'actual': name(bar, self.__dict__)},
+        ]
+
+        for datum in data:
+            helper.append_to_error_if_not_expect_with_msg(
+                errors,
+                datum['expect'] == datum['actual'],
+                "Expect: {0}\nActual: {1}".format(
+                    datum['expect'], datum['actual']))
+
+        assert errors == [], Exception(helper.get_error_string(errors))
+
     def test_gen_unique_str(self):
         gen_unique_str = util.gen_unique_str
         u = gen_unique_str('')

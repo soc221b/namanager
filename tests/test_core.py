@@ -34,35 +34,6 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_name(self):
-        fc = Namanager()
-        errors = []
-        foo = 123
-        global bar
-        bar = 456
-        self.baz = 789
-
-        data = [
-            {'expect': 'foo', 'actual': fc.name(foo, locals())},
-            {'expect': None, 'actual': fc.name(bar, locals())},
-            {'expect': None, 'actual': fc.name(self.baz, locals())},
-            {'expect': 'bar', 'actual': fc.name(bar, globals())},
-            {'expect': None, 'actual': fc.name(foo, globals())},
-            {'expect': None, 'actual': fc.name(self.baz, globals())},
-            {'expect': 'baz', 'actual': fc.name(self.baz, self.__dict__)},
-            {'expect': None, 'actual': fc.name(foo, self.__dict__)},
-            {'expect': None, 'actual': fc.name(bar, self.__dict__)},
-        ]
-
-        for datum in data:
-            helper.append_to_error_if_not_expect_with_msg(
-                errors,
-                datum['expect'] == datum['actual'],
-                "Expect: {0}\nActual: {1}".format(
-                    datum['expect'], datum['actual']))
-
-        assert errors == [], Exception(helper.get_error_string(errors))
-
     def test_verify_setting_type(self):
         fc = Namanager()
         errors = []

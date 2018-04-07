@@ -47,13 +47,6 @@ class Namanager():
             converted_strlist.append(s.replace('/', os.sep))
         return converted_strlist
 
-    def name(self, obj, callingLocals=locals()):
-        name = None
-        for k, v in list(callingLocals.items()):
-            if v is obj:
-                name = k
-        return name
-
     def verify_setting_type(self):
         errors = []
 
@@ -83,7 +76,7 @@ class Namanager():
         for setting in settings:
             if not isinstance(setting['s'], setting['t']):
                 errors.append("Type of {0} must be {1}.".format(
-                    self.name(setting['s'], self.__dict__), setting['t']))
+                    util.name(setting['s'], self.__dict__), setting['t']))
 
         err_str = '\n'
         for error in errors:
