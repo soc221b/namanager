@@ -164,7 +164,7 @@ class Namanager():
                     return True
         return False
 
-    def _convert_walk_to_list(self, root):
+    def _get_walk(self, root):
         return [path_info for path_info in os.walk(os.path.realpath(root))]
 
     def _get_root_in_walk(self, walk):
@@ -296,7 +296,7 @@ class Namanager():
 
         return filtered_walk
 
-    def _get_file_list(self, walk):
+    def _get_file_walk(self, walk):
         if self.involve_files:
             walk = self._involve_re_patterns_of_files_in_walk(
                 self.involve_files, walk)
@@ -306,7 +306,7 @@ class Namanager():
 
         return walk
 
-    def _get_dir_list(self, walk):
+    def _get_dir_walk(self, walk):
         if self.involve_dirs:
             walk = self._involve_re_patterns_of_dirs_in_walk(
                 self.involve_dirs, walk)
@@ -318,8 +318,8 @@ class Namanager():
 
     def check_file(self, root):
         root = os.path.realpath(root)
-        walk = self._convert_walk_to_list(root)
-        walk = self._get_file_list(walk)
+        walk = self._get_walk(root)
+        walk = self._get_file_walk(walk)
         for dirpath, dirs, files in walk:
             for f in files:
                 actual = f
@@ -345,8 +345,8 @@ class Namanager():
             OK: any part path of /root/path/to/dir will be never checked
         """
         root = os.path.realpath(root)
-        walk = self._convert_walk_to_list(root)
-        walk = self._get_dir_list(walk)
+        walk = self._get_walk(root)
+        walk = self._get_dir_walk(walk)
         for dirpath, dirs, files in walk:
             dirpath_dirname = os.path.dirname(dirpath)
             actual = os.sep + dirpath.split(os.sep)[-1]

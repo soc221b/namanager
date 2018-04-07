@@ -136,10 +136,10 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_convert_walk_to_list(self):
+    def test_get_walk(self):
         fc = Namanager()
 
-        actl = fc._convert_walk_to_list(os.path.dirname(sys.executable))
+        actl = fc._get_walk(os.path.dirname(sys.executable))
 
         assert isinstance(actl, list)
         assert isinstance(actl[0], tuple)
@@ -612,10 +612,10 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_get_file_list(self):
+    def test_get_file_walk(self):
         pass
 
-    def test_get_dir_list(self):
+    def test_get_dir_walk(self):
         pass
 
     def test_check_file(self):
