@@ -2,10 +2,10 @@
     "CHECK_DIRS": [
         "./"
     ],
-    "ONLY_FILES": [
+    "INVOLVE_FILES": [
         ".*"
     ],
-    "ONLY_DIRS": [
+    "INVOLVE_DIRS": [
         ".*"
     ],
     "IGNORE_FILES": [
@@ -28,15 +28,15 @@
     "_comment": {
         "notes": [
             "The path separator will be converted automatically in this config, you must always use `/` as path separator",
-            "Priority of ONLY_FILES/ONLY_DIRS is higher then IGNORE_FILES/IGNORE_DIRS."
+            "Priority of INVOLVE_FILES/INVOLVE_DIRS is higher then IGNORE_FILES/IGNORE_DIRS."
         ],
         "CHECK_DIRS": {
             "/path/to/check_dir": "will be root"
         },
-        "ONLY_FILES": {
+        "INVOLVE_FILES": {
             "": ""
         },
-        "ONLY_DIRS": {
+        "INVOLVE_DIRS": {
             "": ""
         },
         "IGNORE_FILES": {

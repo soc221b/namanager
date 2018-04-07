@@ -50,8 +50,8 @@ class TestNamanager():
     def test_load_settings(self, fc=Namanager()):
         settings = {
             # "CHECK_DIRS": ["123"],
-            "ONLY_FILES": ["123"],
-            "ONLY_DIRS": ["123"],
+            "INVOLVE_FILES": ["123"],
+            "INVOLVE_DIRS": ["123"],
             "IGNORE_FILES": ["123"],
             "IGNORE_DIRS": ["123"],
             "FILE_FORMATS": {"LETTER_CASE": "123", "SEP": ["123"]},
@@ -60,8 +60,8 @@ class TestNamanager():
 
         fc.load_settings(settings)
 
-        assert fc.only_files == ["123"]
-        assert fc.only_dirs == ["123"]
+        assert fc.involve_files == ["123"]
+        assert fc.involve_dirs == ["123"]
         assert fc.ignore_files == ["123"]
         assert fc.ignore_dirs == ["123"]
         assert fc.file_formats == {"LETTER_CASE": "123", "SEP": ["123"]}
@@ -79,10 +79,10 @@ class TestNamanager():
              "actual": fc.file_formats},
             {"expect": enums.SETTINGS['DIR_FORMATS'],
              "actual": fc.dir_formats},
-            {"expect": enums.SETTINGS['ONLY_FILES'],
-             "actual": fc.only_files},
-            {"expect": enums.SETTINGS['ONLY_DIRS'],
-             "actual": fc.only_dirs},
+            {"expect": enums.SETTINGS['INVOLVE_FILES'],
+             "actual": fc.involve_files},
+            {"expect": enums.SETTINGS['INVOLVE_DIRS'],
+             "actual": fc.involve_dirs},
             {"expect": enums.SETTINGS['IGNORE_FILES'],
              "actual": fc.ignore_files},
             {"expect": enums.SETTINGS['IGNORE_DIRS'],
@@ -245,7 +245,7 @@ class TestNamanager():
             )
         )
 
-    def test_include_file_by_match_list_in_walk(self):
+    def test_involve_re_patterns_of_files_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -333,7 +333,7 @@ class TestNamanager():
 
         for description, pattern in patterns.items():
             for p in itertools.permutations(pattern):
-                actl = fc._include_file_by_match_list_in_walk(p, walk)
+                actl = fc._involve_re_patterns_of_files_in_walk(p, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -346,7 +346,7 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_exclude_file_by_match_list_in_walk(self):
+    def test_ignore_re_patterns_of_files_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -437,7 +437,7 @@ class TestNamanager():
 
         for description, patterns in classified_patterns.items():
             for pattern in itertools.permutations(patterns):
-                actl = fc._exclude_file_by_match_list_in_walk(pattern, walk)
+                actl = fc._ignore_re_patterns_of_files_in_walk(pattern, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -450,7 +450,7 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_include_dir_by_match_list_in_walk(self):
+    def test_involve_re_patterns_of_dirs_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -517,7 +517,7 @@ class TestNamanager():
 
         for description, pattern in patterns.items():
             for p in itertools.permutations(pattern):
-                actl = fc._include_dir_by_match_list_in_walk(p, walk)
+                actl = fc._involve_re_patterns_of_dirs_in_walk(p, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -530,7 +530,7 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_exclude_dir_by_match_list_in_walk(self):
+    def test_ignore_re_patterns_of_dirs_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -599,7 +599,7 @@ class TestNamanager():
 
         for description, pattern in patterns.items():
             for p in itertools.permutations(pattern):
-                actl = fc._exclude_dir_by_match_list_in_walk(p, walk)
+                actl = fc._ignore_re_patterns_of_dirs_in_walk(p, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -627,8 +627,8 @@ class TestNamanager():
                 os.path.realpath(
                     os.path.join(os.path.dirname(__file__), '..', '..')),
             ],
-            "ONLY_FILES": [],
-            "ONLY_DIRS": [],
+            "INVOLVE_FILES": [],
+            "INVOLVE_DIRS": [],
             "IGNORE_FILES": [],
             "IGNORE_DIRS": [],
             "FILE_FORMATS": {
