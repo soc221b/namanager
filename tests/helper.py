@@ -115,7 +115,7 @@ def classify_different_type_element(tuple_):
 
 def _is_same_disorderly_dict(a, b, convert_unicode=True):
     for k, v in a.items():
-        if k in b:
+        if k in b or str(k) in b:
             if isinstance(v, (list, tuple, set, dict)):
                 if not _is_same_disorderly(a[k], b[k], convert_unicode):
                     return False
