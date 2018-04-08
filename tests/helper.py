@@ -196,24 +196,27 @@ def is_same_disorderly(a, b, convert_unicode=True):
 def get_all_type_values_of_json():
     # Types of json/python mapping:
     # int, float, True, False, None, dict, list, (long), (str), (unicode)
-    type_values = (1, 2, 3.4, 4.5, True, False, None, long(5), long(6),
-                   unicode('bar'), unicode('foo'), str('baz'), str('qux'))
+    # Ensure any type values contains two elements
+    type_values1 = (1, 3.4, True, False, None, long(5), unicode('bar'),
+                    str('baz'))
+    type_values2 = (2, 4.5, True, False, None, long(6), unicode('foo'),
+                    str('qux'))
     dict_values = ()
     list_values = ()
 
-    for i in type_values:
-        for j in type_values:
+    for i in range(0, len(type_values1)):
+        for j in range(i, len(type_values2)):
             try:
-                dict_values += ({i: j},)
+                dict_values += ({type_values1[i]: type_values2[j],
+                                 type_values2[j]: type_values1[i]},)
             except Exception:  # pragma: no cover
                 pass
-    for i in type_values:
-        for j in type_values:
             try:
-                list_values += ([j],)
+                list_values += ([type_values1[i], type_values2[j]],)
+                list_values += ([type_values2[j], type_values1[i]],)
             except Exception:  # pragma: no cover
                 pass
-    type_values += dict_values
-    type_values += list_values
+    type_values1 += dict_values
+    type_values1 += list_values
 
-    return type_values
+    return type_values1
