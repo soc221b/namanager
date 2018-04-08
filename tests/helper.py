@@ -2,6 +2,7 @@ import random
 import itertools
 import string
 import collections
+import logging
 
 # Backward Compatibility
 try:
@@ -131,9 +132,15 @@ def _is_same_disorderly_dict(a, b, convert_unicode=True):
                 if not _is_same_disorderly(a[k], b[k], convert_unicode):
                     return False
             elif not is_equal(v, b[k]):
-                if (str(v) != str(b[k]) and
-                   isinstance(v, (str, unicode)) and
-                   isinstance(b[k], (str, unicode))):
+                logging.info(v)
+                logging.info(type(v))
+                logging.info(b[k])
+                logging.info(type(b[k]))
+                if not convert_unicode:
+                    return False
+                elif (str(v) != str(b[k]) and
+                      isinstance(v, (str, unicode)) and
+                      isinstance(b[k], (str, unicode))):
                     return False
         else:
             return False
