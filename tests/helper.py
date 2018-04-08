@@ -3,6 +3,7 @@ import itertools
 import string
 import collections
 import logging
+import json
 
 # Backward Compatibility
 try:
@@ -203,27 +204,74 @@ def is_same_disorderly(a, b, convert_unicode=True):
 def get_all_type_values_of_json():
     # Types of json/python mapping:
     # int, float, True, False, None, dict, list, (long), (str), (unicode)
+
+    # key of json loads always be unicode in python2 and str in python3
+    possible_keys1 = (unicode('1'))
+    possible_keys2 = (unicode('2'))
     # Ensure any type values contains two elements
-    type_values1 = (1, 3.4, True, False, None, long(5), unicode('bar'),
-                    str('baz'))
-    type_values2 = (2, 4.5, True, False, None, long(6), unicode('foo'),
+    type_values1 = (1, 2.2, long(3), True, False, None, unicode('foo'),
+                    str('bar'))
+    type_values2 = (4, 5.5, long(6), True, False, None, unicode('baz'),
                     str('qux'))
     dict_values = ()
     list_values = ()
+    nested_dict_values = ()
+    nested_list_values = ()
+    nested2_dict_values = ()
+    nested2_list_values = ()
 
-    for i in range(0, len(type_values1)):
-        for j in range(i, len(type_values2)):
-            try:
-                dict_values += ({type_values1[i]: type_values2[j],
-                                 type_values2[j]: type_values1[i]},)
-            except Exception:  # pragma: no cover
-                pass
-            try:
-                list_values += ([type_values1[i], type_values2[j]],)
-                list_values += ([type_values2[j], type_values1[i]],)
-            except Exception:  # pragma: no cover
-                pass
-    type_values1 += dict_values
-    type_values1 += list_values
+    for i in range(0, len(possible_keys1)):
+        for j in range(0, len(type_values1)):
+            # {1: 2}
+            dict_values += ({
+                possible_keys1[i]: type_values1[j],
+                possible_keys2[i]: type_values2[j]},)
+            # [1, 2]
+            list_values += ([type_values1[j], type_values2[j]],)
+    for i in range(0, len(possible_keys1)):
+        for j in range(0, len(dict_values)):
+            # {1: {2: 3}}
+            nested_dict_values += ({
+                possible_keys1[i]: dict_values[j],
+                possible_keys2[i]: dict_values[j]},)
+            # [{1: 2, 3: 4}]
+            nested_list_values += ([dict_values[j], dict_values[j]],)
+        for j in range(0, len(list_values)):
+            # {1: [2, 3]}
+            nested_dict_values += ({
+                possible_keys1[i]: list_values[j],
+                possible_keys2[i]: list_values[j]},)
+            # [[1, 2], [3, 4]]
+            nested_list_values += ([list_values[j], list_values[j]],)
+    for i in range(0, len(possible_keys1)):
+        for j in range(0, len(nested_dict_values)):
+            # {1: {2: {3: 4}}}
+            nested2_dict_values += ({
+                possible_keys1[i]: nested_dict_values[j],
+                possible_keys2[i]: nested_dict_values[j]},)
+            # [[{1: 2, 3: 4}, {5: 6, 7: 8}]]
+            nested2_list_values += ([
+                nested_dict_values[j], nested_dict_values[j]],)
+        for j in range(0, len(nested_list_values)):
+            # {1: [[2, 3]]}
+            nested2_dict_values += ({
+                possible_keys1[i]: nested_list_values[j],
+                possible_keys2[i]: nested_list_values[j]},)
+            # [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
+            nested2_list_values += ([
+                nested_list_values[j], nested_list_values[j]],)
 
-    return type_values1
+    logging.debug('dict_values:')
+    logging.info(json.dumps(dict_values, indent=2))
+    logging.debug('list_values:')
+    logging.info(json.dumps(list_values, indent=2))
+    logging.debug('nested_dict_values:')
+    logging.info(json.dumps(nested_dict_values, indent=2))
+    logging.debug('nested_list_values:')
+    logging.info(json.dumps(nested_list_values, indent=2))
+    logging.debug('nested2_dict_values:')
+    logging.info(json.dumps(nested2_dict_values, indent=2))
+    logging.debug('nested2_list_values:')
+    logging.info(json.dumps(nested2_list_values, indent=2))
+    return (dict_values + list_values + nested_dict_values +
+            nested_list_values + nested2_dict_values + nested2_list_values)
