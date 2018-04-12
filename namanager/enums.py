@@ -56,8 +56,8 @@ FORMATS = {
 # Default settings
 SETTINGS = {
     "CHECK_DIRS": [],
-    "INVOLVE_FILES": [],
-    "INVOLVE_DIRS": [],
+    "INCLUDE_FILES": [],
+    "INCLUDE_DIRS": [],
     "IGNORE_FILES": [],
     "IGNORE_DIRS": [],
     "FILE_FORMATS": {

@@ -24,8 +24,8 @@ class Namanager():
             enums.SETTINGS['FILE_FORMATS']['SEP'])
         self._FILE_LETTER_CASE = (
             enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])
-        self._INVOLVE_FILES = (
-            enums.SETTINGS['INVOLVE_FILES'])
+        self._INCLUDE_FILES = (
+            enums.SETTINGS['INCLUDE_FILES'])
         self._IGNORE_FILES = (
             enums.SETTINGS['IGNORE_FILES'])
 
@@ -35,8 +35,8 @@ class Namanager():
             enums.SETTINGS['DIR_FORMATS']['SEP'])
         self._DIR_LETTER_CASE = (
             enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])
-        self._INVOLVE_DIRS = (
-            enums.SETTINGS['INVOLVE_DIRS'])
+        self._INCLUDE_DIRS = (
+            enums.SETTINGS['INCLUDE_DIRS'])
         self._IGNORE_DIRS = (
             enums.SETTINGS['IGNORE_DIRS'])
 
@@ -56,8 +56,8 @@ class Namanager():
              't': type(enums.SETTINGS['FILE_FORMATS']['SEP'])},
             {'s': self._FILE_LETTER_CASE,
              't': type(enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])},
-            {'s': self._INVOLVE_FILES,
-             't': type(enums.SETTINGS['INVOLVE_FILES'])},
+            {'s': self._INCLUDE_FILES,
+             't': type(enums.SETTINGS['INCLUDE_FILES'])},
             {'s': self._IGNORE_FILES,
              't': type(enums.SETTINGS['IGNORE_FILES'])},
             {'s': self._DIR_FORMATS,
@@ -66,8 +66,8 @@ class Namanager():
              't': type(enums.SETTINGS['DIR_FORMATS']['SEP'])},
             {'s': self._DIR_LETTER_CASE,
              't': type(enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])},
-            {'s': self._INVOLVE_DIRS,
-             't': type(enums.SETTINGS['INVOLVE_DIRS'])},
+            {'s': self._INCLUDE_DIRS,
+             't': type(enums.SETTINGS['INCLUDE_DIRS'])},
             {'s': self._IGNORE_DIRS,
              't': type(enums.SETTINGS['IGNORE_DIRS'])},
         ]
@@ -92,8 +92,8 @@ class Namanager():
         self._FILE_LETTER_CASE = str(
             self._FILE_FORMATS.get(
                 'LETTER_CASE', enums.SETTINGS['FILE_FORMATS']['LETTER_CASE']))
-        self._INVOLVE_FILES = self._convert_os_sep_of_str_in_list(
-            settings.get('INVOLVE_FILES', enums.SETTINGS['INVOLVE_FILES']))
+        self._INCLUDE_FILES = self._convert_os_sep_of_str_in_list(
+            settings.get('INCLUDE_FILES', enums.SETTINGS['INCLUDE_FILES']))
         self._IGNORE_FILES = self._convert_os_sep_of_str_in_list(
             settings.get('IGNORE_FILES', enums.SETTINGS['IGNORE_FILES']))
 
@@ -104,8 +104,8 @@ class Namanager():
         self._DIR_LETTER_CASE = str(
             self._DIR_FORMATS.get(
                 'LETTER_CASE', enums.SETTINGS['DIR_FORMATS']['LETTER_CASE']))
-        self._INVOLVE_DIRS = self._convert_os_sep_of_str_in_list(
-            settings.get('INVOLVE_DIRS', enums.SETTINGS['INVOLVE_DIRS']))
+        self._INCLUDE_DIRS = self._convert_os_sep_of_str_in_list(
+            settings.get('INCLUDE_DIRS', enums.SETTINGS['INCLUDE_DIRS']))
         self._IGNORE_DIRS = self._convert_os_sep_of_str_in_list(
             settings.get('IGNORE_DIRS', enums.SETTINGS['IGNORE_DIRS']))
 
@@ -126,12 +126,12 @@ class Namanager():
         return self._DIR_FORMATS
 
     @property
-    def involve_files(self):
-        return self._INVOLVE_FILES
+    def include_files(self):
+        return self._INCLUDE_FILES
 
     @property
-    def involve_dirs(self):
-        return self._INVOLVE_DIRS
+    def include_dirs(self):
+        return self._INCLUDE_DIRS
 
     @property
     def ignore_files(self):
@@ -203,7 +203,7 @@ class Namanager():
 
         return separated_patterns
 
-    def _involve_re_patterns_of_files_in_walk(self, re_patterns, walk,
+    def _include_re_patterns_of_files_in_walk(self, re_patterns, walk,
                                               root=None):
         if root is None:
             root = self._get_root_in_walk(walk)
@@ -242,7 +242,7 @@ class Namanager():
 
     def _ignore_re_patterns_of_files_in_walk(self, re_patterns, walk,
                                              root=None):
-        include_walk = self._involve_re_patterns_of_files_in_walk(
+        include_walk = self._include_re_patterns_of_files_in_walk(
             re_patterns, walk, root)
         filtered_walk = []
 
@@ -265,7 +265,7 @@ class Namanager():
 
         return filtered_walk
 
-    def _involve_re_patterns_of_dirs_in_walk(self, re_patterns, walk,
+    def _include_re_patterns_of_dirs_in_walk(self, re_patterns, walk,
                                              root=None):
         if root is None:
             root = self._get_root_in_walk(walk)
@@ -280,7 +280,7 @@ class Namanager():
 
     def _ignore_re_patterns_of_dirs_in_walk(self, re_patterns, walk,
                                             root=None):
-        include_walk = self._involve_re_patterns_of_dirs_in_walk(
+        include_walk = self._include_re_patterns_of_dirs_in_walk(
             re_patterns, walk, root)
         filtered_walk = []
 
@@ -297,9 +297,9 @@ class Namanager():
         return filtered_walk
 
     def _get_file_walk(self, walk):
-        if self.involve_files:
-            walk = self._involve_re_patterns_of_files_in_walk(
-                self.involve_files, walk)
+        if self.include_files:
+            walk = self._include_re_patterns_of_files_in_walk(
+                self.include_files, walk)
         if self.ignore_files:
             walk = self._ignore_re_patterns_of_files_in_walk(
                 self.ignore_files, walk)
@@ -307,9 +307,9 @@ class Namanager():
         return walk
 
     def _get_dir_walk(self, walk):
-        if self.involve_dirs:
-            walk = self._involve_re_patterns_of_dirs_in_walk(
-                self.involve_dirs, walk)
+        if self.include_dirs:
+            walk = self._include_re_patterns_of_dirs_in_walk(
+                self.include_dirs, walk)
         if self.ignore_dirs:
             walk = self._ignore_re_patterns_of_dirs_in_walk(
                 self.ignore_dirs, walk)
