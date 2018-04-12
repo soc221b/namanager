@@ -85,8 +85,9 @@ class TestHelper():
         for actl in actual:
             try:
                 json.loads(json.dumps(actl))
-            except Exception:
-                errors.append("{1} is not valid.".format(actl))
+            except Exception as e:
+                errors.append("{0} is not valid json format:\n{1}".format(
+                    actl, e))
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
