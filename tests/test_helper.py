@@ -187,19 +187,19 @@ class TestHelper():
                     False is is_equal(len(TruthyCls()), t),
                     "Expect: False\nvalue1: {0}(TruthyClass)"
                     "\nvalue2: {1}".format(len(TruthyCls()), t))
-        for t in falsy:
-            if t is not False:
+        for f in falsy:
+            if f is not False:
                 helper.append_to_error_if_not_expect_with_msg(
                     errors,
-                    False is is_equal(bool(FalsyCls()), t),
+                    False is is_equal(bool(FalsyCls()), f),
                     "Expect: False\nvalue1: {0}(FalsyClass)"
-                    "\nvalue2: {1}".format(bool(FalsyCls()), t))
-            if t is not 0:
+                    "\nvalue2: {1}".format(bool(FalsyCls()), f))
+            if f is not 0:
                 helper.append_to_error_if_not_expect_with_msg(
                     errors,
-                    False is is_equal(len(FalsyCls()), t),
+                    False is is_equal(len(FalsyCls()), f),
                     "Expect: False\nvalue1: {0}(FalsyClass)"
-                    "\nvalue2: {1}".format(len(FalsyCls()), t))
+                    "\nvalue2: {1}".format(len(FalsyCls()), f))
         helper.append_to_error_if_not_expect_with_msg(
             errors,
             True is is_equal(bool(TruthyCls()), True),
