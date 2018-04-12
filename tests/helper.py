@@ -8,11 +8,9 @@ import json
 # Backward Compatibility
 try:
     unicode()
-except NameError:
-    unicode = str
-try:
     long()
 except NameError:
+    unicode = str
     long = int
 
 
