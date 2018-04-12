@@ -57,13 +57,13 @@ def is_in_tuple(x, t):
 
 
 def is_equal(a, b):
-    return (((a == b) and
-             (type(a) == type(b)) and
-             (not is_in_tuple(a, (None, True, False))) and
-             (not is_in_tuple(b, (None, True, False)))) or
-            (a is None and b is None) or
-            (a is True and b is True) or
-            (a is False and b is False))
+    return (a is None and b is None or
+            a is True and b is True or
+            a is False and b is False or
+            (not is_in_tuple(a, (None, True, False)) and
+             not is_in_tuple(b, (None, True, False)) and
+             a == b and
+             type(a) == type(b)))
 
 
 def _is_same_disorderly_list(a, b, convert_unicode=True):
