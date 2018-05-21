@@ -253,11 +253,14 @@ class TestMain():
         driver.entry(**kwargs)
 
         logger().debug('after')
-        logger().info(os.listdir(dirs[0]))
         logger().info(driver.result['rename_backup_name'])
+        if not os.path.isdir(dirs[0]):
+            dirs[0] = os.sep.join(
+                dirs[0].split(os.sep)[:-1] +
+                [dirs[0].split(os.sep)[-1].upper()])
+            assert os.path.isdir(dirs[0])
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
         assert driver.result['errors'] == []
-        os.remove(driver.result['rename_backup_name'])
 
     def test_cli_rename_backup_path_to_dir(self):
         driver = Driver()
@@ -280,11 +283,14 @@ class TestMain():
         driver.entry(**kwargs)
 
         logger().debug('after')
-        logger().info(os.listdir(dirs[0]))
         logger().info(driver.result['rename_backup_name'])
+        if not os.path.isdir(dirs[0]):
+            dirs[0] = os.sep.join(
+                dirs[0].split(os.sep)[:-1] +
+                [dirs[0].split(os.sep)[-1].upper()])
+            assert os.path.isdir(dirs[0])
         assert driver.find_recent_backup_files(dirname=dirs[0]) != []
         assert driver.result['errors'] == []
-        os.remove(driver.result['rename_backup_name'])
 
     def test_cli_rename_backup_path_to_file(self):
         driver = Driver()
@@ -303,16 +309,21 @@ class TestMain():
         }
         logger().debug('before')
         logger().info(os.listdir(dirs[0]))
+        assert os.path.isdir(dirs[0])
         assert not os.path.isfile(backup_filename)
 
         driver.entry(**kwargs)
 
         logger().debug('after')
-        logger().info(os.listdir(dirs[0]))
         logger().info(driver.result['rename_backup_name'])
+        if not os.path.isdir(dirs[0]):
+            dirs[0] = os.sep.join(
+                dirs[0].split(os.sep)[:-1] +
+                [dirs[0].split(os.sep)[-1].upper()])
+            backup_filename = os.sep.join([dirs[0], '123'])
+            assert os.path.isdir(dirs[0])
         assert os.path.isfile(backup_filename)
         assert driver.result['errors'] == []
-        os.remove(driver.result['rename_backup_name'])
 
     def _test_cli_rename_recover(self):
         return
