@@ -160,7 +160,7 @@ Unit tests
 '''
 mv tests namanager
 assert
-nosetests . -v --with-coverage --cover-erase --cover-html --cover-tests
+nosetests --tests namanager.tests -v --with-coverage --cover-erase --cover-html --cover-tests
 assert
 mv namanager/tests .
 assert
@@ -209,7 +209,7 @@ for (( i = 0; i < 200; i++ )); do
     mktemp_cwd
 done
 
-namanager --settings ../namanager/settings.json
+namanager --settings ../tests/settings.json
 assert
 
 cd $NAMANAGER_ROOT_PATH

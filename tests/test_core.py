@@ -464,6 +464,14 @@ class TestNamanager():
             ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
         ]
         patterns = {
+            'test root': [
+                r'^/$',
+                r'/$',
+            ],
+            'test any dir': [
+                r'/',
+                r'^/',
+            ],
             'test particular dir': [
                 r'a',
             ],
@@ -484,6 +492,20 @@ class TestNamanager():
             ],
         }
         expect_pairs = {
+            'test root': [
+                ('/root/to/path', ['aa', 'ba', 'ca'], [
+                    'not.mdfile', 'notmd', 'is.md']),
+            ],
+            'test any dir': [
+                ('/root/to/path', ['aa', 'ba', 'ca'], [
+                    'not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/aa', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/aa/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+            ],
             'test particular dir': [
                 ('/root/to/path/aa', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
                 ('/root/to/path/aa/aa', [], ['not.mdfile', 'notmd', 'is.md']),
@@ -544,6 +566,14 @@ class TestNamanager():
             ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
         ]
         patterns = {
+            'test root': [
+                r'^/$',
+                r'/$',
+            ],
+            'test any dir': [
+                r'/',
+                r'^/',
+            ],
             'test particular dir': [
                 r'a',
             ],
@@ -564,6 +594,16 @@ class TestNamanager():
             ],
         }
         expect_pairs = {
+            'test root': [
+                ('/root/to/path/aa', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/aa/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ba/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca', ['aa'], ['not.mdfile', 'notmd', 'is.md']),
+                ('/root/to/path/ca/aa', [], ['not.mdfile', 'notmd', 'is.md']),
+            ],
+            'test any dir': [
+            ],
             'test particular dir': [
                 ('/root/to/path', ['aa', 'ba', 'ca'], [
                     'not.mdfile', 'notmd', 'is.md']),
@@ -644,13 +684,13 @@ class TestNamanager():
         fc.load_settings(etc)
         fc.check_file(etc['CHECK_DIRS'][0])
 
-        for f in fc.get_dict():
-            expect = f['filename']['expect']
-            actual = f['filename']['actual']
+        for f in fc.get_dict(fc.error_info):
+            expect = f['expect']
+            actual = f['actual']
             helper.append_to_error_if_not_expect_with_msg(
                 errors, len(expect) == len(actual), (
-                    "expect: {0}\nactual: {1}\nin: {2}".format(
-                        expect, actual, f['dirpath'])))
+                    "expect: {0}\nactual: {1}".format(expect, actual)))
+
         assert errors == [], Exception(helper.get_error_string(errors))
 
     def test_check_dir(self):

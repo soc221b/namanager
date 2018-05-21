@@ -273,6 +273,8 @@ class Namanager():
         filtered_walk = []
         for (dirpath, dirs, files) in walk:
             rel_dirpath = dirpath[len(root):]
+            if rel_dirpath == '':
+                rel_dirpath = '/'
             if self._is_string_matching(rel_dirpath, re_patterns):
                 filtered_walk.append((dirpath, dirs, files))
 
@@ -327,11 +329,8 @@ class Namanager():
 
                 if expect != actual:
                     self._error_info.append({
-                        'filename': {
-                            'expect': expect,
-                            'actual': actual
-                        },
-                        'dirpath': dirpath
+                        'expect': os.sep.join([dirpath, expect]),
+                        'actual': os.sep.join([dirpath, actual])
                     })
                     self._error_info_count += len(expect)
 
@@ -354,11 +353,8 @@ class Namanager():
 
             if expect != actual:
                 self._error_info.append({
-                    'dirname': {
-                        'expect': expect,
-                        'actual': actual
-                    },
-                    'dirpath': dirpath_dirname
+                    'expect': os.sep.join([dirpath_dirname, expect]),
+                    'actual': os.sep.join([dirpath_dirname, actual])
                 })
                 self._error_info_count += 1
 
@@ -377,7 +373,7 @@ class Namanager():
         extension = self.get_extension(filename)
 
         name = util.convert_sep(name, self.file_sep)
-        if self.dir_letter_case != 'ignore':
+        if self.file_letter_case != 'ignore':
             name = util.convert_sentence_to_case(
                 name, self.file_letter_case)
 
