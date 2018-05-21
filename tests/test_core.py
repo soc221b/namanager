@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import itertools
-import xmltodict
+# import xmltodict
 import namanager.tests.helper as helper
 from namanager.core import Namanager
 import namanager.enums as enums
@@ -34,35 +34,6 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_name(self):
-        fc = Namanager()
-        errors = []
-        foo = 123
-        global bar
-        bar = 456
-        self.baz = 789
-
-        data = [
-            {'expect': 'foo', 'actual': fc.name(foo, locals())},
-            {'expect': None, 'actual': fc.name(bar, locals())},
-            {'expect': None, 'actual': fc.name(self.baz, locals())},
-            {'expect': 'bar', 'actual': fc.name(bar, globals())},
-            {'expect': None, 'actual': fc.name(foo, globals())},
-            {'expect': None, 'actual': fc.name(self.baz, globals())},
-            {'expect': 'baz', 'actual': fc.name(self.baz, self.__dict__)},
-            {'expect': None, 'actual': fc.name(foo, self.__dict__)},
-            {'expect': None, 'actual': fc.name(bar, self.__dict__)},
-        ]
-
-        for datum in data:
-            helper.append_to_error_if_not_expect_with_msg(
-                errors,
-                datum['expect'] == datum['actual'],
-                "Expect: {0}\nActual: {1}".format(
-                    datum['expect'], datum['actual']))
-
-        assert errors == [], Exception(helper.get_error_string(errors))
-
     def test_verify_setting_type(self):
         fc = Namanager()
         errors = []
@@ -79,8 +50,8 @@ class TestNamanager():
     def test_load_settings(self, fc=Namanager()):
         settings = {
             # "CHECK_DIRS": ["123"],
-            "ONLY_FILES": ["123"],
-            "ONLY_DIRS": ["123"],
+            "INCLUDE_FILES": ["123"],
+            "INCLUDE_DIRS": ["123"],
             "IGNORE_FILES": ["123"],
             "IGNORE_DIRS": ["123"],
             "FILE_FORMATS": {"LETTER_CASE": "123", "SEP": ["123"]},
@@ -89,8 +60,8 @@ class TestNamanager():
 
         fc.load_settings(settings)
 
-        assert fc.only_files == ["123"]
-        assert fc.only_dirs == ["123"]
+        assert fc.include_files == ["123"]
+        assert fc.include_dirs == ["123"]
         assert fc.ignore_files == ["123"]
         assert fc.ignore_dirs == ["123"]
         assert fc.file_formats == {"LETTER_CASE": "123", "SEP": ["123"]}
@@ -108,10 +79,10 @@ class TestNamanager():
              "actual": fc.file_formats},
             {"expect": enums.SETTINGS['DIR_FORMATS'],
              "actual": fc.dir_formats},
-            {"expect": enums.SETTINGS['ONLY_FILES'],
-             "actual": fc.only_files},
-            {"expect": enums.SETTINGS['ONLY_DIRS'],
-             "actual": fc.only_dirs},
+            {"expect": enums.SETTINGS['INCLUDE_FILES'],
+             "actual": fc.include_files},
+            {"expect": enums.SETTINGS['INCLUDE_DIRS'],
+             "actual": fc.include_dirs},
             {"expect": enums.SETTINGS['IGNORE_FILES'],
              "actual": fc.ignore_files},
             {"expect": enums.SETTINGS['IGNORE_DIRS'],
@@ -165,10 +136,10 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_convert_walk_to_list(self):
+    def test_get_walk(self):
         fc = Namanager()
 
-        actl = fc._convert_walk_to_list(os.path.dirname(sys.executable))
+        actl = fc._get_walk(os.path.dirname(sys.executable))
 
         assert isinstance(actl, list)
         assert isinstance(actl[0], tuple)
@@ -186,7 +157,7 @@ class TestNamanager():
 
         assert actl == expt
 
-    def test_separate_with_in_out_particular_dir_patterns(self):
+    def test_divide_full_part_path_patterns(self):
         fc = Namanager()
         errors = []
         data = [
@@ -211,7 +182,7 @@ class TestNamanager():
         ]
 
         actual_within, actual_without = (
-            fc._separate_with_in_out_particular_dir_patterns(data))
+            fc._divide_full_part_path_patterns(data))
 
         helper.append_to_error_if_not_expect_with_msg(
             errors,
@@ -230,7 +201,7 @@ class TestNamanager():
             )
         )
 
-    def test_separate_dir_and_file_part_of_patterns(self):
+    def test_divide_file_and_dir_name_of_patterns(self):
         fc = Namanager()
         errors = []
         data = [
@@ -263,7 +234,7 @@ class TestNamanager():
             },
         ]
 
-        actual_patterns = fc._separate_dir_and_file_part_of_patterns(data)
+        actual_patterns = fc._divide_file_and_dir_name_of_patterns(data)
 
         helper.append_to_error_if_not_expect_with_msg(
             errors,
@@ -274,7 +245,7 @@ class TestNamanager():
             )
         )
 
-    def test_include_file_by_match_list_in_walk(self):
+    def test_include_re_patterns_of_files_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -362,7 +333,7 @@ class TestNamanager():
 
         for description, pattern in patterns.items():
             for p in itertools.permutations(pattern):
-                actl = fc._include_file_by_match_list_in_walk(p, walk)
+                actl = fc._include_re_patterns_of_files_in_walk(p, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -375,7 +346,7 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_exclude_file_by_match_list_in_walk(self):
+    def test_ignore_re_patterns_of_files_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -466,7 +437,7 @@ class TestNamanager():
 
         for description, patterns in classified_patterns.items():
             for pattern in itertools.permutations(patterns):
-                actl = fc._exclude_file_by_match_list_in_walk(pattern, walk)
+                actl = fc._ignore_re_patterns_of_files_in_walk(pattern, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -479,7 +450,7 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_include_dir_by_match_list_in_walk(self):
+    def test_include_re_patterns_of_dirs_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -546,7 +517,7 @@ class TestNamanager():
 
         for description, pattern in patterns.items():
             for p in itertools.permutations(pattern):
-                actl = fc._include_dir_by_match_list_in_walk(p, walk)
+                actl = fc._include_re_patterns_of_dirs_in_walk(p, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -559,7 +530,7 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_exclude_dir_by_match_list_in_walk(self):
+    def test_ignore_re_patterns_of_dirs_in_walk(self):
         fc = Namanager()
         errors = []
         walk = [
@@ -628,7 +599,7 @@ class TestNamanager():
 
         for description, pattern in patterns.items():
             for p in itertools.permutations(pattern):
-                actl = fc._exclude_dir_by_match_list_in_walk(p, walk)
+                actl = fc._ignore_re_patterns_of_dirs_in_walk(p, walk)
                 expt = expect_pairs[description]
                 helper.append_to_error_if_not_expect_with_msg(
                     errors, helper.is_same_disorderly(expt, actl), (
@@ -641,10 +612,10 @@ class TestNamanager():
 
         assert errors == [], Exception(helper.get_error_string(errors))
 
-    def test_get_file_list(self):
+    def test_get_file_walk(self):
         pass
 
-    def test_get_dir_list(self):
+    def test_get_dir_walk(self):
         pass
 
     def test_check_file(self):
@@ -656,8 +627,8 @@ class TestNamanager():
                 os.path.realpath(
                     os.path.join(os.path.dirname(__file__), '..', '..')),
             ],
-            "ONLY_FILES": [],
-            "ONLY_DIRS": [],
+            "INCLUDE_FILES": [],
+            "INCLUDE_DIRS": [],
             "IGNORE_FILES": [],
             "IGNORE_DIRS": [],
             "FILE_FORMATS": {
@@ -696,16 +667,19 @@ class TestNamanager():
 
         for datum in data:
             # get dict
-            helper.is_same_disorderly(datum, fc.get_dict(datum))
+            assert helper.is_same_disorderly(datum, fc.get_dict(datum))
 
             # get json
-            actual = json.dumps(fc.get_json(datum, False))
-            helper.is_same_disorderly(datum, actual)
-            actual = json.dumps(fc.get_json(datum, True))
-            helper.is_same_disorderly(datum, actual)
+            actual = json.loads(fc.get_json(datum, False))
+            assert helper.is_same_disorderly(datum, actual)
+            actual = json.loads(fc.get_json(datum, True))
+            assert helper.is_same_disorderly(datum, actual)
 
+            """
+            TODO
+            xmltodict returned OrderedDict object,
+            we need to convert it to dict object and then test it.
+            """
             # get xml
-            actual = json.dumps(xmltodict.parse(fc.get_xml(datum, False)))
-            helper.is_same_disorderly(datum, actual)
-            actual = json.dumps(xmltodict.parse(fc.get_xml(datum, True)))
-            helper.is_same_disorderly(datum, actual)
+            # actual = xmltodict.parse(fc.get_xml(datum, False))
+            # actual = xmltodict.parse(fc.get_xml(datum, True))

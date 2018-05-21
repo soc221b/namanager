@@ -24,8 +24,8 @@ class Namanager():
             enums.SETTINGS['FILE_FORMATS']['SEP'])
         self._FILE_LETTER_CASE = (
             enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])
-        self._ONLY_FILES = (
-            enums.SETTINGS['ONLY_FILES'])
+        self._INCLUDE_FILES = (
+            enums.SETTINGS['INCLUDE_FILES'])
         self._IGNORE_FILES = (
             enums.SETTINGS['IGNORE_FILES'])
 
@@ -35,8 +35,8 @@ class Namanager():
             enums.SETTINGS['DIR_FORMATS']['SEP'])
         self._DIR_LETTER_CASE = (
             enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])
-        self._ONLY_DIRS = (
-            enums.SETTINGS['ONLY_DIRS'])
+        self._INCLUDE_DIRS = (
+            enums.SETTINGS['INCLUDE_DIRS'])
         self._IGNORE_DIRS = (
             enums.SETTINGS['IGNORE_DIRS'])
 
@@ -47,16 +47,8 @@ class Namanager():
             converted_strlist.append(s.replace('/', os.sep))
         return converted_strlist
 
-    def name(self, obj, callingLocals=locals()):
-        name = None
-        for k, v in list(callingLocals.items()):
-            if v is obj:
-                name = k
-        return name
-
     def verify_setting_type(self):
         errors = []
-
         settings = [
             {'s': self._FILE_FORMATS,
              't': type(enums.SETTINGS['FILE_FORMATS'])},
@@ -64,8 +56,8 @@ class Namanager():
              't': type(enums.SETTINGS['FILE_FORMATS']['SEP'])},
             {'s': self._FILE_LETTER_CASE,
              't': type(enums.SETTINGS['FILE_FORMATS']['LETTER_CASE'])},
-            {'s': self._ONLY_FILES,
-             't': type(enums.SETTINGS['ONLY_FILES'])},
+            {'s': self._INCLUDE_FILES,
+             't': type(enums.SETTINGS['INCLUDE_FILES'])},
             {'s': self._IGNORE_FILES,
              't': type(enums.SETTINGS['IGNORE_FILES'])},
             {'s': self._DIR_FORMATS,
@@ -74,8 +66,8 @@ class Namanager():
              't': type(enums.SETTINGS['DIR_FORMATS']['SEP'])},
             {'s': self._DIR_LETTER_CASE,
              't': type(enums.SETTINGS['DIR_FORMATS']['LETTER_CASE'])},
-            {'s': self._ONLY_DIRS,
-             't': type(enums.SETTINGS['ONLY_DIRS'])},
+            {'s': self._INCLUDE_DIRS,
+             't': type(enums.SETTINGS['INCLUDE_DIRS'])},
             {'s': self._IGNORE_DIRS,
              't': type(enums.SETTINGS['IGNORE_DIRS'])},
         ]
@@ -83,13 +75,12 @@ class Namanager():
         for setting in settings:
             if not isinstance(setting['s'], setting['t']):
                 errors.append("Type of {0} must be {1}.".format(
-                    self.name(setting['s'], self.__dict__), setting['t']))
-
-        err_str = '\n'
-        for error in errors:
-            err_str += error + '\n'
+                    util.name(setting['s'], self.__dict__), setting['t']))
 
         if errors:
+            err_str = '\n'
+            for error in errors:
+                err_str += error + '\n'
             raise TypeError(err_str)
 
     def load_settings(self, settings={}):
@@ -101,8 +92,8 @@ class Namanager():
         self._FILE_LETTER_CASE = str(
             self._FILE_FORMATS.get(
                 'LETTER_CASE', enums.SETTINGS['FILE_FORMATS']['LETTER_CASE']))
-        self._ONLY_FILES = self._convert_os_sep_of_str_in_list(
-            settings.get('ONLY_FILES', enums.SETTINGS['ONLY_FILES']))
+        self._INCLUDE_FILES = self._convert_os_sep_of_str_in_list(
+            settings.get('INCLUDE_FILES', enums.SETTINGS['INCLUDE_FILES']))
         self._IGNORE_FILES = self._convert_os_sep_of_str_in_list(
             settings.get('IGNORE_FILES', enums.SETTINGS['IGNORE_FILES']))
 
@@ -113,8 +104,8 @@ class Namanager():
         self._DIR_LETTER_CASE = str(
             self._DIR_FORMATS.get(
                 'LETTER_CASE', enums.SETTINGS['DIR_FORMATS']['LETTER_CASE']))
-        self._ONLY_DIRS = self._convert_os_sep_of_str_in_list(
-            settings.get('ONLY_DIRS', enums.SETTINGS['ONLY_DIRS']))
+        self._INCLUDE_DIRS = self._convert_os_sep_of_str_in_list(
+            settings.get('INCLUDE_DIRS', enums.SETTINGS['INCLUDE_DIRS']))
         self._IGNORE_DIRS = self._convert_os_sep_of_str_in_list(
             settings.get('IGNORE_DIRS', enums.SETTINGS['IGNORE_DIRS']))
 
@@ -135,12 +126,12 @@ class Namanager():
         return self._DIR_FORMATS
 
     @property
-    def only_files(self):
-        return self._ONLY_FILES
+    def include_files(self):
+        return self._INCLUDE_FILES
 
     @property
-    def only_dirs(self):
-        return self._ONLY_DIRS
+    def include_dirs(self):
+        return self._INCLUDE_DIRS
 
     @property
     def ignore_files(self):
@@ -173,8 +164,8 @@ class Namanager():
                     return True
         return False
 
-    def _convert_walk_to_list(self, root):
-        return [tp for tp in os.walk(os.path.realpath(root))]
+    def _get_walk(self, root):
+        return [path_info for path_info in os.walk(os.path.realpath(root))]
 
     def _get_root_in_walk(self, walk):
         root = ''
@@ -185,19 +176,19 @@ class Namanager():
                     root = dirpath
         return root
 
-    def _separate_with_in_out_particular_dir_patterns(self, re_patterns):
-        within_patterns = []
-        without_patterns = []
+    def _divide_full_part_path_patterns(self, re_patterns):
+        full_path_patterns = []
+        part_path_patterns = []
 
         for pattern in re_patterns:
             if pattern.rfind(os.sep) == -1:
-                without_patterns.append(pattern)
+                part_path_patterns.append(pattern)
             else:
-                within_patterns.append(pattern)
+                full_path_patterns.append(pattern)
 
-        return within_patterns, without_patterns
+        return full_path_patterns, part_path_patterns
 
-    def _separate_dir_and_file_part_of_patterns(self, re_patterns):
+    def _divide_file_and_dir_name_of_patterns(self, re_patterns):
         separated_patterns = []
 
         for pattern in re_patterns:
@@ -212,15 +203,15 @@ class Namanager():
 
         return separated_patterns
 
-    def _include_file_by_match_list_in_walk(self, re_patterns, walk,
-                                            root=None):
+    def _include_re_patterns_of_files_in_walk(self, re_patterns, walk,
+                                              root=None):
         if root is None:
             root = self._get_root_in_walk(walk)
 
         filtered_walk = []
         within, without = (
-            self._separate_with_in_out_particular_dir_patterns(re_patterns))
-        within = self._separate_dir_and_file_part_of_patterns(within)
+            self._divide_full_part_path_patterns(re_patterns))
+        within = self._divide_file_and_dir_name_of_patterns(within)
 
         for (dirpath, dirs, files) in walk:
             filtered = []
@@ -249,9 +240,9 @@ class Namanager():
 
         return filtered_walk
 
-    def _exclude_file_by_match_list_in_walk(self, re_patterns, walk,
-                                            root=None):
-        include_walk = self._include_file_by_match_list_in_walk(
+    def _ignore_re_patterns_of_files_in_walk(self, re_patterns, walk,
+                                             root=None):
+        include_walk = self._include_re_patterns_of_files_in_walk(
             re_patterns, walk, root)
         filtered_walk = []
 
@@ -274,7 +265,8 @@ class Namanager():
 
         return filtered_walk
 
-    def _include_dir_by_match_list_in_walk(self, re_patterns, walk, root=None):
+    def _include_re_patterns_of_dirs_in_walk(self, re_patterns, walk,
+                                             root=None):
         if root is None:
             root = self._get_root_in_walk(walk)
 
@@ -286,8 +278,9 @@ class Namanager():
 
         return filtered_walk
 
-    def _exclude_dir_by_match_list_in_walk(self, re_patterns, walk, root=None):
-        include_walk = self._include_dir_by_match_list_in_walk(
+    def _ignore_re_patterns_of_dirs_in_walk(self, re_patterns, walk,
+                                            root=None):
+        include_walk = self._include_re_patterns_of_dirs_in_walk(
             re_patterns, walk, root)
         filtered_walk = []
 
@@ -303,30 +296,30 @@ class Namanager():
 
         return filtered_walk
 
-    def _get_file_list(self, walk):
-        if self.only_files:
-            walk = self._include_file_by_match_list_in_walk(
-                self.only_files, walk)
+    def _get_file_walk(self, walk):
+        if self.include_files:
+            walk = self._include_re_patterns_of_files_in_walk(
+                self.include_files, walk)
         if self.ignore_files:
-            walk = self._exclude_file_by_match_list_in_walk(
+            walk = self._ignore_re_patterns_of_files_in_walk(
                 self.ignore_files, walk)
 
         return walk
 
-    def _get_dir_list(self, walk):
-        if self.only_dirs:
-            walk = self._include_dir_by_match_list_in_walk(
-                self.only_dirs, walk)
+    def _get_dir_walk(self, walk):
+        if self.include_dirs:
+            walk = self._include_re_patterns_of_dirs_in_walk(
+                self.include_dirs, walk)
         if self.ignore_dirs:
-            walk = self._exclude_dir_by_match_list_in_walk(
+            walk = self._ignore_re_patterns_of_dirs_in_walk(
                 self.ignore_dirs, walk)
 
         return walk
 
     def check_file(self, root):
         root = os.path.realpath(root)
-        walk = self._convert_walk_to_list(root)
-        walk = self._get_file_list(walk)
+        walk = self._get_walk(root)
+        walk = self._get_file_walk(walk)
         for dirpath, dirs, files in walk:
             for f in files:
                 actual = f
@@ -352,8 +345,8 @@ class Namanager():
             OK: any part path of /root/path/to/dir will be never checked
         """
         root = os.path.realpath(root)
-        walk = self._convert_walk_to_list(root)
-        walk = self._get_dir_list(walk)
+        walk = self._get_walk(root)
+        walk = self._get_dir_walk(walk)
         for dirpath, dirs, files in walk:
             dirpath_dirname = os.path.dirname(dirpath)
             actual = os.sep + dirpath.split(os.sep)[-1]
