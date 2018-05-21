@@ -1,6 +1,14 @@
 import re
 
 
+def name(obj, callingLocals=locals()):
+    name = None
+    for k, v in list(callingLocals.items()):
+        if v is obj:
+            name = k
+    return name
+
+
 def gen_unique_str(string):
     u = '_'
     while u in string:
