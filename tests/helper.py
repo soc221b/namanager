@@ -6,6 +6,7 @@ import string
 import collections
 import logging
 import json
+import shutil
 
 # Backward Compatibility
 try:
@@ -80,15 +81,15 @@ def mkdtemp(**kwargs):  # pragma: no cover
     return os.path.realpath(tmpdir)
 
 
+def rm_path(path):
+    shutil.rmtree(path)
+
+
 def rm_paths(paths):
     paths.sort(key=lambda p: len(p.split(os.sep)), reverse=True)
 
     for path in paths:
-        if os.path.isfile(path):
-            os.remove(path)
-    for path in paths:
-        if os.path.isdir(path):
-            os.rmdir(path)
+        rm_path(path)
 
 
 def get_error_string(errors):

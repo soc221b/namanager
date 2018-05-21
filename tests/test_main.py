@@ -11,10 +11,13 @@ class TestMain():
     def __init__(self):
         self.TMPFILE_PREFIX = 'test_main_'
         self.RENAME_SUFFIX = '_*&^%$'
-        self.TMP_ROOT = os.sep.join(
-            [os.path.realpath(os.path.dirname(__file__)), 'test_root'])
-        if not os.path.exists(self.TMP_ROOT):
-            os.mkdir(self.TMP_ROOT)
+
+    def setUp(self):
+        self.TMP_ROOT = helper.mkdtemp(
+            root=os.path.realpath(os.path.dirname(__file__)))
+
+    def tearDown(self):
+        helper.rm_path(self.TMP_ROOT)
 
     def test_cli_version(self):
         driver = Driver()
@@ -181,7 +184,6 @@ class TestMain():
 
         driver.entry(**kwargs)
 
-        os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
 
     def test_cli_rename_backup(self):
@@ -204,7 +206,6 @@ class TestMain():
 
         driver.entry(**kwargs)
 
-        os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
 
     def test_cli_rename_no_backup(self):
@@ -359,7 +360,6 @@ class TestMain():
 
         driver.entry(**revert_kwargs)
 
-        os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
 
     def test_cli_revert_last_existed(self):
@@ -434,7 +434,6 @@ class TestMain():
 
         driver.entry(**revert_kwargs)
 
-        os.remove(driver.result['rename_backup_name'])
         assert driver.result['errors'] == []
 
     def test_required_success(self):

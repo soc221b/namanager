@@ -9,10 +9,13 @@ class TestArchieveManager():
     def __init__(self):
         self.TMPFILE_PREFIX = 'test_am_'
         self.RENAME_SUFFIX = '_*&^%$'
-        self.TMP_ROOT = os.sep.join(
-            [os.path.realpath(os.path.dirname(__file__)), 'test_root'])
-        if not os.path.exists(self.TMP_ROOT):
-            os.mkdir(self.TMP_ROOT)
+
+    def setUp(self):
+        self.TMP_ROOT = helper.mkdtemp(
+            root=os.path.realpath(os.path.dirname(__file__)))
+
+    def tearDown(self):
+        helper.rm_path(self.TMP_ROOT)
 
     def test_rename(self):
         # test files/directories both mixed
