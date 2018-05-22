@@ -1,4 +1,5 @@
 import re
+import os
 
 
 def name(obj, callingLocals=locals()):
@@ -134,3 +135,23 @@ def convert_words_to_case(words, case):
             "key {0} is not found in the set of existing keys.".format(case))
 
     return converted_words
+
+
+def get_full_path(path):
+    return os.path.realpath(os.path.relpath(path))
+
+
+def isfile_casesensitive(path):
+    path = get_full_path(path)
+    if not os.path.isfile(path):
+        return False   # exit early
+    directory, filename = os.path.split(path)
+    return filename in os.listdir(directory)
+
+
+def isdir_casesensitive(path):
+    path = get_full_path(path)
+    if not os.path.isdir(path):
+        return False   # exit early
+    directory, dirname = os.path.split(path)
+    return dirname in os.listdir(directory)

@@ -353,8 +353,8 @@ class Namanager():
 
             if expect != actual:
                 self._error_info.append({
-                    'expect': os.sep.join([dirpath_dirname, expect]),
-                    'actual': os.sep.join([dirpath_dirname, actual])
+                    'expect': "".join([dirpath_dirname, expect]),
+                    'actual': "".join([dirpath_dirname, actual])
                 })
                 self._error_info_count += 1
 
@@ -405,4 +405,4 @@ class Namanager():
         if pretty_dump:
             return parseString(xml).toprettyxml()
         else:
-            return xml
+            return parseString(xml).toxml()

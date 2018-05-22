@@ -6,6 +6,7 @@ from namanager.core import Namanager
 from namanager.archieve_manager import ArchieveManager
 from namanager.logger import logger
 import namanager.enums as enums
+import namanager.util as util
 
 
 def raiser(condition, msg):
@@ -164,35 +165,40 @@ class Driver():
         COUNT = kwargs.get('count', False)
         FMT = kwargs.get('fmt', 'json')
         PRETTY_DUMP = kwargs.get('pretty_dump', False)
-        unexpected_pairs = []
-        checker = Namanager(settings_json)
+        self._result['unexpected_pairs'] = [] if FMT == 'nodump' else ''
 
         for d in settings_json['CHECK_DIRS']:
+            if not util.isdir_casesensitive(d):
+                continue
+
+            checker = Namanager(settings_json)
             checker.check(d)
 
             if checker.error_info:
-                unexpected_pairs.extend(checker.error_info)
+                unexpected_pairs = checker.error_info
                 if COUNT:
                     self._result['errors'].append(
                         'In folder {0} :'.format(os.path.realpath(d)))
                     self._result['errors'].append(
                         'FAILED (error={0})'.format(checker.error_info_count))
+            else:
+                unexpected_pairs = []
 
-        if FMT == 'readable':
-            s = ""
-            for pair in checker.get_dict(unexpected_pairs):
-                s += 'expect: {0}\n'.format(pair['expect'])
-                s += 'actual: {0}\n\n'.format(pair['actual'])
-            self._result['unexpected_pairs'] = s
-        elif FMT == 'json':
-            self._result['unexpected_pairs'] = (
-                checker.get_json(unexpected_pairs, PRETTY_DUMP))
-        elif FMT == 'xml':
-            self._result['unexpected_pairs'] = (
-                checker.get_xml(unexpected_pairs, PRETTY_DUMP))
-        elif FMT == 'nodump':
-            self._result['unexpected_pairs'] = (
-                checker.get_dict(unexpected_pairs))
+            if FMT == 'readable':
+                s = ""
+                for pair in checker.get_dict(unexpected_pairs):
+                    s += 'expect: {0}\n'.format(pair['expect'])
+                    s += 'actual: {0}\n\n'.format(pair['actual'])
+                self._result['unexpected_pairs'] += s
+            elif FMT == 'json':
+                self._result['unexpected_pairs'] += (
+                    checker.get_json(unexpected_pairs, PRETTY_DUMP))
+            elif FMT == 'xml':
+                self._result['unexpected_pairs'] += (
+                    checker.get_xml(unexpected_pairs, PRETTY_DUMP))
+            elif FMT == 'nodump':
+                self._result['unexpected_pairs'] += (
+                    checker.get_dict(unexpected_pairs))
 
     def rename_backup(self, rename_pairs, **kwargs):
         am = ArchieveManager()
@@ -265,6 +271,9 @@ class Driver():
                 kwargs['settings_json'] = self.import_settings(SETTINGS)
             self.check(**kwargs)
             print(self._result['unexpected_pairs'])
+
+            if REQUIRED and self._result['unexpected_pairs']:
+                self._exit_code = 1
 
         if self._result['errors']:
             for e in self._result['errors']:
