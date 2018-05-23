@@ -723,3 +723,89 @@ class TestNamanager():
             # get xml
             # actual = xmltodict.parse(fc.get_xml(datum, False))
             # actual = xmltodict.parse(fc.get_xml(datum, True))
+
+    def test_get_name_with_prefix_by_mode(self):
+        namanager = Namanager()
+        errors = []
+        data = {
+            'add': [
+                {'name': 'aabc', 'expect': 'aaabc'},
+                {'name': 'abc', 'expect': 'aabc'},
+                {'name': 'bc', 'expect': 'abc'}
+            ],
+            'force_add': [
+                {'name': 'aabc', 'expect': 'abc'},
+                {'name': 'abc', 'expect': 'abc'},
+                {'name': 'bc', 'expect': 'abc'}
+            ],
+            'remove': [
+                {'name': 'aabc', 'expect': 'abc'},
+                {'name': 'abc', 'expect': 'bc'},
+                {'name': 'bc', 'expect': 'bc'}
+            ],
+            'force_remove': [
+                {'name': 'aabc', 'expect': 'bc'},
+                {'name': 'abc', 'expect': 'bc'},
+                {'name': 'bc', 'expect': 'bc'}
+            ],
+            'ignore': [
+                {'name': 'abcc', 'expect': 'abcc'},
+                {'name': 'abc', 'expect': 'abc'},
+                {'name': 'ab', 'expect': 'ab'}
+            ],
+        }
+
+        for mode in data:
+            for pair in data[mode]:
+                actual = namanager.get_name_with_prefix_by_mode(
+                    pair['name'], 'a', mode),
+                expect = pair['expect']
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors,
+                    expect != actual,
+                    "expect: {0}\nactual: {1}".format(expect, actual))
+
+        assert errors == [], Exception(helper.get_error_string(errors))
+
+    def test_get_name_with_suffix_by_mode(self):
+        namanager = Namanager()
+        errors = []
+        data = {
+            'add': [
+                {'name': 'abcc', 'expect': 'abccc'},
+                {'name': 'abc', 'expect': 'abcc'},
+                {'name': 'ab', 'expect': 'abc'}
+            ],
+            'force_add': [
+                {'name': 'abcc', 'expect': 'abc'},
+                {'name': 'abc', 'expect': 'abc'},
+                {'name': 'ab', 'expect': 'abc'}
+            ],
+            'remove': [
+                {'name': 'abcc', 'expect': 'abc'},
+                {'name': 'abc', 'expect': 'ab'},
+                {'name': 'ab', 'expect': 'ab'}
+            ],
+            'force_remove': [
+                {'name': 'abcc', 'expect': 'ab'},
+                {'name': 'abc', 'expect': 'ab'},
+                {'name': 'ab', 'expect': 'ab'}
+            ],
+            'ignore': [
+                {'name': 'abcc', 'expect': 'abcc'},
+                {'name': 'abc', 'expect': 'abc'},
+                {'name': 'ab', 'expect': 'ab'}
+            ],
+        }
+
+        for mode in data:
+            for pair in data[mode]:
+                actual = namanager.get_name_with_suffix_by_mode(
+                    pair['name'], 'c', mode),
+                expect = pair['expect']
+                helper.append_to_error_if_not_expect_with_msg(
+                    errors,
+                    expect != actual,
+                    "expect: {0}\nactual: {1}".format(expect, actual))
+
+        assert errors == [], Exception(helper.get_error_string(errors))

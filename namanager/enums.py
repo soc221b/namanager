@@ -51,6 +51,13 @@ FORMATS = {
         'dash_to_underscore',
         'underscore_to_dash',
     ],
+    'MODE': [  # set 'SUFFIX' to 'c'
+        'add',  # 'abccc' -> 'abcccc'
+        'remove',  # 'abccc' -> 'abcc'
+        'force_add',  # 'abccc' -> 'abc'
+        'force_remove',  # 'abccc' -> 'ab'
+        'ignore',
+    ],
 }
 
 # Default settings
@@ -68,4 +75,12 @@ SETTINGS = {
         "LETTER_CASE": "ignore",
         "SEP": [],
     },
+    "FILE_PREFIX_MODE": "ignore",
+    "FILE_SUFFIX_MODE": "ignore",
+    "FILE_PREFIX": "",
+    "FILE_SUFFIX": "",
+    "DIR_PREFIX_MODE": "ignore",
+    "DIR_SUFFIX_MODE": "ignore",
+    "DIR_PREFIX": "",
+    "DIR_SUFFIX": "",
 }
