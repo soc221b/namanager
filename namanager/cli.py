@@ -5,6 +5,7 @@ import sys
 import os
 from namanager.main import Driver
 
+
 def cli():
     parser = argparse.ArgumentParser()
 
@@ -42,7 +43,8 @@ def cli():
                         help="Generate as json format.")
     parser.add_argument("--pretty-dump",
                         action='store_true',
-                        help="Only works with --with-xml or --with-json options")
+                        help="Only works with --with-xml or "
+                             "--with-json options")
 
     parser.add_argument("--rename",
                         action='store_true',
@@ -67,7 +69,7 @@ def cli():
     parser.add_argument("--rename-recover",
                         action='store_true',
                         help="Recover paths after any rename failed.")
-    
+
     parser.add_argument("--revert",
                         action='store_true',
                         help="Revert paths which are renamed by --rename "

@@ -66,13 +66,12 @@ setuptools.setup(
     ],
 
     packages=PACKAGES,
-    scripts=SCRIPTS,
     install_requires=INSTALL_REQUIRES,
     python_requires=PYTHON_REQUIRES,
-    
+
     entry_points={
-        'console_scripts' : [
+        'console_scripts': [
             'namanager=namanager.cli:cli'
         ]
-    }
+    },
 )
