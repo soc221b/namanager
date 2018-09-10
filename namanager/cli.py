@@ -120,7 +120,7 @@ def cli():
     driver.entry(**kwargs)
 
     return driver.exit_code
-    
+
 
 if __name__ == '__main__':
     sys.exit(cli())
