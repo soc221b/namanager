@@ -21,7 +21,8 @@ def cli():
                         help="Store initial settings file to PATH.")
     parser.add_argument("-s", "--settings",
                         default=os.path.join(os.getcwd(), 'settings.json'),
-                        help="Default is ./settings.json. Import settings.json.")
+                        help="Default is ./settings.json. "
+                             "Import settings.json.")
 
     parser.add_argument("--required",
                         action='store_true',
@@ -69,7 +70,8 @@ def cli():
     
     parser.add_argument("--revert",
                         action='store_true',
-                        help="Revert paths which are renamed by --rename option."
+                        help="Revert paths which are renamed by --rename "
+                             "option."
                         )
     parser.add_argument("--revert-last",
                         action='store_true',
