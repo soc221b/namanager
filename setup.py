@@ -33,6 +33,11 @@ with open('requirements.txt') as f:
         for line in f if line and not line.startswith('- ')
     ])
 PYTHON_REQUIRES = '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,'
+ENTRY_POINTS = {
+    'console_scripts': [
+        'namanager=namanager.cli:cli'
+    ]
+}
 
 setuptools.setup(
     name=NAME,
@@ -69,9 +74,5 @@ setuptools.setup(
     install_requires=INSTALL_REQUIRES,
     python_requires=PYTHON_REQUIRES,
 
-    entry_points={
-        'console_scripts': [
-            'namanager=namanager.cli:cli'
-        ]
-    },
+    entry_points=ENTRY_POINTS,
 )
