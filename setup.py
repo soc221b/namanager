@@ -24,9 +24,7 @@ MAINTAINER_EMAIL = (
     ', arnavborborah11@gmail.com'
 )
 URL = 'https://github.com/iattempt/namanager'
-PACKAGES = {'namanager'}
 PACKAGES = setuptools.find_packages(exclude=['tests'])
-SCRIPTS = ['bin/namanager']
 KEYWORDS = ['namanager', 'name', 'manager', 'checker', 'formatter', 'filename']
 
 with open('requirements.txt') as f:
@@ -35,6 +33,11 @@ with open('requirements.txt') as f:
         for line in f if line and not line.startswith('- ')
     ])
 PYTHON_REQUIRES = '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,'
+ENTRY_POINTS = {
+    'console_scripts': [
+        'namanager=namanager.cli:cli'
+    ]
+}
 
 setuptools.setup(
     name=NAME,
@@ -68,7 +71,8 @@ setuptools.setup(
     ],
 
     packages=PACKAGES,
-    scripts=SCRIPTS,
     install_requires=INSTALL_REQUIRES,
     python_requires=PYTHON_REQUIRES,
+
+    entry_points=ENTRY_POINTS,
 )
