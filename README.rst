@@ -4,13 +4,13 @@ namanager
 
 .. include-documentation-begin-marker
 
-.. image:: https://img.shields.io/travis/iattempt/namanager/master.svg?style=flat&label=Linux
-        :target: https://travis-ci.org/iattempt/namanager
-        :alt: see build status of Unix-like: https://travis-ci.org/iattempt/namanager
+.. image:: https://img.shields.io/travis/iendeavor/namanager/master.svg?style=flat&label=Linux
+        :target: https://travis-ci.org/iendeavor/namanager
+        :alt: see build status of Unix-like: https://travis-ci.org/iendeavor/namanager
 
-.. image:: https://img.shields.io/codecov/c/github/iattempt/namanager/master.svg?style=flat
-        :target: https://codecov.io/gh/iattempt/namanager
-        :alt: see code coverage status: https://codecov.io/gh/iattempt/namanager
+.. image:: https://img.shields.io/codecov/c/github/iendeavor/namanager/master.svg?style=flat
+        :target: https://codecov.io/gh/iendeavor/namanager
+        :alt: see code coverage status: https://codecov.io/gh/iendeavor/namanager
 
 .. image:: https://img.shields.io/pypi/v/namanager.svg?style=flat
     :target: https://pypi.python.org/pypi/namanager
