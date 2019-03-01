@@ -21,6 +21,9 @@ if [ "`$PIP -V`" != "`$PYTHON -m pip -V`" ]; then
     $PIP -V
     $PYTHON -V
     echo "Version of pip and python must be same."
+    echo
+    echo "Add version suffix as argument if you wnat to specify version."
+    echo "example: your python command is 'python3.6' => type './test.sh 3.6'"
     exit 1
 fi
 
