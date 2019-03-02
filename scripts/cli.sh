@@ -85,7 +85,6 @@ deactivate_env()
     is_supports_venv
     if [[ $? -eq 1 ]]; then
         deactivate
-        assert
     fi
 }
 
@@ -124,49 +123,62 @@ echo `$PIP -V`
 echo `$PYTHON -V`
 
 echo '''
-################################################################################
-Flake8
-################################################################################
+================================================================================
+Deactivate the development environment
+================================================================================
 '''
-./scripts/flake8.sh $1
+deactivate_env dev
+
+echo '''
+================================================================================
+Setting up a distribute environment
+================================================================================
+'''
+activate_env dist
+$PYTHON setup.py sdist
+assert
+$PYTHON setup.py bdist_wheel --universal
+assert
+$PIP install dist/namanager-`$PYTHON setup.py -V`-py2.py3-none-any.whl
 assert
 
 echo '''
-################################################################################
-Nose
-################################################################################
+================================================================================
+Run CLI
+================================================================================
 '''
-./scripts/nose.sh $1
+# generate temp files
+mktemp_cwd -d
+rand_dir=$result
+# also prevent import by relative way.
+# if build has wrongs, error(s) will be occurs.
+cd $rand_dir
+for (( i = 0; i < 200; i++ )); do
+    mktemp_cwd -d
+    mktemp_cwd
+done
+
+namanager --settings ../tests/settings.json
 assert
+
+cd $NAMANAGER_ROOT_PATH
+rm -rf $rand_dir
 
 echo '''
-################################################################################
-CLI
-################################################################################
+================================================================================
+Deactivate the distribute environment
+================================================================================
 '''
-./scripts/cli.sh $1
-assert
+$PIP uninstall -y dist/namanager-`$PYTHON setup.py -V`-py2.py3-none-any.whl
+deactivate_env dist
 
-if [ $CI ]; then
-    if [ $error_code -eq 0 ]; then
-        echo '''
-================================================================================
-Update codecov badge
-================================================================================
-'''
-        $PIP install coverage codecov
-        codecov --required
-        assert
-    fi
-else
-    echo '''
+echo '''
 ================================================================================
 Rebuild local development environment
 ================================================================================
 '''
-    activate_env dev
-    $PIP install -r requirements_dev.txt
-fi
+activate_env dev
+$PIP install -r requirements_dev.txt
 
 echo '''
 ================================================================================

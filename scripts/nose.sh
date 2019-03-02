@@ -114,59 +114,55 @@ mktemp_cwd()
 ################################################################################
 echo '''
 ================================================================================
-Environment information
+Tearing down environment
 ================================================================================
 '''
-echo $SHELL
-echo `which $PIP`
-echo `which $PYTHON`
-echo `$PIP -V`
-echo `$PYTHON -V`
+deactivate
+rm -rf env build dist
+mv namanager/tests .
+
+# Prevent haven't completely install the package.
+
+# Try to correctly install namanager and remove it.
+$PIP install namanager
+$PIP uninstall -y namanager
+
+# Initialize libs.
+$PIP uninstall -y -r requirements_dev.txt
+$PIP uninstall -y -r requirements.txt
+
+# Check if the namanager has been installed or hasn't completely installed.
+version=`namanager --version 2>/dev/null`
+assert 127 # command not found
 
 echo '''
-################################################################################
-Flake8
-################################################################################
+================================================================================
+Setting up a development environment
+================================================================================
 '''
-./scripts/flake8.sh $1
+activate_env dev
+$PIP install -r requirements_dev.txt
 assert
 
 echo '''
-################################################################################
-Nose
-################################################################################
+================================================================================
+Unit tests
+================================================================================
 '''
-./scripts/nose.sh $1
+mv tests namanager
+assert
+nosetests --tests namanager.tests -v --with-coverage --cover-erase --cover-html --cover-tests
+assert
+mv namanager/tests .
 assert
 
 echo '''
-################################################################################
-CLI
-################################################################################
-'''
-./scripts/cli.sh $1
-assert
-
-if [ $CI ]; then
-    if [ $error_code -eq 0 ]; then
-        echo '''
-================================================================================
-Update codecov badge
-================================================================================
-'''
-        $PIP install coverage codecov
-        codecov --required
-        assert
-    fi
-else
-    echo '''
 ================================================================================
 Rebuild local development environment
 ================================================================================
 '''
     activate_env dev
     $PIP install -r requirements_dev.txt
-fi
 
 echo '''
 ================================================================================
