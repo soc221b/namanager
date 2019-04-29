@@ -108,6 +108,7 @@ class ArchieveManager():
         return file_pairs, dir_pairs
 
     def _sort_path_pair(self, path_pairs, **kwargs):
+        # accepts path-like pairs.
         reverse = kwargs.get('reverse', False)
 
         path_pairs = path_pairs[:]
@@ -115,9 +116,7 @@ class ArchieveManager():
         for pair in path_pairs:
             counted_path_pairs.append(
                 [pair[0], pair[1], len(pair[0].split(os.sep))])
-        counted_path_pairs.sort(
-            key=lambda p: p[2] if os.path.isdir(p[0]) else p[2] - 1,
-            reverse=reverse)
+        counted_path_pairs.sort(key=lambda p: p[2], reverse=reverse)
 
         sorted_ = []
         for pair in counted_path_pairs:
