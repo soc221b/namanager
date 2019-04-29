@@ -1,5 +1,4 @@
 import os
-import shutil
 
 
 class ArchieveManager():
@@ -33,7 +32,7 @@ class ArchieveManager():
 
         for src, dst in path_pairs:
             try:
-                shutil.move(src, dst)
+                os.rename(src, dst)
             except Exception:
                 error_pairs.append([src, dst])
 
