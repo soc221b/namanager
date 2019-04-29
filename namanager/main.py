@@ -168,7 +168,8 @@ class Driver():
         self._result['unexpected_pairs'] = [] if FMT == 'nodump' else ''
 
         for d in settings_json['CHECK_DIRS']:
-            if not util.isdir_casesensitive(d):
+            if (not os.path.isdir(d) or
+               not util.is_os_case_sensitive(d)):
                 continue
 
             checker = Namanager(settings_json)
