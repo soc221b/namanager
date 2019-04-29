@@ -55,10 +55,10 @@ def get_words(string, include_non_letter=True):
                 words.append(string)
                 string = ''
         else:
-            tpl = get_first_word(string)
-            if tpl[0]:
-                string = string[tpl[2]:]
-                words.append(tpl[0])
+            first_word, _, end = get_first_word(string)
+            if first_word:
+                string = string[end:]
+                words.append(first_word)
             else:
                 string = ''
 
