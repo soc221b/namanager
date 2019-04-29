@@ -18,6 +18,9 @@ class ArchieveManager():
         file_pairs, dir_pairs = (
             self._separate_file_dir_from_path_pair(path_pairs))
 
+        file_pairs = self._sort_path_pair(file_pairs, reverse=True)
+        dir_pairs = self._sort_path_pair(dir_pairs, reverse=True)
+
         error_pairs.extend(self._rename(file_pairs))
         error_pairs.extend(self._rename(dir_pairs))
 
@@ -28,7 +31,6 @@ class ArchieveManager():
         :return: pairs which doesn't be renamed
         """
         error_pairs = []
-        path_pairs = self._sort_path_pair(path_pairs, reverse=True)
 
         for src, dst in path_pairs:
             try:
